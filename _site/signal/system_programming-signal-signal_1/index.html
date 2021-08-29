@@ -1,0 +1,1450 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.21.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Signal &lt;1&gt; signal(), sigaction(), kill(), 시그널 블록 - 혼자 보려고 만든 블로그</title>
+<meta name="description" content="signal(), sigaction(), kill()로 시그널 기본 호출 및 핸들러 구현, 시그널 블록">
+
+
+  <meta name="author" content="Dong-Heyon Yang">
+  
+  <meta property="article:author" content="Dong-Heyon Yang">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="혼자 보려고 만든 블로그">
+<meta property="og:title" content="Signal &lt;1&gt; signal(), sigaction(), kill(), 시그널 블록">
+<meta property="og:url" content="https://markyang920413.github.io//signal/system_programming-signal-signal_1/">
+
+
+  <meta property="og:description" content="signal(), sigaction(), kill()로 시그널 기본 호출 및 핸들러 구현, 시그널 블록">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2021-01-01T00:00:00+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://markyang920413.github.io//signal/system_programming-signal-signal_1/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "Dong-Hyeon Yang",
+      "url": "https://markyang920413.github.io//"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="혼자 보려고 만든 블로그 Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          혼자 보려고 만든 블로그
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/categories/">Category</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/">About</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+  
+    
+      
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox" />
+  <label for="ac-toc">Toggle menu</label>
+  <ul class="nav__items">
+    
+      <li>
+        
+          <span class="nav__sub-title">LINUX</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#linux-system">LINUX System</a></li>
+          
+            <li><a href="/categories/#linux-tools">LINUX Tools</a></li>
+          
+            <li><a href="/categories/#linux-compile">LINUX Compile</a></li>
+          
+            <li><a href="/categories/#linux-filesystem">LINUX Filesystem</a></li>
+          
+            <li><a href="/categories/#http">HTTP</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">System Programming</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#file">File, Memory</a></li>
+          
+            <li><a href="/categories/#env">Env</a></li>
+          
+            <li><a href="/categories/#process">Process</a></li>
+          
+            <li><a href="/categories/#thread">Thread</a></li>
+          
+            <li><a href="/categories/#ipc">IPC</a></li>
+          
+            <li><a href="/categories/#signal">Signal</a></li>
+          
+            <li><a href="/categories/#socket-programming">Socket Programming</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">C</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#c">C</a></li>
+          
+            <li><a href="/categories/#system-programming">System Programming</a></li>
+          
+            <li><a href="/categories/#stdio">Standard I/O</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">Python</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#python-language">Python Language</a></li>
+          
+            <li><a href="/categories/#python-pandas">Python Pandas</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">Algorithm</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#algorithm">Algorithm</a></li>
+          
+            <li><a href="/categories/#problem">Problem</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">MAC</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#mac">Mac</a></li>
+          
+        </ul>
+        
+      </li>
+    
+  </ul>
+</nav>
+
+    
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Signal &lt;1&gt; signal(), sigaction(), kill(), 시그널 블록">
+    <meta itemprop="description" content="signal(), sigaction(), kill()로 시그널 기본 호출 및 핸들러 구현, 시그널 블록">
+    <meta itemprop="datePublished" content="2021-01-01T00:00:00+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">Signal &lt;1&gt; signal(), sigaction(), kill(), 시그널 블록
+</h1>
+          
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          9 minute read
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              <ul class="toc__menu"><li><a href="#시그널-특징">시그널 특징</a></li><li><a href="#자주-사용되는-시그널">자주 사용되는 시그널</a><ul><li><a href="#쉘에서-시그널-보내기">쉘에서 시그널 보내기</a></li><li><a href="#시그널-short-cut">시그널 short cut</a></li></ul></li><li><a href="#시그널-포착">시그널 포착</a><ul><li><a href="#signal2">signal():2</a><ul><li><a href="#signal-예제-sighup-구현">signal 예제: SIGHUP 구현</a></li></ul></li><li><a href="#signal2의-문제점">signal():2의 문제점</a></li></ul></li><li><a href="#sigaction">sigaction</a><ul><li><a href="#sigaction-">sigaction ()</a></li><li><a href="#sigaction-구조체">sigaction 구조체</a></li><li><a href="#sigaction-예제">sigaction 예제</a></li><li><a href="#sigset_t-api">sigset_t API</a></li></ul></li><li><a href="#시그널-블록">시그널 블록</a><ul><li><a href="#시그널-블록-예제-1-블록된-시그널-검출">시그널 블록 예제 1. 블록된 시그널 검출</a></li><li><a href="#시그널-블록-예제-2">시그널 블록 예제 2.</a></li><li><a href="#sighup-문제-해결">SIGHUP 문제 해결</a></li></ul></li><li><a href="#시그널-전송">시그널 전송</a><ul><li><a href="#kill2">kill():2</a></li><li><a href="#시그널-보내는-간단한-예제">시그널 보내는 간단한 예제</a></li><li><a href="#ctrl--c">Ctrl + C</a></li></ul></li></ul>
+
+            </nav>
+          </aside>
+        
+        <h2 id="시그널-특징">시그널 특징</h2>
+<ol>
+  <li><strong>대기열</strong>을 <strong>가지지 않는다.</strong>
+    <ul>
+      <li>프로세스는 <strong>동시에 하나</strong>의 프로세스 처리</li>
+    </ul>
+  </li>
+  <li><span style="color:red"><strong>비 신뢰성</strong></span>
+    <ul>
+      <li>요청에 대한 응답이 전달되었는지 확인하는 쌍방향 통신과는 달리, 시그널은 프로세스에 제대로 전달되었는지 확인 <span style="color:red"><strong>x</strong></span></li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="자주-사용되는-시그널">자주 사용되는 시그널</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">시그널명</th>
+      <th style="text-align: left">포착 가능</th>
+      <th style="text-align: left">디폴트 기능</th>
+      <th style="text-align: left">생성 원인과 용도</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left"><strong>SIGALARM</strong></td>
+      <td style="text-align: left">O</td>
+      <td style="text-align: left">-</td>
+      <td style="text-align: left"><strong>비동기적인 사건 발생 알림</strong></td>
+    </tr>
+    <tr>
+      <td style="text-align: left">SIGINT</td>
+      <td style="text-align: left">O</td>
+      <td style="text-align: left">종료</td>
+      <td style="text-align: left">주로 ctrl+c로 생성<br />프로그램을 종료하고 싶을 때 사용</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">SIGHUP</td>
+      <td style="text-align: left">O</td>
+      <td style="text-align: left">종료</td>
+      <td style="text-align: left">User가 로그아웃할 때 생성됨. 데몬 프로세스에서는 설정 파일을 다시 읽어들이는 경우에 많이 사용</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">SIGPIPE</td>
+      <td style="text-align: left">O</td>
+      <td style="text-align: left">종료</td>
+      <td style="text-align: left">끊어진 파이프에 데이터를 쓰려고 시도하면 생성된다.</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">SIGTERM</td>
+      <td style="text-align: left">O</td>
+      <td style="text-align: left">종료</td>
+      <td style="text-align: left">프로세스를 <strong>종료</strong><br />kill 명령어를 시그널지정 없이 사용할 때 전달됨</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">SIGKILL</td>
+      <td style="text-align: left"><span style="color:red"><strong>X</strong></span></td>
+      <td style="text-align: left">종료</td>
+      <td style="text-align: left">프로세스 <strong>종료</strong></td>
+    </tr>
+    <tr>
+      <td style="text-align: left">SIGCHLD</td>
+      <td style="text-align: left">O</td>
+      <td style="text-align: left">무시</td>
+      <td style="text-align: left">자식 프로세스가 <strong>정지</strong> 또는 <strong>종료</strong> 시 발생됨</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">SIGSEGV</td>
+      <td style="text-align: left">O</td>
+      <td style="text-align: left">코어 덤프</td>
+      <td style="text-align: left">금지된 메모리 영역 액세스, 초기화 하지 않은 포인터, 버퍼 오버 플로우 등..</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">SIGBUS</td>
+      <td style="text-align: left">O</td>
+      <td style="text-align: left">코어덤프</td>
+      <td style="text-align: left">Alignment 위반, 포인터 작업을 잘못한 경우 등</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">SIGFPE</td>
+      <td style="text-align: left">O</td>
+      <td style="text-align: left">코어 덤프</td>
+      <td style="text-align: left">산술 연산 에러 Div zero, floating point overflow 등..</td>
+    </tr>
+  </tbody>
+</table>
+
+<ul>
+  <li><strong>시그널 번호</strong></li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">kill</span> <span class="nt">-l</span>
+ 1<span class="o">)</span> SIGHUP       2<span class="o">)</span> SIGINT       3<span class="o">)</span> SIGQUIT      4<span class="o">)</span> SIGILL
+ 5<span class="o">)</span> SIGTRAP      6<span class="o">)</span> SIGABRT      7<span class="o">)</span> SIGBUS       8<span class="o">)</span> SIGFPE
+ 9<span class="o">)</span> SIGKILL     10<span class="o">)</span> SIGUSR1     11<span class="o">)</span> SIGSEGV     12<span class="o">)</span> SIGUSR2
+13<span class="o">)</span> SIGPIPE     14<span class="o">)</span> SIGALRM     15<span class="o">)</span> SIGTERM     16<span class="o">)</span> SIGSTKFLT
+17<span class="o">)</span> SIGCHLD     18<span class="o">)</span> SIGCONT     19<span class="o">)</span> SIGSTOP     20<span class="o">)</span> SIGTSTP
+21<span class="o">)</span> SIGTTIN     22<span class="o">)</span> SIGTTOU     23<span class="o">)</span> SIGURG      24<span class="o">)</span> SIGXCPU
+25<span class="o">)</span> SIGXFSZ     26<span class="o">)</span> SIGVTALRM   27<span class="o">)</span> SIGPROF     28<span class="o">)</span> SIGWINCH
+29<span class="o">)</span> SIGIO       30<span class="o">)</span> SIGPWR      31<span class="o">)</span> SIGSYS      34<span class="o">)</span> SIGRTMIN
+35<span class="o">)</span> SIGRTMIN+1  36<span class="o">)</span> SIGRTMIN+2  37<span class="o">)</span> SIGRTMIN+3  38<span class="o">)</span> SIGRTMIN+4
+39<span class="o">)</span> SIGRTMIN+5  40<span class="o">)</span> SIGRTMIN+6  41<span class="o">)</span> SIGRTMIN+7  42<span class="o">)</span> SIGRTMIN+8
+43<span class="o">)</span> SIGRTMIN+9  44<span class="o">)</span> SIGRTMIN+10 45<span class="o">)</span> SIGRTMIN+11 46<span class="o">)</span> SIGRTMIN+12
+47<span class="o">)</span> SIGRTMIN+13 48<span class="o">)</span> SIGRTMIN+14 49<span class="o">)</span> SIGRTMIN+15 50<span class="o">)</span> SIGRTMAX-14
+51<span class="o">)</span> SIGRTMAX-13 52<span class="o">)</span> SIGRTMAX-12 53<span class="o">)</span> SIGRTMAX-11 54<span class="o">)</span> SIGRTMAX-10
+55<span class="o">)</span> SIGRTMAX-9  56<span class="o">)</span> SIGRTMAX-8  57<span class="o">)</span> SIGRTMAX-7  58<span class="o">)</span> SIGRTMAX-6
+59<span class="o">)</span> SIGRTMAX-5  60<span class="o">)</span> SIGRTMAX-4  61<span class="o">)</span> SIGRTMAX-3  62<span class="o">)</span> SIGRTMAX-2
+63<span class="o">)</span> SIGRTMAX-1  64<span class="o">)</span> SIGRTMAX
+</code></pre></div></div>
+<h3 id="쉘에서-시그널-보내기">쉘에서 시그널 보내기</h3>
+<hr />
+<ul>
+  <li><span style="color:magenta"><strong>kill</strong></span>: <span style="color:red"><strong>sig_kill</strong></span>시그널을 보내는게 아님!</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">kill</span> -[SIGNAL | SIGNO] <span class="o">[</span>PID]
+
+<span class="nv">$ </span><span class="nb">kill</span> <span class="nt">-SIGKILL</span> 100		<span class="c"># pid 100번 프로세스에 프로세스를 죽이는 시그널 보냄</span>
+<span class="nv">$ </span><span class="nb">kill</span> <span class="nt">-9</span> 100		<span class="c"># pid 100번 프로세스에 프로세스를 죽이는 시그널 보냄</span>
+</code></pre></div></div>
+<h3 id="시그널-short-cut">시그널 short cut</h3>
+<hr />
+
+<table>
+  <tbody>
+    <tr>
+      <td><strong>short cut</strong></td>
+      <td><strong>SIGNAL</strong></td>
+      <td><strong>Description</strong></td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <td><strong><em>Ctrl+C</em></strong></td>
+      <td>SIGINT</td>
+      <td>프로세스를 <strong>종료</strong>하는 시그널 전송</td>
+    </tr>
+    <tr>
+      <td>Ctrl+Z</td>
+      <td>SIGSTP</td>
+      <td>프로세스를 <strong>중단</strong>하는 시그널 전송</td>
+    </tr>
+    <tr>
+      <td>Ctrl+\</td>
+      <td>SIGQUIT</td>
+      <td>core dump를 남기고 프로세스 종료하는 시그널 전송</td>
+    </tr>
+  </tfoot>
+</table>
+
+<h2 id="시그널-포착">시그널 포착</h2>
+<ul>
+  <li>시그널을 받은 프로세스는 어떻게 되는가?
+    <ul>
+      <li>따로 핸들러를 설정하지 않았다면, <strong>디폴트 기능 수행</strong></li>
+      <li><strong>포착 가능</strong>한 시그널은 트랩하자!</li>
+    </ul>
+  </li>
+  <li>포착: 트랩(trap), 캐치(catch)</li>
+  <li><strong>포착 가능</strong>: 위 표에서 <span style="color:magenta"><strong>포착 가능</strong></span>하면, 그 시그널은 <span style="color:magenta"><strong>시그널이 전달</strong></span>될 때의 <span style="color:steelblue"><strong>동작을 변경</strong></span>할 수 있다.
+    <ul>
+      <li>SIGCHLD는 디폴트로 무시되지만, 포착 가능 하므로 <span style="color:magenta"><strong>siganl(), sigaction()</strong></span>을 사용하여 수신 시 동작을 변경 가능</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="signal2">signal():2</h3>
+<hr />
+<p><span style="color:red"><strong>주의!</strong></span> 시그널을 보내는게 아닌 <span style="color:magenta"><strong>트랩(포착)</strong></span>하는 API임!</p>
+
+<p><img src="img1.png" /></p>
+
+<ul>
+  <li><span style="color:magenta"><strong>시그널 번호 sig</strong></span>인 <strong>시그널을 받았을 때</strong>, 디폴트 동작할 것을 <span style="color:steelblue"><strong>지정한 함수로 동작</strong></span>하게 한다.</li>
+  <li><span style="color:steelblue"><strong>지정한 함수</strong></span>를 <strong>시그널 핸들러</strong>라 칭함
+    <ul>
+      <li>함수를 넣어 시그널 핸들러로 사용케 하거나, 아래의 몇 매크로를 넣어 사용할 수도 있다.</li>
+    </ul>
+  </li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left"><span style="color:steelblue"><strong>func</strong></span> 사용할 수 있는 매크로</th>
+      <th style="text-align: left">의미</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">SIG_DFL</td>
+      <td style="text-align: left">디폴트 동작 수행해라</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">SIG_IGN</td>
+      <td style="text-align: left">이 시그널은 무시해라</td>
+    </tr>
+  </tbody>
+</table>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">return</th>
+      <th style="text-align: left">value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">성공</td>
+      <td style="text-align: left">이전까지 사용되었던 시그널 핸들러 값</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">실패</td>
+      <td style="text-align: left">SIG_ERR<br />errno set에 원인</td>
+    </tr>
+  </tbody>
+</table>
+
+<ul>
+  <li><strong>SIG_DFL</strong>은 왜 필요할까?
+    <ul>
+      <li>최초 시그널을 모시했는데, 중간에 시그널을 기본행동으로 해야할 필요가 있을 때</li>
+      <li><strong>자식 프로세스</strong>를 생성했을 때
+        <ul>
+          <li><strong>fork()</strong>사용 시, 자식 프로세스는 <strong>부모의 시그널 정책</strong>을 <span style="color:red"><strong>그대로 복사</strong></span></li>
+          <li>그래서 자식이 시그널 정책을 바꿀 필요가 있을 때!!</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h4 id="signal-예제-sighup-구현">signal 예제: SIGHUP 구현</h4>
+<hr />
+<ul>
+  <li><strong>SIGHUP</strong>를 해당 <strong>pid</strong>에 주면,  해당 <strong>pid</strong>로 <span style="color:steelblue"><strong>프로세스</strong></span>가 <strong>다시 시작</strong>되는 것을 볼 수 있다.</li>
+  <li>보통 <span style="color:blue"><strong>대몬 프로세스</strong></span>의 설정을 마친 다음에 <strong>설정 내용 재 적용</strong> 시켜주기 위해서 자주 사용한다.</li>
+  <li><strong>SIGHUP</strong> 시그널을 받으면, 프로세스를 해당 지점에서 종료하고, <strong>execl계열</strong> 시스템 콜 함수를 이용해서 프로세스를 다시 실행시킨다.</li>
+</ul>
+
+<p><img src="img2.png" /></p>
+
+<ul>
+  <li>위 프로그램 빌드 후, 실행 시키고 <strong>kill</strong> 명령을 이용해서 <strong>SIGHUP</strong>를 발생시켜보자.</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ps <span class="nt">-aux</span> | <span class="nb">grep </span>sig_hup
+root	4209	.... ./sig_hup
+<span class="nv">$ </span><span class="nb">kill</span> <span class="nt">-9</span> 4209
+<span class="c"># ./sig_hup 재 실행됨</span>
+<span class="nv">$ </span><span class="nb">kill</span> <span class="nt">-9</span> 4209
+<span class="c"># ./sig_hup 재 실행되지 않음</span>
+</code></pre></div></div>
+<ul>
+  <li><strong>문제점</strong>: execl계열 함수를 이용하여 새로운 프로세스를 실행시킬 경우, <strong>기존 프로세스의 자원 중 몇 가지</strong>가 <strong>새로운 프로세스로 전달</strong>된다.
+signal의 경우는 새로운 프로세스로 현재 상태가 전달되므로 <strong>시그널이 블럭 상태로 넘어가게된다.</strong>
+    <ul>
+      <li>즉, <span style="color:magenta"><strong>시그널 콜</strong></span>은 프로세스 <span style="color:blue"><strong>상태</strong></span>도 넘기므로(<em>*이건 넘기면 안됨</em>) 문제가되는 것</li>
+      <li><strong>핸들러가 종료되지 않아</strong>서 <strong>시그널이 블럭된 상태</strong>라도, <strong>블럭 해제</strong>되고 <strong>코드는 문제 없이 작동</strong>한다.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="signal2의-문제점">signal():2의 문제점</h3>
+<hr />
+<ul>
+  <li><strong>프로세스의 상태 고려 X</strong><br />프로세스 상태를 고려하지 않고 언제라도 날라와 문제를 이르킴</li>
+  <li><strong>핸들러 초기화</strong><br />OS에 따라서 지정한 시그널 핸들러를 수행 후, 원래 디폴트로 돌리는경우가 있다.<br />그러면 한번 시그널 트랩 후, 다시 핸들러를 등록하거나 핸들러 동작 못한다.</li>
+  <li><strong>시스템 콜 수행 중에 시그널</strong><br />read()나 write() 시스템 콜을 수행 중에 시그널이 날라오면, 시스템 콜 수행을 보장할 수 없다.</li>
+  <li><strong>중복 호출해서 안되는 함수를 중복 호출</strong><br />어떤 함수를 실행 중 시그널 핸들러에 의해 해당 함수가 다시 호출될 수 있다.<br />함수 내에서 전역 변수를 사용하고 있다면 의도치 않은 문제를 이르킬 수 있다.<br />C 표준 라이브러리에 이러한 함수가 많다.</li>
+  <li><strong>시그널 블록</strong><br />시그널 핸들러가 실행 중 또 시그널 핸들러가 발동되어 복수로 실행될 수 있다.<br />시스템에서는 이를 막고자 <strong>시그널 핸들러가 실행 중</strong>일 경우 <strong>같은 종류</strong> <span style="color:magenta"><strong>시그널을 블록</strong></span>한다.<br />하지만 <strong>signal()에서는 블록 설정이 없다.</strong></li>
+</ul>
+
+<h2 id="sigaction">sigaction</h2>
+<h3 id="sigaction-">sigaction ()</h3>
+<hr />
+
+<ul>
+  <li>(<em>sa_handler)나 (</em>sa_sigaction) 중 하나를 <strong>시그널 핸들러</strong>로 사용하면 된다.</li>
+  <li><strong><em>sigaction</em></strong>은 시그널을 객체로 다룰 수 있다.
+    <ul>
+      <li>시그널 set</li>
+      <li>시그널에 대한 정책</li>
+      <li>시그널 함수</li>
+    </ul>
+  </li>
+  <li><span style="color:magenta"><strong><em>struct</em></strong></span> <strong>sigaction</strong>을 이용해서 시그널 객체요소를 다룬다.</li>
+</ul>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;signal.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">sigaction</span><span class="p">(</span><span class="kt">int</span> <span class="n">sig</span><span class="p">,</span> <span class="k">const</span> <span class="k">struct</span> <span class="n">sigaction</span> <span class="o">*</span><span class="n">act</span><span class="p">,</span> <span class="k">struct</span> <span class="n">sigaction</span> <span class="o">*</span><span class="n">oldact</span><span class="p">);</span>
+</code></pre></div></div>
+
+<table>
+  <tbody>
+    <tr>
+      <td><strong><em>return</em></strong></td>
+      <td><strong><em>value</em></strong></td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <td>성공</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>실패</td>
+      <td>-1, errno set</td>
+    </tr>
+  </tfoot>
+</table>
+
+<table>
+  <tbody>
+    <tr>
+      <td><strong><em>parameter</em></strong></td>
+      <td><strong><em>Description</em></strong></td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <td><strong><em>sig</em></strong></td>
+      <td>어떤 <span style="color:magenta"><strong>시그널</strong></span>이 들어왔을 때 <strong>트랩</strong>시킬 것인가?</td>
+    </tr>
+    <tr>
+      <td><strong><em>*act</em></strong></td>
+      <td><span style="color:steelblue"><strong>시그널 핸들러 지정</strong></span><br /><strong>SIG_DFL</strong>*: 해당 시그널의 디폴트 동작 수행해라<br /><strong>SIG_IGN</strong>: 이 시그널이 들어오면 그냥 무시해라<br /><strong>*sigaction struct 포인터</strong>: 지정한 포인터로 핸들러 실행</td>
+    </tr>
+    <tr>
+      <td><strong>*oldact</strong></td>
+      <td>sigaction()를 호출할 때 설정되어 있던 시그널 핸들러 기재된다.<br />불필요시 NULL 지정</td>
+    </tr>
+  </tfoot>
+</table>
+
+<h3 id="sigaction-구조체">sigaction 구조체</h3>
+<hr />
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">struct</span> <span class="n">sigaction</span> <span class="p">{</span>
+	<span class="cm">/* sa_handler나 sa_sigaction 중 하나만 사용한다 */</span>
+	<span class="kt">void</span> <span class="p">(</span><span class="o">*</span><span class="n">sa_handler</span><span class="p">)(</span><span class="kt">int</span><span class="p">);</span>
+	<span class="kt">void</span> <span class="p">(</span><span class="o">*</span><span class="n">sa_sigaction</span><span class="p">)(</span><span class="kt">int</span><span class="p">,</span> <span class="n">siginfo_t</span><span class="o">*</span><span class="p">,</span> <span class="kt">void</span><span class="o">*</span><span class="p">);</span>
+	<span class="n">sigset_t</span> <span class="n">sa_mask</span><span class="p">;</span>
+	<span class="kt">int</span> <span class="n">sa_flags</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<table>
+  <tbody>
+    <tr>
+      <td><span style="color:magenta">struct</span> <span style="color:steelblue"><strong>sigaction</strong></span> <strong>멤버</strong></td>
+      <td>Description</td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <td><strong>*sa_handler</strong></td>
+      <td><strong>SIG_DFL</strong>, <strong>SIG_IGN</strong>, <span style="color:steelblue"><strong>시그널 핸들링 함수 포인터</strong></span> (이 함수는 아규먼트로 시그널 번호를 받는다.)<br /><u>*sa_handler</u>나 <u>*sa_sigaction</u> 중 <u>하나만 사용</u></td>
+    </tr>
+    <tr>
+      <td><strong>*sa_sigaction</strong></td>
+      <td>기능이 더 많은 <span style="color:steelblue"><strong>시그널 핸들링 함수 포인터</strong></span><br /><strong>siginfo_t*</strong> 기능 등을 추가해서 더 자세한 정보를 얻을 수 있다.. man 2 sigaction page를 참고하자.</td>
+    </tr>
+    <tr>
+      <td><span style="color:steelblue"><strong>sigset_t</strong></span> <strong>sa_mask</strong></td>
+      <td>시그널 핸들러의 실행동안 블록되어야하는 시그널의 마스크를 지정한다.<br />트리거되는 핸들러는 <strong>SA_NODEFER</strong> 플래그가 사용되지 않으면, 블록될 것이다.</td>
+    </tr>
+    <tr>
+      <td><strong>sa_flags</strong></td>
+      <td><strong>SA_SIGINFO</strong>: <strong><u>sa_sigaction</u></strong>(<strong>siginfo_t*</strong>) 인자로 info 정보를 보낸다.<br /><strong>SA_RESTART</strong>: 시스템 콜 재기동</td>
+    </tr>
+  </tfoot>
+</table>
+
+<ul>
+  <li><strong>signal</strong>에 비해 다른점
+    <ul>
+      <li><strong>핸들러 유지</strong>
+        <ul>
+          <li>sigaction()은 OS와 관련 없이 한번 설정한 시그널 핸들러가 계속 유지된다.</li>
+        </ul>
+      </li>
+      <li><strong>시스템 콜의 재기동</strong>
+        <ul>
+          <li><span style="color:steelblue"><strong>sa_flags</strong></span> 멤버에 플래그 <span style="color:magenta"><strong>SA_RESTART</strong></span>을 추가하면 시스템 콜을 재기동한다.<br />일반적으로 재기동하는 것이 편하다.</li>
+        </ul>
+      </li>
+      <li><strong>시그널 블록</strong>
+        <ul>
+          <li><span style="color:steelblue"><strong>sigset_t</strong></span> <span style="color:magenta"><strong>sa_mask</strong></span>에 <strong>블록할 시그널</strong>을 지정할 수 있다.<br />그러나 시그널 핸들러를 수행할 때는 처리 중인 시그널이 자동으로 블록되므로 대부분 이 멤버는 비워두면 된다.<br />비우기 위해서는 후술할 <span style="color:steelblue"><strong>sigset_t</strong></span> <strong>API</strong>인 <strong>sigemptyset()</strong>을 사용하면 된다.</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="sigaction-예제">sigaction 예제</h3>
+<hr />
+<ul>
+  <li><strong>1.</strong> <span style="color:red"><strong>sigaction</strong></span> <strong>사용 예제</strong>
+<img src="img4.png" /></li>
+  <li><strong>1-1.</strong> <span style="color:red"><strong>sigaction + sa_handler</strong></span> <strong>사용</strong><br />
+<img src="img5.png" width="45%" /><br />
+<br /><br /></li>
+  <li><strong>1-2.</strong> <span style="color:steelblue"><strong>sa_sigaction</strong></span> <strong>(<span style="color:magenta">int </span>,<span style="color:magenta">siginfo_t</span><span style="color:steelblue">*</span> ,<span style="color:magenta">void</span> <span style="color:steelblue">*</span>) 사용</strong><br />
+<img src="img6.png" width="70%" /></li>
+</ul>
+
+<h3 id="sigset_t-api"><span style="color:steelblue">sigset_t</span> API</h3>
+<hr />
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">nclude</span> <span class="o">&lt;</span><span class="n">signal</span><span class="p">.</span><span class="n">h</span><span class="o">&gt;</span>
+
+<span class="kt">int</span> <span class="nf">sigemptyset</span><span class="p">(</span><span class="n">sigset_t</span> <span class="o">*</span><span class="n">set</span><span class="p">);</span>		<span class="s">"set을 빈 값으로 초기화한다."</span>
+<span class="kt">int</span> <span class="nf">sigfillset</span><span class="p">(</span><span class="n">sigset_t</span> <span class="o">*</span><span class="n">set</span><span class="p">);</span>		<span class="s">"set을 모든 시그널을 포함하는 상태로 한다."</span>
+<span class="kt">int</span> <span class="nf">sigaddset</span><span class="p">(</span><span class="n">sigset_t</span> <span class="o">*</span><span class="n">set</span><span class="p">,</span> <span class="kt">int</span> <span class="n">sig</span><span class="p">);</span>	<span class="s">"set에 시그널(sig)을 추가한다."</span>
+<span class="kt">int</span> <span class="nf">sigdelset</span><span class="p">(</span><span class="n">sigset_t</span> <span class="o">*</span><span class="n">set</span><span class="p">,</span> <span class="kt">int</span> <span class="n">sig</span><span class="p">);</span>	<span class="s">"set에 시그널(sig)를 제거한다."</span>
+<span class="kt">int</span> <span class="nf">sigismember</span><span class="p">(</span><span class="k">const</span> <span class="n">sigset_t</span> <span class="o">*</span><span class="n">set</span><span class="p">,</span> <span class="kt">int</span> <span class="n">sig</span><span class="p">);</span>	<span class="s">"set에 시그널(sig)가 포함되어 있으면 참 반환"</span>
+</code></pre></div></div>
+
+<table>
+  <tbody>
+    <tr>
+      <td><strong><em>함수명</em></strong></td>
+      <td><strong><em>parameter</em></strong></td>
+      <td><strong><em>Description</em></strong></td>
+    </tr>
+    <tr>
+      <td><span style="color:steelblue"><strong><em>sigemptyset</em></strong></span></td>
+      <td>sigset_t <strong>*set</strong></td>
+      <td><strong>*set</strong>을 빈 값으로 초기화한다.<br /><strong>ex) sigemptyset(&amp;act.sa_mask)</strong></td>
+    </tr>
+    <tr>
+      <td><span style="color:steelblue"><strong><em>sigfillset</em></strong></span></td>
+      <td>sigset_t <strong>*set</strong></td>
+      <td><strong>*set</strong> <strong>bit flag</strong>를 <strong>on</strong>한다.<br /><strong>ex)</strong> <strong>모든 시그널</strong>을 <strong>SIG_BLOCK</strong>하길 원한다면, 아래와 같이한다.<br /><span style="color:magenta"><em>sigset_t</em></span> sigset, oldset;<br /><span style="color:steelblue">sigfillset</span> (&amp;sigset);<br /><span style="color:orange">sigprocmask</span>(<strong>SIG_BLOCK</strong>, &amp;sigset, &amp;oldset);</td>
+    </tr>
+    <tr>
+      <td><span style="color:steelblue"><strong><em>sigaddset</em></strong></span></td>
+      <td>sigset_t <strong>*set</strong><br />int <span style="color:red"><em>signum</em></span></td>
+      <td><span style="color:red"><em>signum</em></span>번호를 가지는 시그널을 <strong>set</strong>에 추가한다.</td>
+    </tr>
+    <tr>
+      <td><span style="color:steelblue"><strong><em>sigdelset</em></strong></span></td>
+      <td>sigset_t <strong>*set</strong><br />int <span style="color:red"><em>signum</em></span></td>
+      <td><span style="color:red"><em>signum</em></span>번호를 가지는 시그널을 <strong>set</strong>에서 지운다.</td>
+    </tr>
+    <tr>
+      <td><span style="color:steelblue"><strong><em>sigmember</em></strong></span></td>
+      <td>const sigset_t <strong>*set</strong><br />int <span style="color:red"><em>signum</em></span></td>
+      <td><span style="color:red"><em>signum</em></span>이 시그널 <strong>set</strong>에 포함되어 있는지 확인한다.<br />★★★<span style="color:steelblue"><strong><em>sigpending</em></strong></span>과 함께 사용되면, 어떤 시그널에 대해서 <strong>블록</strong>되었는지를 알고 이에 대한 처리를 할 수 있다.★★★</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="시그널-블록">시그널 블록</h2>
+
+<ul>
+  <li><strong>시그널 블록</strong>은 <span style="color:magenta"><strong><em>struct</em></strong></span> <span style="color:steelblue"><strong>sigaction</strong></span>의 <strong>sa_mask</strong> 멤버를 사용하여 설정할 수 있다.</li>
+</ul>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;signal.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">sigprocmask</span><span class="p">(</span><span class="kt">int</span> <span class="n">how</span><span class="p">,</span> <span class="k">const</span> <span class="n">sigset_t</span> <span class="o">*</span><span class="n">set</span><span class="p">,</span> <span class="n">sigset_t</span> <span class="o">*</span><span class="n">oldset</span><span class="p">);</span>
+<span class="kt">int</span> <span class="nf">sigpending</span><span class="p">(</span><span class="n">sigset_t</span> <span class="o">*</span><span class="n">set</span><span class="p">);</span>
+<span class="kt">int</span> <span class="nf">sigsuspend</span><span class="p">(</span><span class="k">const</span> <span class="n">sigset_t</span> <span class="o">*</span><span class="n">mask</span><span class="p">);</span>
+</code></pre></div></div>
+
+<table>
+  <tbody>
+    <tr>
+      <td><strong><em>함수명</em></strong></td>
+      <td><strong><em>parameter</em></strong></td>
+      <td><strong>비고</strong></td>
+    </tr>
+    <tr>
+      <td><span style="color:steelblue"><strong><em>sigprocmask</em></strong></span></td>
+      <td>int <strong>how</strong><br />const sigset_t <strong>*set</strong><br />sigset_t <strong>*oldset</strong></td>
+      <td><strong>시그널 마스크</strong>를 <strong>검사/변경</strong><br /><strong>how값</strong><br />　<strong>SIG_BLOCK</strong>: <strong>set</strong>에 포함되는 시그널을 시그널 마스크에 추가한다.<br />　<strong>SIG_UNBLOCK</strong>: <strong>set</strong>에 포함되는 시그널을 시그널 마스크에서 삭제한다.<br />　<strong>SIG_SETMASK</strong>: 시그널 마스크를 <strong>set</strong>으로 대체한다.</td>
+    </tr>
+    <tr>
+      <td><span style="color:steelblue"><strong><em>sigpending</em></strong></span></td>
+      <td>sigset_t <strong>*set</strong></td>
+      <td><strong>시그널이 블록된 상태</strong>에서 <span style="color:navy"><strong>어떤 시그널이 발생해서 블록되었는지</strong></span> 알 수 있다.</td>
+    </tr>
+    <tr>
+      <td><span style="color:steelblue"><strong><em>sigsuspend</em></strong></span></td>
+      <td>const sigset_t <strong>*mask</strong></td>
+      <td>해당 신호가 발생할 때 까지 프로세스를 <span style="color:red"><strong>중지</strong></span></td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="시그널-블록-예제-1-블록된-시그널-검출">시그널 블록 예제 1. 블록된 시그널 검출</h3>
+<hr />
+<ul>
+  <li><span style="color:navy"><strong>블록된</strong></span> <span style="color:magenta"><strong>시그널</strong></span>을 <strong>검출</strong></li>
+</ul>
+
+<p><img src="img7.png" width="80%" /></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">====</span> <span class="c"># shell 1 =====</span>
+<span class="nv">$ </span>./sig_block
+My PID 5389
+0
+1
+2
+...
+121
+122
+<span class="o">====</span> <span class="c"># shell 2 =====</span>
+<span class="nv">$ </span><span class="nb">kill</span> <span class="nt">-SIGUSR1</span> 5389
+<span class="o">====</span> <span class="c"># shell 1 =====</span>
+BLOCKED Signal: SIGUSR1
+</code></pre></div></div>
+
+<h3 id="시그널-블록-예제-2">시그널 블록 예제 2.</h3>
+<hr />
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;signal.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;string.h&gt;
+#include &lt;stdio.h&gt;
+</span>
+<span class="kt">void</span> <span class="nf">sig_int</span><span class="p">(</span><span class="kt">int</span> <span class="n">signo</span><span class="p">);</span>
+<span class="kt">void</span> <span class="nf">sig_usr</span><span class="p">(</span><span class="kt">int</span> <span class="n">signo</span><span class="p">);</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(){</span>
+	<span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+	<span class="k">struct</span> <span class="n">sigaction</span> <span class="n">intsig</span><span class="p">,</span> <span class="n">usrsig</span><span class="p">;</span>
+
+	<span class="n">printf</span><span class="p">(</span><span class="s">"PID : %d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">getpid</span><span class="p">());</span>
+	<span class="cm">/* ====== SIGUSR2 시그널 처리 ======*/</span>
+	<span class="n">usrsig</span><span class="p">.</span><span class="n">sa_handler</span><span class="o">=</span><span class="n">sig_usr</span><span class="p">;</span> <span class="c1">// 시그널 핸들러 등록</span>
+	<span class="n">sigemptyset</span><span class="p">(</span><span class="o">&amp;</span><span class="n">usrsig</span><span class="p">.</span><span class="n">sa_mask</span><span class="p">);</span> <span class="c1">// 시그널 마스크 초기화</span>
+	<span class="n">usrsig</span><span class="p">.</span><span class="n">sa_flags</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">sigaction</span><span class="p">(</span><span class="n">SIGUSR2</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">usrsig</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">){</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">"signal(SIGUSR2 error"</span><span class="p">);</span>
+		<span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="cm">/* ============================== */</span>
+
+	<span class="cm">/* ====== SIGINT (CTRL+C) 시그널 처리 ======*/</span>
+	<span class="n">usrsig</span><span class="p">.</span><span class="n">sa_handler</span><span class="o">=</span><span class="n">sig_int</span><span class="p">;</span> <span class="c1">// 시그널 핸들러 등록</span>
+	<span class="n">sigemptyset</span><span class="p">(</span><span class="o">&amp;</span><span class="n">usrsig</span><span class="p">.</span><span class="n">sa_mask</span><span class="p">);</span> <span class="c1">// 시그널 마스크 초기화</span>
+	<span class="n">usrsig</span><span class="p">.</span><span class="n">sa_flags</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">sigaction</span><span class="p">(</span><span class="n">SIGINT</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">usrsig</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">){</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">"signal(SIGUSR2 error"</span><span class="p">);</span>
+		<span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="cm">/* ============================== */</span>
+
+	<span class="k">while</span><span class="p">(</span><span class="mi">1</span><span class="p">){</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">"%d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="n">i</span><span class="p">);</span>
+		<span class="n">i</span><span class="o">++</span><span class="p">;</span>
+		<span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">sig_int</span><span class="p">(</span><span class="kt">int</span> <span class="n">signo</span><span class="p">){</span>
+	<span class="n">sigset_t</span> <span class="n">sigset</span><span class="p">,</span> <span class="n">oldset</span><span class="p">;</span>
+	<span class="n">sigemptyset</span><span class="p">(</span><span class="o">&amp;</span><span class="n">oldset</span><span class="p">);</span>
+
+	<span class="c1">// SIGUSR2와 SIGUSR1은 블럭된다</span>
+	<span class="c1">// 이들 시그널은 핸들러가 종료되면 전달된다.</span>
+	<span class="n">sigemptyset</span><span class="p">(</span><span class="o">&amp;</span><span class="n">sigset</span><span class="p">);</span>
+	<span class="n">sigaddset</span><span class="p">(</span><span class="o">&amp;</span><span class="n">sigset</span><span class="p">,</span> <span class="n">SIGUSR2</span><span class="p">);</span>
+	<span class="n">sigaddset</span><span class="p">(</span><span class="o">&amp;</span><span class="n">sigset</span><span class="p">,</span> <span class="n">SIGUSR1</span><span class="p">);</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">sigprocmask</span><span class="p">(</span><span class="n">SIG_BLOCK</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">sigset</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">oldset</span><span class="p">)</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">)</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">"sigprocmask %d error</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">signo</span><span class="p">);</span>
+
+	<span class="c1">// SIGINT를 UNBLOCK한다.</span>
+	<span class="c1">// 핸들러가 수행 중 이더라도 즉시 전달한다.</span>
+	<span class="n">sigemptyset</span><span class="p">(</span><span class="o">&amp;</span><span class="n">sigset</span><span class="p">);</span>
+	<span class="n">sigaddset</span><span class="p">(</span><span class="o">&amp;</span><span class="n">sigset</span><span class="p">,</span> <span class="n">SIGINT</span><span class="p">);</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">sigprocmask</span><span class="p">(</span><span class="n">SIG_UNBLOCK</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">sigset</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">oldset</span><span class="p">)</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">)</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">"sigprocmask %d error </span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="n">signo</span><span class="p">);</span>
+
+	<span class="n">printf</span><span class="p">(</span><span class="s">"sig_int</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+	<span class="n">sleep</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
+
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">sig_usr</span><span class="p">(</span><span class="kt">int</span> <span class="n">signo</span><span class="p">){</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">"sig_usr2</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<ol>
+  <li><strong>SIGUSR1</strong>과 <strong>SIGUSR2</strong> <strong>시그널 블럭</strong> 시켰다. 핸들러가 수행되는 5초 동안 이들 시그널이 도착하면, 시그널은 <strong>BLOCK</strong>된다.<br />그러다 <span style="color:steelblue"><strong>시그널 핸들러</strong></span>가 종료하면, 전달된다.</li>
+  <li><strong>SIGINT</strong>를 <strong>UNBLOCK</strong>로 한다. <span style="color:steelblue"><strong>시그널 핸들러</strong></span>가 수행되는 동안 <strong>동일한 시그널</strong>이 발생하면! <span style="color:magenta"><strong>시그널</strong></span>은 <strong>BLOCK</strong>된다.<br /><strong>SIGINT</strong>에 대해서 <strong>UNBLOCK</strong>을 했으므로 <strong>SIGINT</strong>가 도착하게 되면, 곧바로 <span style="color:magenta"><strong>시그널 전달</strong></span>되고, <span style="color:navy"><strong><em>sig_int</em></strong></span> <span style="color:steelblue"><strong>시그널 핸들러</strong></span>가 수행</li>
+  <li>이 코드를 주석 처리한 다음에 <strong>SIGINT</strong>를 여러번 발생 시켜보면서 검사</li>
+</ol>
+
+<h3 id="sighup-문제-해결">SIGHUP 문제 해결</h3>
+<hr />
+<ul>
+  <li><strong>위 SIGHUP</strong>에서 <strong>execl</strong>계열 실행이 블록된 상태를 받는 문제를 해결한다.
+```c
+#include <stdio.h>
+#include <signal.h>
+#include <unistd.h></unistd.h></signal.h></stdio.h></li>
+</ul>
+
+<p>void sig_handler(int signo);</p>
+
+<p>int main(){
+	int i=0;
+	sigset_t newmask, oldmask;</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>printf("Program start\n");
+
+if(signal(SIGHUP, (void*)sig_handler) == SIG_ERR){
+	perror("signal set error ");
+	exit(0);
+}
+
+sigemptyset(&amp;newmask);
+sigaddset(&amp;newmask, SIGHUP);
+if(sigprocmask(SIG_UNBLOCK, &amp;newmask, &amp;oldmask) &lt; 0){
+	perror("sigmask error: ");
+	exit(0);
+}
+
+while(1){
+	printf("%d\n");
+	i++;
+	sleep(1);
+}
+
+return 1; }
+</code></pre></div></div>
+
+<p>void sig_handler(int signo){
+	execl(“./sig_hup2”, 0);
+}</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+- &lt;span style="color:magenta"&gt;***sigemptyset***&lt;/span&gt;를 이용해 **newmaskset**을 비운다.
+- &lt;span style="color:magenta"&gt;***sigaddset***&lt;/span&gt;을 이용해 여기에 &lt;span style="color:red"&gt;**SIGHUP**&lt;/span&gt;추가
+- &lt;span style="color:steelblue"&gt;***sigprocmask***&lt;/span&gt;을 이용해서 **newmaskset**에 포함된 &lt;span style="color:red"&gt;**SIGNAL**&lt;/span&gt;들에 대해 **블럭 해제**
+	- **핸들러가 종료되지 않아**서 **시그널이 블럭된 상태**라도, **블럭 해제**되고 **코드는 문제 없이 작동**한다.
+
+
+## sigwait(): 시그널을 이용한 동기적 시그널 처리
+---
+
+```c
+#include &lt;signal.h&gt;
+
+int sigwait(const sigset_t *set, int *sig);
+</code></pre></div></div>
+<ul>
+  <li><strong>sigwait</strong>()는 <strong>set</strong>에 등록된 시그널이 발생될 때까지 기다린다.</li>
+  <li><span style="color:steelblue"><strong>sigset_t</strong></span> 라는 데이터는 <strong>시그널</strong>에 대응되는 <strong>bit값</strong> 설정</li>
+  <li>sigaction에서 sigwait설명</li>
+</ul>
+
+<h2 id="시그널-전송">시그널 전송</h2>
+<h3 id="kill2">kill():2</h3>
+<hr />
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;sys/types.h&gt;
+#include &lt;signal.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">kill</span><span class="p">(</span><span class="n">pid_t</span> <span class="n">pid</span><span class="p">,</span> <span class="kt">int</span> <span class="n">sig</span><span class="p">);</span>
+</code></pre></div></div>
+<ul>
+  <li>기능: PID가 pid인 프로세스에게 시그널 sig를 송신한다. <span style="color:magenta"><strong>주의! 절때 kill명령을 내리는게 아님</strong></span></li>
+</ul>
+
+<table>
+  <tbody>
+    <tr>
+      <td>retrun</td>
+      <td>value</td>
+    </tr>
+    <tr>
+      <td>성공</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>실패</td>
+      <td>-1, errno set</td>
+    </tr>
+  </tbody>
+</table>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left"><em>parameter</em></th>
+      <th style="text-align: left">Desciption</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left"><em>pid</em></td>
+      <td style="text-align: left">시그널을 전송할 <strong>pid</strong> 명시<br /><strong>음수</strong>로 지정 시, <strong>-</strong>pid 인 프로세스 그룹 전체에 시그널 송신</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><em>sig</em></td>
+      <td style="text-align: left">시그널 번호</td>
+    </tr>
+  </tbody>
+</table>
+
+<ul>
+  <li><strong>killpg()</strong>: 프로세스 그룹에 시그널 보냄</li>
+</ul>
+
+<h3 id="시그널-보내는-간단한-예제">시그널 보내는 간단한 예제</h3>
+<hr />
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;signal.h&gt;
+#include &lt;sys/types.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[]){</span>
+	<span class="kt">int</span> <span class="n">pid</span><span class="p">;</span>
+	<span class="kt">int</span> <span class="n">sig_num</span><span class="p">;</span>
+
+	<span class="k">if</span><span class="p">(</span><span class="n">argc</span><span class="o">!=</span><span class="mi">3</span><span class="p">){</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">"usage %s [pid] [signum]</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+		<span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="n">pid</span><span class="o">=</span><span class="n">atoi</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+	<span class="n">sig_num</span><span class="o">=</span><span class="n">atoi</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span>
+	<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">kill</span><span class="p">(</span><span class="n">pid</span><span class="p">,</span> <span class="n">sig_num</span><span class="p">)){</span>
+		<span class="n">perror</span><span class="p">(</span><span class="s">"Signal send error</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+		<span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h3 id="ctrl--c">Ctrl + C</h3>
+<hr />
+<ul>
+  <li><strong>Ctrl + C</strong>가 시그널로 변환되어 프로세스에 전달되기 까지 과정</li>
+</ul>
+
+<ol>
+  <li>사용자가 <strong>Ctrl + C</strong> 누르면, 이것을 <strong>단말 드라이브</strong>가 파악
+    <ul>
+      <li>단말 드라이브는 모드에 따라 움직임이 다르다.
+        <ul>
+          <li>셸 사용: <strong>cooked 모드</strong>로 특수한 기능을 하는 키가 존재한다.<br /><code class="language-plaintext highlighter-rouge">stty -a</code> 명령을 쳐본다.<br /><img src="img8.png" /><br />인터럽트: ^C 중지: ^Z 등이 지정</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><span style="color:magenta"><strong>SIGINT</strong></span>를 단말에서 동작 중인 프로세스에 전송</li>
+  <li><strong>셸</strong>이 <strong>단말</strong>에게 <strong>너가 관리하는 프로세스는 이것 이것</strong>이다라고 가르쳐 줌
+    <ul>
+      <li><strong>tcsetpgrp() API</strong>사용, <a href="https://markyang920413.github.io/file/system_programming-file-lowlevel_IO_2/#ioctl2"><strong>ioctl()</strong></a>이 사용됨</li>
+    </ul>
+  </li>
+  <li>단말은 파이프로 연결된 프로세스 그룹 전체에 신호를 전송한다.</li>
+  <li>SIGINT가 전송되면, 파이프 전체 프로세스가 종료된다.</li>
+  <li>물론 프로세스가 <strong>sigaction() 등으로</strong> <span style="color:magenta"><strong>SIGINT</strong></span>를 <span style="color:steelblue"><strong>시그널 핸들러</strong></span> 등록하고 있으면, 설정한 대로 동작한다.</li>
+</ol>
+
+<p><img src="img9.jpg" width="50%" height="50%" /></p>
+<ol>
+  <li>셸이 파이프를 구성하는 프로세스 fork()</li>
+  <li>셸이 파이프의 프로세스 그룹 ID를 tcsetpgrp()로 단말에 통지한다.</li>
+  <li>fork된 각 프로세스가 각각의 명령어를 exec한다.</li>
+  <li>사용자가 Ctrl+C로 인터럽트 건다.</li>
+  <li>커널 내의 단말 드라이브가 그것을 SIGINT로 변환해 동작 중인 프로세스 그룹에 전송</li>
+  <li>프로세스 그룹이 시그널에 대한 기본 동작으로 종료된다.</li>
+</ol>
+
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/#signal" class="page__taxonomy-item" rel="tag">signal</a>
+    
+    </span>
+  </p>
+
+
+        
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2021-01-01T00:00:00+09:00">January 1, 2021</time></p>
+
+
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">Share on</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=Signal+%3C1%3E+signal%28%29%2C+sigaction%28%29%2C+kill%28%29%2C+%EC%8B%9C%EA%B7%B8%EB%84%90+%EB%B8%94%EB%A1%9D%20https%3A%2F%2Fmarkyang920413.github.io%2F%2Fsignal%2Fsystem_programming-signal-signal_1%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmarkyang920413.github.io%2F%2Fsignal%2Fsystem_programming-signal-signal_1%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fmarkyang920413.github.io%2F%2Fsignal%2Fsystem_programming-signal-signal_1%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/c/func_pointer/" class="pagination--pager" title="함수 포인터
+">Previous</a>
+    
+    
+      <a href="/socket-programming/socket_programming_1/" class="pagination--pager" title="소켓 프로그래밍 -1- 인터넷 구조, 호스트명, DNS, 도메인, getaddrinfo()
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/linux-filesystem/linux-linux_filesystem-LVM/" rel="permalink">LVM
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/mac/m1_rosetta2/" rel="permalink">M1 Mac 로제타2 설치, 로제타 사용 brew 설치, M1용 jekyll설치
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/algorithm/algorithm-algorithm-time_complexity/" rel="permalink">Time complexity
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          less than 1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/algorithm/algorithm-algorithm-IO_STL/" rel="permalink">시험에서 입출력, STL
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          less than 1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2021 Dong-Hyeon Yang. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "https://markyang920413.github.io//signal/system_programming-signal-signal_1/";  /* Replace PAGE_URL with your page's canonical URL variable */
+      this.page.identifier = "/signal/system_programming-signal-signal_1"; /* Replace PAGE_IDENTIFIER with your page's unique identifier variable */
+    };
+    (function() { /* DON'T EDIT BELOW THIS LINE */
+      var d = document, s = d.createElement('script');
+      s.src = 'https://MarkYang920413.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+
+
+  </body>
+</html>

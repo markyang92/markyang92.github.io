@@ -1,0 +1,1015 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.21.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>WWW와 HTTP - 혼자 보려고 만든 블로그</title>
+<meta name="description" content="WWW, HTTP">
+
+
+  <meta name="author" content="Dong-Heyon Yang">
+  
+  <meta property="article:author" content="Dong-Heyon Yang">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="혼자 보려고 만든 블로그">
+<meta property="og:title" content="WWW와 HTTP">
+<meta property="og:url" content="https://markyang920413.github.io//http/http_1/">
+
+
+  <meta property="og:description" content="WWW, HTTP">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2021-01-04T00:00:00+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://markyang920413.github.io//http/http_1/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "Dong-Hyeon Yang",
+      "url": "https://markyang920413.github.io//"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="혼자 보려고 만든 블로그 Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          혼자 보려고 만든 블로그
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/categories/">Category</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/">About</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+  
+    
+      
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox" />
+  <label for="ac-toc">Toggle menu</label>
+  <ul class="nav__items">
+    
+      <li>
+        
+          <span class="nav__sub-title">LINUX</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#linux-system">LINUX System</a></li>
+          
+            <li><a href="/categories/#linux-tools">LINUX Tools</a></li>
+          
+            <li><a href="/categories/#linux-compile">LINUX Compile</a></li>
+          
+            <li><a href="/categories/#linux-filesystem">LINUX Filesystem</a></li>
+          
+            <li><a href="/categories/#http">HTTP</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">System Programming</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#file">File, Memory</a></li>
+          
+            <li><a href="/categories/#env">Env</a></li>
+          
+            <li><a href="/categories/#process">Process</a></li>
+          
+            <li><a href="/categories/#thread">Thread</a></li>
+          
+            <li><a href="/categories/#ipc">IPC</a></li>
+          
+            <li><a href="/categories/#signal">Signal</a></li>
+          
+            <li><a href="/categories/#socket-programming">Socket Programming</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">C</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#c">C</a></li>
+          
+            <li><a href="/categories/#system-programming">System Programming</a></li>
+          
+            <li><a href="/categories/#stdio">Standard I/O</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">Python</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#python-language">Python Language</a></li>
+          
+            <li><a href="/categories/#python-pandas">Python Pandas</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">Algorithm</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#algorithm">Algorithm</a></li>
+          
+            <li><a href="/categories/#problem">Problem</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">MAC</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#mac">Mac</a></li>
+          
+        </ul>
+        
+      </li>
+    
+  </ul>
+</nav>
+
+    
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="WWW와 HTTP">
+    <meta itemprop="description" content="WWW, HTTP">
+    <meta itemprop="datePublished" content="2021-01-04T00:00:00+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">WWW와 HTTP
+</h1>
+          
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          3 minute read
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              <ul class="toc__menu"><li><a href="#http-11">HTTP 1.1</a></li><li><a href="#www">WWW</a></li><li><a href="#http">HTTP</a><ul><li><a href="#http-요청">HTTP 요청</a></li><li><a href="#http-응답">HTTP 응답</a></li><li><a href="#http-정리">HTTP 정리</a></li></ul></li><li><a href="#http-서버-개략">HTTP 서버 개략</a><ul><li><a href="#http-서버의-목적">HTTP 서버의 목적</a></li><li><a href="#구현-방침">구현 방침</a></li><li><a href="#에러와-로그">에러와 로그</a></li><li><a href="#메모리-관리">메모리 관리</a></li><li><a href="#시그널-처리">시그널 처리</a></li></ul></li><li><a href="#서비스-개시까지">서비스 개시까지</a><ul><li><a href="#main">main()</a></li><li><a href="#service">service()</a></li></ul></li></ul>
+
+            </nav>
+          </aside>
+        
+        <h2 id="http-11">HTTP 1.1</h2>
+<ul>
+  <li><span style="color:magenta"><strong>HTTP</strong></span>(HyperText Transfer Protocol): 브라우저가 서버로부터 <span style="color:steelblue"><strong>HTML</strong></span> 문서나 이미지를 요청하고 받아들일 때 사용하는 프로토콜
+    <ul>
+      <li><span style="color:magenta"><strong>HTTP서버</strong></span>는 <span style="color:steelblue"><strong>HTML 문서, 이미지</strong></span>를 제공해주는 SW</li>
+      <li>유명한 http 서버로는 <strong><em>Apache, Nginx, IIS</em></strong><sub>(microsoft)</sub></li>
+    </ul>
+  </li>
+  <li>현재는 차세대 HTTP로 <strong>HTTP/2</strong>가 등장</li>
+</ul>
+
+<h2 id="www">WWW</h2>
+<p><img src="img1.jpg" width="30%" height="30%" /></p>
+<ul>
+  <li><strong>웹 브라우저(index.html)</strong>
+    <ul>
+      <li>웹 페이지는 <span style="color:steelblue"><strong>HTML</strong></span>로 작성</li>
+    </ul>
+  </li>
+  <li>위 페이지(index.html)의 코드는 아래와 같다.</li>
+</ul>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;html</span> <span class="na">lang=</span><span class="s">"ja-JP"</span><span class="nt">&gt;</span>
+<span class="nt">&lt;head&gt;</span>
+	<span class="nt">&lt;title&gt;</span>Test Page<span class="nt">&lt;/title&gt;</span>
+<span class="nt">&lt;/head&gt;</span>
+<span class="nt">&lt;body&gt;</span>
+<span class="nt">&lt;h1&gt;</span>Test Page<span class="nt">&lt;/h1&gt;</span>
+<span class="nt">&lt;p&gt;&lt;a</span> <span class="na">href=</span><span class="s">"other.html"</span><span class="nt">&gt;</span>Other Page<span class="nt">&lt;/a&gt;&lt;/p&gt;</span>	# "Other Page텍스트와 other.html에 하이퍼링크 연결 코드"
+<span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre></div></div>
+
+<ul>
+  <li>이 페이지의 <strong>Other Page</strong>텍스트는 <strong>other.html</strong>에 <span style="color:blue">하이퍼링크</span>로 연결
+    <ul>
+      <li><span style="color:steelblue"><strong>href</strong></span>로 지정한 주소가 <strong>상대 URL</strong>(relative URL)로 표시되었으므로 <u>서버(호스트), 포트, 디렉터리 경로</u>는 현재 표시중인 페이지와 동일하다고 판단.</li>
+      <li>웹 브라우저는 index.html과 동일한 서버, 동일한 포트에 <strong>TCP 소켓</strong>을 연결하여 통신 시도</li>
+    </ul>
+  </li>
+</ul>
+
+<p><img src="img2.jpg" width="60%" height="60%" /></p>
+<ul>
+  <li>TCP 접속이 완료되면 <strong>HTTP 서버</strong> 프로세스와 <strong>HTTP 클라이언트</strong> 프로세스(웹 브라우저)의 사이에 <span style="color:steelblue"><strong>스트림</strong></span>이 연결된다.</li>
+</ul>
+
+<p><img src="img3.jpg" width="60%" height="60%" /></p>
+<ul>
+  <li>이 <span style="color:steelblue"><strong>스트림</strong></span>을 통해 브라우저와 HTTP서버가 아래 코드처럼 정보 교환한다.
+    <ul>
+      <li>‘→’ 서버로 부터 클라이언트로 보내는 데이터, ‘←’ 클라이언트로 부터 서버로 보내는 데이터</li>
+    </ul>
+  </li>
+</ul>
+
+<p><img src="img4.jpg" width="60%" height="60%" /></p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;html</span> <span class="na">lang=</span><span class="s">"ja-JP"</span><span class="nt">&gt;</span>
+<span class="nt">&lt;head&gt;</span>
+	<span class="nt">&lt;meta</span> <span class="na">http-equiv=</span><span class="s">"Content-Type"</span> <span class="na">content=</span><span class="s">"text/html; charset=utf-8"</span><span class="nt">&gt;</span>
+	<span class="nt">&lt;title&gt;</span>Other Page<span class="nt">&lt;/title&gt;</span>
+<span class="nt">&lt;/head&gt;</span>
+<span class="nt">&lt;body&gt;</span>
+<span class="nt">&lt;h1&gt;</span>Other Page<span class="nt">&lt;/h1&gt;</span>
+<span class="nt">&lt;p&gt;</span>또다른 페이지<span class="nt">&lt;/p&gt;</span>
+<span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</code></pre></div></div>
+
+<p><img src="img5.jpg" width="30%" height="30%" /></p>
+<ul>
+  <li>브라우저는 렌더링해서 위와같은 화면(other.html)을 표시한다.</li>
+  <li>이미지나 CSS 파일도 이와 같은 방식으로 획득하여 표시한다.</li>
+</ul>
+
+<h2 id="http">HTTP</h2>
+<ul>
+  <li>위에서 WWW가 대략적 구조가 이해되었다면, HTTP의 내용을 좀더 자세히 살펴보자.
+<img src="img6.png" width="60%" height="60%" /></li>
+  <li>처음에 <span style="color:magenta"><strong>client</strong></span>가 쓰는 <span style="color:magenta"><strong>HTTP 요청</strong></span></li>
+  <li>그다음 <span style="color:steelblue"><strong>server</strong></span>가 쓰는 <span style="color:steelblue"><strong>HTTP 응답</strong></span></li>
+  <li><strong>요청 -&gt; 응답</strong>의 반복이 <strong>HTTP</strong></li>
+</ul>
+
+<h3 id="http-요청">HTTP 요청</h3>
+<hr />
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"GET /ja/linuxprog/test/other.html HTTP/1.1\r\n"	# 1)
+"Connection: close\r\n"					# 2)
+"Accept: */*\r\n"
+"Host: i.loveruby.net\r\n"
+"\r\n"
+</code></pre></div></div>
+<ul>
+  <li><strong>1) <span style="color:steelblue">요청라인</span></strong>(request line)
+    <ul>
+      <li><strong>GET</strong> : 데이터가 필요하다.</li>
+      <li><strong>/ja/linuxprog/test/other.html</strong> : 데이터의 경로</li>
+      <li><strong>HTTP/1.1</strong> : HTTP 1.1 버전이다.</li>
+    </ul>
+  </li>
+  <li><strong>2) <span style="color:magenta">HTTP 헤더</span></strong> : 부가적인 정보, <strong>'항목명: 값'</strong>의 형태로 부가적인 정보가 기재
+    <ul>
+      <li><strong>“Connection: close”</strong> : 응답 후 TCP 연결을 끊어달라</li>
+      <li><strong>“Accpet: */*“</strong> : 어떤 종류의 데이터라도 받겠다.</li>
+      <li><strong>"\r\n"</strong> : <strong>끝(개행문자 CR LF)</strong></li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="http-응답">HTTP 응답</h3>
+<hr />
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"HTTP/1.1 200 OK\r\n"					# 1)
+"Date: Fri, 11 Aug 2017 11:50:28 GMT\r\n"		# 2)
+"Server: Apache/2.4.10 (Debian)\r\n"
+"Last-Modified: Fri, 11 Aug 2017 11:48:32 GMT\r\n"
+"ETag: \"a3-55678fde663c0\"\r\n"
+"Accept-Ranges: bytes\r\n"
+"Content-Length: 163\r\n"
+"Vary: Accept-Encoding\r\n"
+"Connection: close\r\n"
+"Content-Type: text/html\r\n"
+"\r\n"
+(HTML)							# 3)
+</code></pre></div></div>
+<ul>
+  <li><strong>1) <span style="color:red">상태 라인</span></strong>: 응답의 결과
+    <ul>
+      <li><strong>200 OK</strong> : 문제없이 내용을 반환할 수 있다.
+        <ul>
+          <li>200 : 문제 없는 결과를 나타내는 <strong>상태 코드</strong>(status code)
+            <ul>
+              <li>이외 상태코드 : ‘404 Not Found’<sub>(URL에 대응하는 데이터가 존재하지 않음)</sub>, ‘403Forbidden’<sub>(액세스 권한 없음)</sub></li>
+            </ul>
+          </li>
+          <li>OK : 사람이 볼 수 있는 보너스 메시지</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><strong>2) <span style="color:magenta">HTTP 헤더</span></strong> : <strong>응답 자체</strong>에 관한 <strong>정보</strong>나 <strong>반환하려는 데이터</strong>에 관한 <strong>정보</strong>
+    <ul>
+      <li>“Date: Fri, 11 Aug 2017 11:50:28 GMT” : 응답을 반환하는 시간</li>
+      <li>“Content-Length: 163” : 반환하려는 데이터 길이가 163Byte</li>
+      <li>“\r\n” : 종료</li>
+    </ul>
+  </li>
+  <li><strong>3) <span style="color:blue">엔터티 본문</span>, <span style="color:blue">body</span></strong> : 반환하려는 데이터 자체가 <strong>전송</strong></li>
+</ul>
+
+<h3 id="http-정리">HTTP 정리</h3>
+<hr />
+<ul>
+  <li><strong>HTTP</strong>는 <strong>요청</strong>과 <strong>응답</strong>으로 구성</li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left"><strong>HTTP 요청</strong></th>
+      <th style="text-align: left"><strong>HTTP 응답</strong></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">요청 라인</td>
+      <td style="text-align: left">상태 라인</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">HTTP 헤더</td>
+      <td style="text-align: left">HTTP 헤더</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">\r\n</td>
+      <td style="text-align: left">\r\n</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">엔터티본문</td>
+      <td style="text-align: left">엔터티본문</td>
+    </tr>
+  </tbody>
+</table>
+
+<ul>
+  <li><strong>HTTP 요청</strong>에서 <strong>GET</strong>요청 방식은 엔터티 본문을 필요로 하지 않지만, <strong>POST</strong> 요청 등에서는 엔터티 본문이 붙는다.</li>
+  <li><strong>GET</strong> 요청 방식 이외
+    <ul>
+      <li><strong>HEAD 요청</strong>: HTTP 헤더만 요구</li>
+      <li><strong>POST 요청</strong>: 데이터 게시에 사용</li>
+      <li><strong>PUT, DELETE</strong> …</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="http-서버-개략">HTTP 서버 개략</h2>
+<h3 id="http-서버의-목적">HTTP 서버의 목적</h3>
+<hr />
+<ul>
+  <li><strong>HTTP</strong>의 <strong>구조</strong>와 <strong>파일 시스템</strong>이 굉장히 닮음
+    <ul>
+      <li><strong>URL</strong>: 파일 시스템에서의 경로</li>
+      <li><strong>GET 명령</strong>: cat 명령어</li>
+      <li><strong>HEAD 요청</strong>: stat():2</li>
+      <li><strong>POST 요청</strong>: 명령어의 실행
+<br /><br /><br /></li>
+    </ul>
+  </li>
+  <li>http://www.example.com<strong>/<u>path/to/file.html</u></strong>에 엑세스하면 www.example.com이라는 호스트에 있는 파일<br /><strong>'/ ..../<u>path/to/file.html</u>'</strong>에 접근한다.</li>
+  <li>'<code class="language-plaintext highlighter-rouge">/ ..../</code>' 이 붙는 이유?
+    <ul>
+      <li><strong>서버의 모든 파일이 웹을 통해 공개되는 것은 곤란하다.</strong></li>
+      <li>HTTP 서버의 역할은 HTTP 요청에 대응하는 파일을 <strong>문서 루트</strong> 밑에서 찾아서 반환하는 것이다.</li>
+    </ul>
+  </li>
+</ul>
+
+<p><img src="img7.jpg" width="40%" height="40%" /></p>
+
+<h3 id="구현-방침">구현 방침</h3>
+<hr />
+<ul>
+  <li><strong>네트워크 접속 부분 생략</strong></li>
+  <li>표준 입력으로 HTTP 요청을 읽어들이고, 그 응답을 표준 출력으로 출력하는 것이다.</li>
+  <li>단말에서 HTTP 요청을 입력하면서 디버그 하기 좋다.</li>
+  <li><a href="https://pllpokko2.github.io//linux-system/linux_directory/#var"><span style="color:steelblue"><strong>inetd</strong></span></a>를 사용하면, 네트워크에 연결할 수도 있다.</li>
+</ul>
+
+<h3 id="에러와-로그">에러와 로그</h3>
+<hr />
+<ul>
+  <li>에러 발생 시 함수 <strong>log_exit()</strong> 를 호출하고 종료한다.</li>
+</ul>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cm">/* log_exit() */</span>
+
+<span class="k">static</span> <span class="kt">void</span>
+<span class="nf">log_exit</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">fmt</span><span class="p">,</span> <span class="p">...){</span>
+	<span class="kt">va_list</span> <span class="n">ap</span><span class="p">;</span>
+
+	<span class="n">va_start</span><span class="p">(</span><span class="n">ap</span><span class="p">,</span> <span class="n">fmt</span><span class="p">);</span>
+	<span class="n">vfprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="n">fmt</span><span class="p">,</span> <span class="n">ap</span><span class="p">);</span>
+	<span class="n">fputc</span><span class="p">(</span><span class="sc">'\n'</span><span class="p">,</span> <span class="n">stderr</span><span class="p">);</span>
+	<span class="n">va_end</span><span class="p">(</span><span class="n">ap</span><span class="p">);</span>
+	<span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="메모리-관리">메모리 관리</h3>
+<hr />
+<ul>
+  <li>메모리 사용 시 <strong>malloc()</strong>을 사용하자.</li>
+</ul>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cm">/* xmalloc() */</span>
+<span class="k">static</span> <span class="kt">void</span><span class="o">*</span>
+<span class="nf">xmalloc</span><span class="p">(</span><span class="kt">size_t</span> <span class="n">sz</span><span class="p">){</span>
+	<span class="kt">void</span> <span class="o">*</span><span class="n">p</span><span class="p">;</span>
+
+	<span class="n">p</span><span class="o">=</span><span class="n">malloc</span><span class="p">(</span><span class="n">sz</span><span class="p">);</span>
+	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">p</span><span class="p">)</span> <span class="n">log_exit</span><span class="p">(</span><span class="s">"failed to allocate memory"</span><span class="p">);</span>
+	<span class="k">return</span> <span class="n">p</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="시그널-처리">시그널 처리</h3>
+<hr />
+<ul>
+  <li>네트워크 프로그램에서 소켓 연결은 언제든 갑자기 끊어질 수 있다.</li>
+  <li>소켓이 끊어지면, <a href="https://pllpokko2.github.io//linux-system/linux_directory/#var"><span style="color:steelblue"><strong>inetd</strong></span></a>에서 시작한 경우 <strong>시그널</strong> <span style="color:magenta"><strong>SIGPIPE</strong></span>가 전달된다.</li>
+  <li>시그널을 포착해 exit()하자</li>
+</ul>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cm">/* install_signal_handlers() */</span>
+
+<span class="k">static</span> <span class="kt">void</span>
+<span class="nf">install_signal_handlers</span><span class="p">(</span><span class="kt">void</span><span class="p">){</span>
+	<span class="n">trap_signal</span><span class="p">(</span><span class="n">SIGPIPE</span><span class="p">,</span> <span class="n">signal_exit</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">static</span> <span class="kt">void</span>
+<span class="nf">trap_signal</span><span class="p">(</span><span class="kt">int</span> <span class="n">sig</span><span class="p">,</span> <span class="n">sighandler_t</span> <span class="n">handler</span><span class="p">){</span>
+	<span class="k">struct</span> <span class="n">sigaction</span> <span class="n">act</span><span class="p">;</span>
+	<span class="n">act</span><span class="p">.</span><span class="n">sa_handler</span> <span class="o">=</span> <span class="n">handler</span><span class="p">;</span>
+	<span class="n">sigemptyset</span><span class="p">(</span><span class="o">&amp;</span><span class="n">act</span><span class="p">.</span><span class="n">sa_mask</span><span class="p">);</span>
+	<span class="n">act</span><span class="p">.</span><span class="n">sa_flags</span> <span class="o">=</span> <span class="n">SA_RESTART</span><span class="p">;</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">sigaction</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">act</span><span class="p">,</span> <span class="nb">NULL</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span>
+		<span class="n">log_exit</span><span class="p">(</span><span class="s">"sigaction() failed: %s"</span><span class="p">,</span> <span class="n">strerror</span><span class="p">(</span><span class="n">errno</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="k">static</span> <span class="kt">void</span>
+<span class="nf">signal_exit</span><span class="p">(</span><span class="kt">int</span> <span class="n">sig</span><span class="p">){</span>
+	<span class="n">log_exit</span><span class="p">(</span><span class="s">"exit by signal %d"</span><span class="p">,</span> <span class="n">sig</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="서비스-개시까지">서비스 개시까지</h2>
+<h3 id="main">main()</h3>
+<hr />
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span>
+<span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[]){</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">argc</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">){</span>
+		<span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="s">"Usage: %s &lt;docroot&gt;</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+		<span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+	<span class="p">}</span>
+
+	<span class="n">install_signal_handlers</span><span class="p">();</span>
+	<span class="n">service</span><span class="p">(</span><span class="n">stdin</span><span class="p">,</span> <span class="n">stdout</span><span class="p">,</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+	<span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<ul>
+  <li>하나의 실행 인자가 필요한데, <strong>문서 루트의 경로</strong>이다.
+    <ul>
+      <li>경로가 <strong>디렉터리 여부 체크</strong>는 <a href="https://pllpokko2.github.io/system-programming/filesystemAPI_4/#stat2-fstat2-lstat2"><strong>stat()</strong></a>참고</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="service">service()</h3>
+<hr />
+<ul>
+  <li><strong>HTTP</strong>의 동작 구조를 보여 준다.</li>
+</ul>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">static</span> <span class="kt">void</span>
+<span class="nf">service</span><span class="p">(</span><span class="kt">FILE</span> <span class="o">*</span><span class="n">in</span><span class="p">,</span> <span class="kt">FILE</span> <span class="o">*</span><span class="n">out</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">docroot</span><span class="p">){</span>
+	<span class="k">struct</span> <span class="n">HTTPRequest</span> <span class="o">*</span><span class="n">req</span><span class="p">;</span>
+
+	<span class="n">req</span><span class="o">=</span><span class="n">read_request</span><span class="p">(</span><span class="n">in</span><span class="p">);</span>
+	<span class="n">respond_to</span><span class="p">(</span><span class="n">req</span><span class="p">,</span> <span class="n">out</span><span class="p">,</span> <span class="n">docroot</span><span class="p">);</span>
+	<span class="n">free_request</span><span class="p">(</span><span class="n">req</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<ul>
+  <li><span style="color:steelblue"><strong>FILE *</strong></span><strong>in</strong>: <strong><em>HTTP</em></strong> 요청 읽음</li>
+  <li>그 <strong>정보</strong>를 <span style="color:magenta"><em>struct</em></span> <strong>HTTP Request</strong> 구조체의 포인터에 저장하고 반환</li>
+  <li><strong>respond_to()</strong>: <strong><em>HTTP</em></strong> 요청 req에 대한 응답을 두 번째 인자 <span style="color:steelblue"><strong>out</strong></span> 스트림에 써넣는다. 이때 참고할 문서루트가 <strong><em>docroot</em></strong> 다.</li>
+</ul>
+
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/#http" class="page__taxonomy-item" rel="tag">http</a>
+    
+    </span>
+  </p>
+
+
+        
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2021-01-04T00:00:00+09:00">January 4, 2021</time></p>
+
+
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">Share on</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=WWW%EC%99%80+HTTP%20https%3A%2F%2Fmarkyang920413.github.io%2F%2Fhttp%2Fhttp_1%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmarkyang920413.github.io%2F%2Fhttp%2Fhttp_1%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fmarkyang920413.github.io%2F%2Fhttp%2Fhttp_1%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/file/system_programming-file-process_env_4/" class="pagination--pager" title="프로세스가 사용하는 리소스, 날짜, 시간, 로그인 기록 명령 및  API
+">Previous</a>
+    
+    
+      <a href="/c/variable_argument/" class="pagination--pager" title="가변 인자
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/linux-filesystem/linux-linux_filesystem-LVM/" rel="permalink">LVM
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/mac/m1_rosetta2/" rel="permalink">M1 Mac 로제타2 설치, 로제타 사용 brew 설치, M1용 jekyll설치
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/algorithm/algorithm-algorithm-time_complexity/" rel="permalink">Time complexity
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          less than 1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/algorithm/algorithm-algorithm-IO_STL/" rel="permalink">시험에서 입출력, STL
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          less than 1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2021 Dong-Hyeon Yang. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "https://markyang920413.github.io//http/http_1/";  /* Replace PAGE_URL with your page's canonical URL variable */
+      this.page.identifier = "/http/http_1"; /* Replace PAGE_IDENTIFIER with your page's unique identifier variable */
+    };
+    (function() { /* DON'T EDIT BELOW THIS LINE */
+      var d = document, s = d.createElement('script');
+      s.src = 'https://MarkYang920413.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+
+
+  </body>
+</html>

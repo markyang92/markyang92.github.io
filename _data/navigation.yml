@@ -1,0 +1,75 @@
+# main links
+main:
+  - title: "Category"
+    url: /categories/
+  - title: "About"
+    url: /about/
+  # - title: "Sample Posts"
+  #   url: /year-archive/
+  # - title: "Sample Collections"
+  #   url: /collection-archive/
+  # - title: "Sitemap"
+  #   url: /sitemap/
+
+docs:
+  - title: LINUX
+    children:
+    - title: LINUX System
+      url: /categories/#linux-system
+    - title: LINUX Tools
+      url: /categories/#linux-tools
+    - title: LINUX Compile
+      url: /categories/#linux-compile
+    - title: LINUX Filesystem
+      url: /categories/#linux-filesystem
+    - title: HTTP
+      url: /categories/#http
+  - title: System Programming
+    children:
+    - title: File, Memory
+      url: /categories/#file
+    - title: Env
+      url: /categories/#env
+    - title: Process
+      url: /categories/#process
+    - title: Thread
+      url: /categories/#thread
+    - title: IPC
+      url: /categories/#ipc
+    - title: Signal
+      url: /categories/#signal
+    - title: Socket Programming
+      url: /categories/#socket-programming
+  - title: C
+    children:
+    - title: C
+      url: /categories/#c
+    - title: "System Programming"
+      url: /categories/#system-programming
+    - title: "Standard I/O"
+      url: /categories/#stdio
+  - title: Python
+    children:
+    - title: "Python Language"
+      url: /categories/#python-language
+    - title: "Python Pandas"
+      url: /categories/#python-pandas
+  - title: Algorithm
+    children:
+    - title: "Algorithm"
+      url: /categories/#algorithm
+    - title: "Problem"
+      url: /categories/#problem
+  - title: MAC
+    children:
+    - title: "Mac"
+      url: /categories/#mac
+  - title: Embedded System
+    children:
+    - title: "Yocto"
+      url: /categories/#yocto
+  - title: English
+    children:
+    - title: "English"
+      url: /categories/#english
+  

@@ -1,0 +1,1018 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.21.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>소켓 프로그래밍 -1- 인터넷 구조, 호스트명, DNS, 도메인, getaddrinfo() - 혼자 보려고 만든 블로그</title>
+<meta name="description" content="인터넷 구조, 호스트명, DNS, 도메인, getaddrinfo()">
+
+
+  <meta name="author" content="Dong-Heyon Yang">
+  
+  <meta property="article:author" content="Dong-Heyon Yang">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="혼자 보려고 만든 블로그">
+<meta property="og:title" content="소켓 프로그래밍 -1- 인터넷 구조, 호스트명, DNS, 도메인, getaddrinfo()">
+<meta property="og:url" content="https://markyang920413.github.io//socket-programming/socket_programming_1/">
+
+
+  <meta property="og:description" content="인터넷 구조, 호스트명, DNS, 도메인, getaddrinfo()">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2021-01-02T00:00:00+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://markyang920413.github.io//socket-programming/socket_programming_1/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "Dong-Hyeon Yang",
+      "url": "https://markyang920413.github.io//"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="혼자 보려고 만든 블로그 Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          혼자 보려고 만든 블로그
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/categories/">Category</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/">About</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+  
+    
+      
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox" />
+  <label for="ac-toc">Toggle menu</label>
+  <ul class="nav__items">
+    
+      <li>
+        
+          <span class="nav__sub-title">LINUX</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#linux-system">LINUX System</a></li>
+          
+            <li><a href="/categories/#linux-tools">LINUX Tools</a></li>
+          
+            <li><a href="/categories/#linux-compile">LINUX Compile</a></li>
+          
+            <li><a href="/categories/#linux-filesystem">LINUX Filesystem</a></li>
+          
+            <li><a href="/categories/#http">HTTP</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">System Programming</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#file">File, Memory</a></li>
+          
+            <li><a href="/categories/#env">Env</a></li>
+          
+            <li><a href="/categories/#process">Process</a></li>
+          
+            <li><a href="/categories/#thread">Thread</a></li>
+          
+            <li><a href="/categories/#ipc">IPC</a></li>
+          
+            <li><a href="/categories/#signal">Signal</a></li>
+          
+            <li><a href="/categories/#socket-programming">Socket Programming</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">C</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#c">C</a></li>
+          
+            <li><a href="/categories/#system-programming">System Programming</a></li>
+          
+            <li><a href="/categories/#stdio">Standard I/O</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">Python</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#python-language">Python Language</a></li>
+          
+            <li><a href="/categories/#python-pandas">Python Pandas</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">Algorithm</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#algorithm">Algorithm</a></li>
+          
+            <li><a href="/categories/#problem">Problem</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">MAC</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#mac">Mac</a></li>
+          
+        </ul>
+        
+      </li>
+    
+  </ul>
+</nav>
+
+    
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="소켓 프로그래밍 -1- 인터넷 구조, 호스트명, DNS, 도메인, getaddrinfo()">
+    <meta itemprop="description" content="인터넷 구조, 호스트명, DNS, 도메인, getaddrinfo()">
+    <meta itemprop="datePublished" content="2021-01-02T00:00:00+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">소켓 프로그래밍 -1- 인터넷 구조, 호스트명, DNS, 도메인, getaddrinfo()
+</h1>
+          
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          3 minute read
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              <ul class="toc__menu"><li><a href="#인터넷-구조">인터넷 구조</a></li><li><a href="#호스트명-dns-도메인">호스트명, DNS, 도메인</a></li><li><a href="#socket">socket</a></li><li><a href="#bind">bind</a></li><li><a href="#listen">listen</a></li><li><a href="#accept">accept</a></li><li><a href="#connect">connect</a></li><li><a href="#host-name---ip-변환-api">Host Name &lt;-&gt; IP 변환 API</a><ul><li><a href="#getaddrinfo3-호스트명-서비스명으로-부터-ip-주소-포트-번호를-얻음">getaddrinfo():3 호스트명, 서비스명으로 부터 IP 주소, 포트 번호를 얻음</a></li></ul></li></ul>
+
+            </nav>
+          </aside>
+        
+        <h2 id="인터넷-구조">인터넷 구조</h2>
+<ul>
+  <li><strong>네트워크 프로그래밍</strong>이라고 하면 전혀 다른 세계 같지만 그렇지 않다.
+    <ul>
+      <li>하나의 머신 안에서든, 네트워크를 넘어서든, 우리가 다루는 것은 결국 <span style="color:steelblue"><strong>stream</strong></span>이다.</li>
+      <li><span style="color:steelblue"><strong>stream</strong></span>이라면 <strong>read(), write()</strong>를 통해 데이터를 R/W 가능 하므로, 결국 <span style="color:steelblue"><strong>stream</strong></span>을 어떻게 얻느냐의 차이이다.</li>
+    </ul>
+  </li>
+  <li>저수준 프로그래밍에서는 <strong>open()</strong>을 통해 <span style="color:blue"><strong>fd</strong></span>를 얻어 <span style="color:steelblue"><strong>stream</strong></span>을 얻었다.</li>
+  <li><strong>네트워크 프로그래밍</strong>에서는 <strong>네트워크 너머의 컴퓨터 이름(IP, PORT)</strong>을 <span style="color:magenta"><strong>커널</strong></span>에 그 이름을 전달해 <span style="color:steelblue"><strong>stream</strong></span>을 얻게된다.
+<br /><br /></li>
+  <li>인터넷에서 파일 시스템의 파일 이름에 대응하는 것이 <strong>IP주소</strong>와 <strong>포트 번호</strong>
+    <ul>
+      <li><strong>IP주소</strong>: <span style="color:navy"><strong>HOST</strong></span></li>
+      <li><strong>PORT</strong>: 각 <span style="color:steelblue"><strong>서버 프로세스</strong></span></li>
+    </ul>
+  </li>
+</ul>
+
+<p><img src="img1.jpg" width="50%" height="50%" /></p>
+
+<p><span style="color:blue"><strong>프로토콜</strong></span>: <strong>규약</strong></p>
+<ul>
+  <li><span style="color:orange"><strong>패킷</strong></span>: IP레벨에서 <span style="color:steelblue"><strong>스트림</strong></span>, <strong>데이터 뭉치</strong></li>
+</ul>
+
+<p><img src="img2.jpg" width="30%" height="30%" /></p>
+<ul>
+  <li>실제로는 <strong>호스트</strong>가 <strong>패킷을</strong> <strong>릴레이 처럼</strong> 보낸다. <strong>자기꺼 아니면 Pass!</strong></li>
+</ul>
+
+<h2 id="호스트명-dns-도메인">호스트명, DNS, 도메인</h2>
+<ul>
+  <li><span style="color:navy"><strong>HOST</strong></span>는 <strong>IP주소</strong>로 구분 하지만, 사람이 다루기 어렵다.
+    <ul>
+      <li>따라서 <strong>호스트명</strong>(host name)을 사용한다.
+        <ul>
+          <li>호스트명 예: www.naver.com</li>
+        </ul>
+      </li>
+      <li><code class="language-plaintext highlighter-rouge">etc/hosts</code>에서 <strong>호스트명</strong> &lt;-&gt; <strong>IP</strong> 관리</li>
+    </ul>
+  </li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># /etc/hosts</span>
+
+127.0.0.1	localhost
+::1		ip6-localhost	ip6-loopback
+...
+</code></pre></div></div>
+
+<ul>
+  <li>하지만 호스트가 늘어날 때마다 모든 호스트를 <strong>/etc/hosts</strong>에 기록해야 하므로 현실적이지 않다.
+    <ul>
+      <li><strong>현재</strong>는 회사나 가정 내 네트워크처럼 <strong>소수 호스트</strong>의 이름을 붙이기 위한 용도로 <strong>/etc/hosts</strong>가 사용된다.</li>
+      <li>컴퓨터 세계에서 <strong>이름으로 실체를 얻어내는 것</strong>을 <span style="color:green"><strong>resolve</strong></span>
+        <ul>
+          <li><strong>호스트 명</strong>과 <strong>IP주소</strong>를 <strong>교환</strong>해주는 존재를 <span style="color:green"><strong>resolve'r'</strong></span>라고 한다.</li>
+          <li>리눅스에서는 <strong>resolver</strong>로 <strong>libc</strong>가 있어, 해당 설정은 <strong>/etc/nsswitch.conf</strong>에 기술됨</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><strong>DNS</strong>(Domain Name System)
+    <ul>
+      <li>DNS는 <strong>호스트명</strong>을 <strong>도메인</strong>이라고 하는 <u>영역에 나눠서 관리함</u>으로써 <strong>호스트명의 관리를 전 세계에 분산</strong>시킴</li>
+    </ul>
+  </li>
+  <li><strong>도메인</strong>(Domain)
+    <ul>
+      <li>리눅스 디렉터리처럼 <strong>트리 구조</strong>로 관리</li>
+      <li><span style="color:steelblue"><strong>오른쪽 부터</strong></span> 루트 도메인!
+        <ul>
+          <li><strong>루트 도메인</strong>: 리눅스 루트 디렉터리 ‘/’ 처럼
+            <ul>
+              <li><strong>최상위 도메인</strong>(Top Level Domains, TLDs): com, org, kr
+                <ul>
+                  <li><strong>배치 .. 배치..</strong></li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li><strong>ex)</strong> 'www.example.com' 이라는 호스트 명은
+        <ul>
+          <li><strong>루트 도메인</strong>: ‘’
+            <ul>
+              <li><strong>최상위 도메인</strong>(Top Level Domains): <strong>.com</strong>
+                <ul>
+                  <li><span style="color:orange"><strong>‘example.com’</strong></span><sup>*</sup> 도메인
+                    <ul>
+                      <li><strong>www.example.com</strong> 호스트명</li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li><strong>각각</strong>의 도메인을 <strong>도메인 이름</strong>(Domain name)이라고 한다.</li>
+      <li>호스트를 루트 도메인에서 시작하여 전부 기술한 것을 <strong>FQDN</strong>(Fully Qualified Domain Name)이라고 한다.
+<br /><br /></li>
+    </ul>
+  </li>
+  <li><span style="color:orange"><strong>‘example.com’</strong></span><sup>*</sup>처럼 호스트명에 대응되지 않는 도메인명도 있다.
+    <ul>
+      <li>이러한 도메인은 파일 시스템에서의 디렉터리처럼 관리를 위해 존재</li>
+      <li>즉, example.com 도메인은 com 도메인과 다른 관리자가 있어서, 그 밑의 도메인을 독자적으로 관리한다.
+        <ul>
+          <li><span style="color:orange">‘example.com’</span><sup>*</sup> 도메인이 관리하는 도메인
+            <ul>
+              <li><u><span style="color:steelblue">www.example.com, mail.example.com, ftp.example.com</span></u></li>
+            </ul>
+          </li>
+          <li>example.com 도메인 <u><span style="color:steelblue">밑의 도메인</span></u>은 <span style="color:orange">example.com</span><sup>*</sup>도메인 관리자에게 물으면 알 수 있는 것이다.</li>
+          <li><u><span style="color:steelblue">www.example.com</span></u>의 <strong>호스트 IP주소</strong>는 <span style="color:orange">example.com 도메인</span><sup>*</sup> 관리자에게 물어보면 된다. 이때 물을 상대는 사람이 아니라 프로그램(서버 프로세스)이다. 이러한 서버를 <span style="color:red"><strong>DNS 서버</strong></span>라고 한다.</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><span style="color:orange">example.com</span><sup>*</sup>의 <span style="color:red"><strong>DNS 서버</strong></span>를 어떻게 찾는가?
+    <ul>
+      <li><span style="color:magenta"><strong>com 도메인의 DNS 서버</strong></span>에게 물으면 된다. 도메인은 트리 구조로 되어 있어, 밑의 도메인에 대해서는 그 위 도메인 관리 DNS 서버에게 문의하면 된다.</li>
+    </ul>
+  </li>
+  <li><span style="color:magenta">com 도메인 서버</span>는 누구에게 물어야 하나?
+    <ul>
+      <li><strong>루트 도메인의 DNS 서버</strong>에게 물으면된다. 루트 도메인의 DNS 서버의 IP주소는 모든 DNS 서버에 직접 등록되어 있어, 문의할 필요가 없다.</li>
+    </ul>
+  </li>
+</ul>
+
+<p>이렇게 DNS가 호스트명을 IP주소로 바꿔준다.</p>
+
+<h2 id="socket">socket</h2>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;sys/socket.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">socket</span><span class="p">(</span><span class="kt">int</span> <span class="n">domain</span><span class="p">,</span> <span class="kt">int</span> <span class="n">type</span><span class="p">,</span> <span class="kt">int</span> <span class="n">protocol</span><span class="p">);</span>
+</code></pre></div></div>
+<ul>
+  <li>기능: <strong>소켓 생성</strong></li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">return</th>
+      <th style="text-align: left">value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">성공</td>
+      <td style="text-align: left">소켓 <strong>fd</strong></td>
+    </tr>
+    <tr>
+      <td style="text-align: left">실패</td>
+      <td style="text-align: left">-1</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="bind">bind</h2>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;sys/socket.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">bind</span><span class="p">(</span><span class="kt">int</span> <span class="n">sockfd</span><span class="p">,</span> <span class="k">struct</span> <span class="n">sockaddr</span> <span class="o">*</span><span class="n">myaddr</span><span class="p">,</span> <span class="n">socklen_t</span> <span class="n">addrlen</span><span class="p">);</span>
+</code></pre></div></div>
+<ul>
+  <li>기능: <strong>소켓</strong>에 <span style="color:red"><strong>IP, PORT</strong></span> 부여</li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">return</th>
+      <th style="text-align: left">value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">성공</td>
+      <td style="text-align: left">0</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">실패</td>
+      <td style="text-align: left">-1</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="listen">listen</h2>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;sys/socket.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">listen</span><span class="p">(</span><span class="kt">int</span> <span class="n">sockfd</span><span class="p">,</span> <span class="kt">int</span> <span class="n">backlog</span><span class="p">);</span>
+</code></pre></div></div>
+<ul>
+  <li>기능: 소켓을 <strong>연결 대기 몇 개?</strong>와 <strong>연결 대기 상태</strong>로 만듬</li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">return</th>
+      <th style="text-align: left">value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">성공</td>
+      <td style="text-align: left">0</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">실패</td>
+      <td style="text-align: left">-1</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="accept">accept</h2>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;sys/socket.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">accept</span><span class="p">(</span><span class="kt">int</span> <span class="n">sockfd</span><span class="p">,</span> <span class="k">struct</span> <span class="n">sockaddr</span> <span class="o">*</span><span class="n">addr</span><span class="p">,</span> <span class="n">socklen_t</span> <span class="o">*</span><span class="n">addrlen</span><span class="p">);</span>
+</code></pre></div></div>
+<ul>
+  <li>기능: 연결 요청 시, 수락</li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">return</th>
+      <th style="text-align: left">value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">성공</td>
+      <td style="text-align: left">0</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">실패</td>
+      <td style="text-align: left">-1</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="connect">connect</h2>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;sys/socket.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">connect</span><span class="p">(</span><span class="kt">int</span> <span class="n">sockfd</span><span class="p">,</span> <span class="k">struct</span> <span class="n">sockaddr</span> <span class="o">*</span><span class="n">serv_addr</span><span class="p">,</span> <span class="n">socklent_t</span> <span class="n">addrlen</span><span class="p">);</span>
+</code></pre></div></div>
+<ul>
+  <li>기능: 지정한 <strong>sockfd</strong> 소켓에 <strong>연결 요청</strong></li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">return</th>
+      <th style="text-align: left">value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">성공</td>
+      <td style="text-align: left">0</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">실패</td>
+      <td style="text-align: left">-1</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="host-name---ip-변환-api">Host Name &lt;-&gt; IP 변환 API</h2>
+<ol>
+  <li><strong>getaddrinfo()</strong>: 호스트명, 서비스명으로부터 IP 주소, 포트 번호를 얻기 위해 사용</li>
+  <li><strong>getnameinfo()</strong>: IP주소나 포트 번호로부터 도메인명이나 서비스명을 얻기 위해 사용한다.</li>
+  <li><strong>freeaddrinfo()</strong>: 보조 API</li>
+  <li><strong>gai_strerror()</strong>: 보조 API</li>
+</ol>
+
+<h3 id="getaddrinfo3-호스트명-서비스명으로-부터-ip-주소-포트-번호를-얻음">getaddrinfo():3 호스트명, 서비스명으로 부터 IP 주소, 포트 번호를 얻음</h3>
+<hr />
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;sys/socket.h&gt;
+#include &lt;sys/types.h&gt;
+#include &lt;netdb.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">getaddrinfo</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">node</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">service</span><span class="p">,</span> 
+		<span class="k">const</span> <span class="k">struct</span> <span class="n">addrinfo</span> <span class="o">*</span><span class="n">hints</span><span class="p">,</span> <span class="k">struct</span> <span class="n">addrinfo</span> <span class="o">**</span><span class="n">res</span><span class="p">);</span>
+
+<span class="kt">void</span> <span class="nf">freeaddrinfo</span><span class="p">(</span><span class="k">struct</span> <span class="n">addrinfo</span> <span class="o">*</span><span class="n">res</span><span class="p">);</span>
+
+<span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="nf">gai_strerror</span><span class="p">(</span><span class="kt">int</span> <span class="n">err</span><span class="p">);</span>
+
+<span class="k">struct</span> <span class="n">addrinfo</span><span class="p">{</span>
+	<span class="kt">int</span>		<span class="n">ai_flags</span><span class="p">;</span>
+	<span class="kt">int</span>		<span class="n">ai_family</span><span class="p">;</span>
+	<span class="kt">int</span>		<span class="n">ai_socktype</span><span class="p">;</span>
+	<span class="kt">int</span>		<span class="n">ai_protocol</span><span class="p">;</span>
+	<span class="n">socklen_t</span>	<span class="n">ai_addrlen</span><span class="p">;</span>
+	<span class="k">struct</span> <span class="n">sockaddr</span>	<span class="o">*</span><span class="n">ai_addr</span><span class="p">;</span>
+	<span class="kt">char</span>		<span class="o">*</span><span class="n">ai_canonname</span><span class="p">;</span>
+	<span class="k">struct</span> <span class="n">addrinfo</span>	<span class="o">*</span><span class="n">ai_next</span><span class="p">;</span>
+<span class="p">};</span>
+</code></pre></div></div>
+<ul>
+  <li>기능: 접속 대상인 <strong>node</strong>의 주소 후보를 <strong>res</strong>에 기재한다. <strong>service</strong>와 <strong>hints</strong>로 범위를 좁힐 수 있다.<br />
+<strong>res</strong>는 <strong>struct addrinfo</strong>의 링크드 리스트 형태를 가진다.</li>
+</ul>
+
+<p><img src="img3.jpg" width="70%" height="70%" /></p>
+<ul>
+  <li><span style="color:magenta"><strong>struct</strong></span> <span style="color:steelblue"><strong>addrinfo</strong></span>의 메모리 영역은 <span style="color:red"><strong><em>malloc()</em></strong></span>으로 할당되므로 명시적으로 해제해야한다.
+    <ul>
+      <li><span style="color:blue"><strong>freeaddrinfo()</strong></span>가 free용으로 사용된다.</li>
+    </ul>
+  </li>
+</ul>
+
+<table>
+  <tbody>
+    <tr>
+      <td>return</td>
+      <td>value</td>
+    </tr>
+    <tr>
+      <td>성공</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>실패</td>
+      <td>0 이상의 값의 에러코드<br />에러코드는 gai_strerror()로 문자열 변환 가능</td>
+    </tr>
+  </tbody>
+</table>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/#socket-programming" class="page__taxonomy-item" rel="tag">socket-programming</a>
+    
+    </span>
+  </p>
+
+
+        
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2021-01-02T00:00:00+09:00">January 2, 2021</time></p>
+
+
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">Share on</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=%EC%86%8C%EC%BC%93+%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D+-1-+%EC%9D%B8%ED%84%B0%EB%84%B7+%EA%B5%AC%EC%A1%B0%2C+%ED%98%B8%EC%8A%A4%ED%8A%B8%EB%AA%85%2C+DNS%2C+%EB%8F%84%EB%A9%94%EC%9D%B8%2C+getaddrinfo%28%29%20https%3A%2F%2Fmarkyang920413.github.io%2F%2Fsocket-programming%2Fsocket_programming_1%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmarkyang920413.github.io%2F%2Fsocket-programming%2Fsocket_programming_1%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fmarkyang920413.github.io%2F%2Fsocket-programming%2Fsocket_programming_1%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/signal/system_programming-signal-signal_1/" class="pagination--pager" title="Signal &lt;1&gt; signal(), sigaction(), kill(), 시그널 블록
+">Previous</a>
+    
+    
+      <a href="/file/system_programming-file-process_env_1/" class="pagination--pager" title="디렉터리 API getcwd(), chdir()
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/linux-filesystem/linux-linux_filesystem-LVM/" rel="permalink">LVM
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/mac/m1_rosetta2/" rel="permalink">M1 Mac 로제타2 설치, 로제타 사용 brew 설치, M1용 jekyll설치
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/algorithm/algorithm-algorithm-time_complexity/" rel="permalink">Time complexity
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          less than 1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/algorithm/algorithm-algorithm-IO_STL/" rel="permalink">시험에서 입출력, STL
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          less than 1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2021 Dong-Hyeon Yang. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "https://markyang920413.github.io//socket-programming/socket_programming_1/";  /* Replace PAGE_URL with your page's canonical URL variable */
+      this.page.identifier = "/socket-programming/socket_programming_1"; /* Replace PAGE_IDENTIFIER with your page's unique identifier variable */
+    };
+    (function() { /* DON'T EDIT BELOW THIS LINE */
+      var d = document, s = d.createElement('script');
+      s.src = 'https://MarkYang920413.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+
+
+  </body>
+</html>

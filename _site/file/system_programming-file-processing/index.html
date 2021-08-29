@@ -1,0 +1,966 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.21.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>파일 처리: 저수준 vs 고수준 - 혼자 보려고 만든 블로그</title>
+<meta name="description" content="low level systemcall I/O vs STDIO">
+
+
+  <meta name="author" content="Dong-Heyon Yang">
+  
+  <meta property="article:author" content="Dong-Heyon Yang">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="혼자 보려고 만든 블로그">
+<meta property="og:title" content="파일 처리: 저수준 vs 고수준">
+<meta property="og:url" content="https://markyang920413.github.io//file/system_programming-file-processing/">
+
+
+  <meta property="og:description" content="low level systemcall I/O vs STDIO">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2020-12-24T00:00:00+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://markyang920413.github.io//file/system_programming-file-processing/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "Dong-Hyeon Yang",
+      "url": "https://markyang920413.github.io//"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="혼자 보려고 만든 블로그 Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          혼자 보려고 만든 블로그
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/categories/">Category</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/">About</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+  
+    
+      
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox" />
+  <label for="ac-toc">Toggle menu</label>
+  <ul class="nav__items">
+    
+      <li>
+        
+          <span class="nav__sub-title">LINUX</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#linux-system">LINUX System</a></li>
+          
+            <li><a href="/categories/#linux-tools">LINUX Tools</a></li>
+          
+            <li><a href="/categories/#linux-compile">LINUX Compile</a></li>
+          
+            <li><a href="/categories/#linux-filesystem">LINUX Filesystem</a></li>
+          
+            <li><a href="/categories/#http">HTTP</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">System Programming</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#file">File, Memory</a></li>
+          
+            <li><a href="/categories/#env">Env</a></li>
+          
+            <li><a href="/categories/#process">Process</a></li>
+          
+            <li><a href="/categories/#thread">Thread</a></li>
+          
+            <li><a href="/categories/#ipc">IPC</a></li>
+          
+            <li><a href="/categories/#signal">Signal</a></li>
+          
+            <li><a href="/categories/#socket-programming">Socket Programming</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">C</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#c">C</a></li>
+          
+            <li><a href="/categories/#system-programming">System Programming</a></li>
+          
+            <li><a href="/categories/#stdio">Standard I/O</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">Python</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#python-language">Python Language</a></li>
+          
+            <li><a href="/categories/#python-pandas">Python Pandas</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">Algorithm</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#algorithm">Algorithm</a></li>
+          
+            <li><a href="/categories/#problem">Problem</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">MAC</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#mac">Mac</a></li>
+          
+        </ul>
+        
+      </li>
+    
+  </ul>
+</nav>
+
+    
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="파일 처리: 저수준 vs 고수준">
+    <meta itemprop="description" content="low level systemcall I/O vs STDIO">
+    <meta itemprop="datePublished" content="2020-12-24T00:00:00+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">파일 처리: 저수준 vs 고수준
+</h1>
+          
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          2 minute read
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              <ul class="toc__menu"><li><a href="#저수준-vs-고수준">저수준 vs 고수준</a></li><li><a href="#멀티-스레드프로세싱에서-파일-출력이-섞이지-않게-하려면-어떻게-하나">멀티 스레드/프로세싱에서 파일 출력이 섞이지 않게 하려면 어떻게 하나?</a></li><li><a href="#저수준에서-printf">저수준에서 printf</a></li><li><a href="#저수준-파일-처리-관련-함수">저수준 파일 처리 관련 함수</a></li><li><a href="#고수준-파일-처리-관련-함수">고수준 파일 처리 관련 함수</a></li><li><a href="#파일-관련-시스템-함수">파일 관련 시스템 함수</a></li><li><a href="#메모">메모</a></li></ul>
+
+            </nav>
+          </aside>
+        
+        <h2 id="저수준-vs-고수준">저수준 vs 고수준</h2>
+
+<table>
+  <tbody>
+    <tr>
+      <td><strong>file processing</strong></td>
+      <td><strong>Description</strong></td>
+    </tr>
+    <tr>
+      <td><strong>저수준</strong> 파일 처리</td>
+      <td><strong>시스템 콜</strong><br /><span style="color:red"><strong>Byte 단위</strong></span> 지정한 버퍼 크기만큼 R/W<br />UNIX 계열에서만 호환<br /><strong>p</strong>read, <strong>p</strong>write를 통해 <span style="color:red"><strong>atomic</strong></span>실행 보장(Thread safe)</td>
+    </tr>
+    <tr>
+      <td><strong>고수준</strong> 파일 처리</td>
+      <td><strong>POSIX C</strong><span style="color:blue"><strong>문자 단위, 줄 단위 R/W</strong></span><br />C 표준 이므로, <strong>C를 지원하는 모든 플랫폼에서 사용</strong> 가능<br /><span style="color:steelblue"><strong>stdio 버퍼링</strong></span> 있음<br />버퍼링은 <strong>사용자 변수</strong>와 <span style="color:steelblue"><strong>버퍼</strong></span> <strong>사이</strong>의 <strong>메모리 복사</strong>, <span style="color:steelblue"><strong>버퍼</strong></span>와 <span style="color:magenta"><strong>커널</strong></span> 사이의 <strong>복사</strong>까지 <strong>중복</strong>되므로 <strong>메모리 대역폭을 비효율적 사용</strong>.<br />저수준 파일 처리보다 비효율적인 면이 있기에 <strong>real-time system과 같이 응답성과 성능을 중시</strong>한다면 <span style="color:red"><strong>고수준 파일 처리는 최소화</strong></span>(다양한 옵션이 있기 때문에 저수준 VS 고수준 단편 속도 비교 불가)</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><br />
+<strong>stdio 버퍼</strong></p>
+<ul>
+  <li><strong>stdio만의 독자적인 버퍼</strong> 사용
+    <ul>
+      <li>내부적으로 <strong>적절한 크기</strong>로 <strong>read()</strong>를 사용해 <strong>stdio 버퍼</strong>로 가져와, <strong>프로그램이 요구한 만큼 반환</strong></li>
+    </ul>
+  </li>
+  <li><strong>읽을 때</strong>, 버퍼링
+    <ol>
+      <li>적절한 크기만큼 <strong>시스템 콜 read()</strong>를 사용해 <strong>stdio 버퍼에 저장</strong></li>
+      <li>프로그램이 요청하는 만큼 반환</li>
+    </ol>
+  </li>
+  <li><strong>쓰기 때</strong>, 버퍼링
+    <ol>
+      <li><strong>바이트</strong> 단위, <strong>줄</strong> 단위의 데이터를 전달받아 <strong>stdio 버퍼</strong>가 꽉차면 <strong>시스템 콜 write() 내부적 호출</strong></li>
+      <li>스트림이 단말에 연결된 경우, 버퍼가 가득 찰 때까지 기다리지 않는다.
+        <ul>
+          <li><strong>'\n'</strong>를 만나면 <strong>즉각</strong>적으로 <strong>시스템 콜 write()</strong> 호출(빠른 응답성 요구)</li>
+        </ul>
+      </li>
+      <li><span style="color:red"><strong>setvbuf()</strong></span>를 이용해, <strong>비 버퍼링 모드</strong> 셋, <strong>즉시 write() 수행</strong></li>
+    </ol>
+  </li>
+</ul>
+
+<h2 id="멀티-스레드프로세싱에서-파일-출력이-섞이지-않게-하려면-어떻게-하나">멀티 스레드/프로세싱에서 파일 출력이 섞이지 않게 하려면 어떻게 하나?</h2>
+<ul>
+  <li>복잡한 <strong>멀티 스레드</strong>를 적용한 <strong>네트워크 서버</strong>에서 <strong>로그 파일</strong>을 <strong>기록</strong>하는 데 있어서 <strong>로그 메시지</strong>가 <strong>서로 섞이지 않게</strong> 하고 싶다!!
+    <ol>
+      <li><strong>저수준 출력</strong> 함수 사용
+        <ul>
+          <li><strong>저수준</strong> 출력은 <span style="color:red"><strong>atomic</strong></span> 보장 하므로, 저수준 출력을 사용한다.</li>
+          <li>장점: 성능을 해지치 않는다.</li>
+          <li>단점: 저수준 FILE I/O는 불편함</li>
+        </ul>
+      </li>
+      <li><span style="color:red"><strong>Lock</strong></span> 이용
+        <ul>
+          <li>장점: 간단</li>
+          <li>단점: lock쓰면 느림 -&gt; 빈번한 출력에서는 사용하지 않음</li>
+        </ul>
+      </li>
+      <li><strong>직렬화</strong>를 이용하여 전문적으로 출력을 도맡아서 하는 프로세스나 스레드 둔다.
+        <ul>
+          <li>장점: 신뢰성이 높음, 응답이 좋음</li>
+          <li>단점: 설계 과정 복잠</li>
+        </ul>
+      </li>
+      <li><strong>mmap</strong>을 이용해 메모리에 쓰고 파일로 동기화하는 방법</li>
+    </ol>
+  </li>
+</ul>
+
+<h2 id="저수준에서-printf">저수준에서 printf</h2>
+<ul>
+  <li>형식화된 출력(formatted print)란, 간단하게 printf</li>
+  <li><strong>저수준</strong>에서 <strong>printf</strong>
+    <ul>
+      <li><strong>snprintf()</strong>사용 후, <strong>write</strong>계열 함수 사용
+        <div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="n">len</span> <span class="o">=</span> <span class="n">snprintf</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">buf</span><span class="p">),</span> <span class="s">"counter : %d"</span><span class="p">,</span> <span class="n">i</span><span class="p">);</span>
+  <span class="n">write</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span> <span class="n">buf</span><span class="p">,</span> <span class="n">len</span><span class="p">);</span>
+</code></pre></div>        </div>
+      </li>
+      <li><strong>dprintf()</strong>(POSIX.1-2008 표준)
+        <div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="n">dprintf</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span> <span class="s">"counter: %d"</span><span class="p">,</span> <span class="n">i</span><span class="p">);</span>
+</code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="저수준-파일-처리-관련-함수">저수준 파일 처리 관련 함수</h2>
+<ul>
+  <li>POSIX.1-2008</li>
+</ul>
+
+<table>
+  <tbody>
+    <tr>
+      <td><strong>저수준 함수</strong></td>
+      <td><strong>Description</strong></td>
+    </tr>
+    <tr>
+      <td><strong><em>open()</em></strong></td>
+      <td>파일 열기</td>
+    </tr>
+    <tr>
+      <td><strong><em>openat()</em></strong></td>
+      <td>fd를 지정하여 파일 열기</td>
+    </tr>
+    <tr>
+      <td><strong><em>close()</em></strong></td>
+      <td>파일 닫기</td>
+    </tr>
+    <tr>
+      <td><strong><em>create()</em></strong></td>
+      <td>생성</td>
+    </tr>
+    <tr>
+      <td><strong><em>fcntl()</em></strong></td>
+      <td>fd 조작</td>
+    </tr>
+    <tr>
+      <td><strong><em>fsync()</em></strong></td>
+      <td>파일 동기화</td>
+    </tr>
+    <tr>
+      <td><strong><em>fdatasync()</em></strong></td>
+      <td>메타 정보(access time, inode 정보 등)를 제외한 동기화</td>
+    </tr>
+    <tr>
+      <td><strong><em>dup(), dup2()</em></strong></td>
+      <td>fd 복제</td>
+    </tr>
+    <tr>
+      <td><strong><em>read(), write()</em></strong></td>
+      <td>읽기, 쓰기</td>
+    </tr>
+    <tr>
+      <td><strong><em>pread(), pwrite()</em></strong></td>
+      <td>오프셋을 지정한 읽기 쓰기(<span style="color:magenta"><strong>시그널</strong></span>, <span style="color:red"><strong>스레드</strong></span>에 <span style="color:navy"><strong>안전</strong></span>)</td>
+    </tr>
+    <tr>
+      <td><strong><em>readv(), writev()</em></strong></td>
+      <td><strong>벡터</strong> 단위 읽기 쓰기</td>
+    </tr>
+    <tr>
+      <td><strong><em>dprintf()</em></strong></td>
+      <td>저수준에서 printf (POSIX.1-2008에서 추가)</td>
+    </tr>
+    <tr>
+      <td><strong><em>lseek()</em></strong></td>
+      <td>파일 위치 변경</td>
+    </tr>
+    <tr>
+      <td><strong><em>truncate()</em></strong></td>
+      <td>파일 크기 변경</td>
+    </tr>
+    <tr>
+      <td><strong><em>fdopen()</em></strong></td>
+      <td>fd를 고수준 파일 처리 스트림으로 변환</td>
+    </tr>
+    <tr>
+      <td><strong><em>renameat()</em></strong></td>
+      <td>파일명 변경(POSIX.1-2008에서 추가)</td>
+    </tr>
+    <tr>
+      <td><strong><em>glob()</em></strong></td>
+      <td>패턴 매칭되는 path명 찾기</td>
+    </tr>
+    <tr>
+      <td><strong><em>stat(), fstat(), fstatat()</em></strong></td>
+      <td>파일 메타 정보 읽기</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="고수준-파일-처리-관련-함수">고수준 파일 처리 관련 함수</h2>
+
+<table>
+  <tbody>
+    <tr>
+      <td><strong>고수준 함수</strong></td>
+      <td><strong>Description</strong></td>
+    </tr>
+    <tr>
+      <td><strong><em>fopen(), fclose()</em></strong></td>
+      <td>파일 스트림 열기, 닫기</td>
+    </tr>
+    <tr>
+      <td><strong><em>freopen(), fdopen()</em></strong></td>
+      <td>파일 스트림을 지정한 파일 스트림으로서 열기, fd -&gt; 파일 스트림 변환</td>
+    </tr>
+    <tr>
+      <td><strong><em>setvbuf(), setbuf()</em></strong></td>
+      <td>stdio 버퍼 설정</td>
+    </tr>
+    <tr>
+      <td><strong><em>fflush(), fpurge()</em></strong></td>
+      <td>버퍼 비움, 버퍼 삭제</td>
+    </tr>
+    <tr>
+      <td><strong><em>fread(), fwrite()</em></strong></td>
+      <td>문자열로서가 아닌 Byte로서 읽고 쓰기</td>
+    </tr>
+    <tr>
+      <td><strong><em>scanf()계열</em></strong></td>
+      <td>형식화된 문자열 입력</td>
+    </tr>
+    <tr>
+      <td><strong><em>printf()계열</em></strong></td>
+      <td>형식화된 문자열 출력</td>
+    </tr>
+    <tr>
+      <td><strong><em>fgetpos(), fsetpos(), fseek(), ftell(), rewind()</em></strong></td>
+      <td>파일 스트림 위치 변경, 보고</td>
+    </tr>
+    <tr>
+      <td><strong><em>clearerr(), feof(), ferror()</em></strong></td>
+      <td>파일 스트림 체크</td>
+    </tr>
+    <tr>
+      <td><strong><em>ftruncate()</em></strong></td>
+      <td>파일 크기 변경</td>
+    </tr>
+    <tr>
+      <td><strong><em>fileno()</em></strong></td>
+      <td>스트림-&gt;fd</td>
+    </tr>
+    <tr>
+      <td><strong><em>fmemopen(), open_memsteram()</em></strong></td>
+      <td>메모리를 파일 스트림으로 열기(POSIX.1-2008)</td>
+    </tr>
+    <tr>
+      <td><strong><em>getline(), getdelim()</em></strong></td>
+      <td>행단위, 구분자 단위로 읽기(POSIX.1-2008)</td>
+    </tr>
+    <tr>
+      <td><strong><em>getc_unlocked(), getchar_unlocked(), putc_unlocked(), putchar_unlocked()</em></strong></td>
+      <td>getc, getchar, putc, putchar의 <strong>NON-BLOCKING</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="파일-관련-시스템-함수">파일 관련 시스템 함수</h2>
+
+<table>
+  <tbody>
+    <tr>
+      <td><strong>파일 관련 시스템 함수</strong></td>
+      <td><strong>Description</strong></td>
+    </tr>
+    <tr>
+      <td><strong><em>umask()</em></strong></td>
+      <td>umask값 조정</td>
+    </tr>
+    <tr>
+      <td><strong><em>mktemp()</em></strong></td>
+      <td>임시 파일 생성</td>
+    </tr>
+    <tr>
+      <td><strong><em>remove(), unlink()</em></strong></td>
+      <td>파일 삭제</td>
+    </tr>
+    <tr>
+      <td><strong><em>link()</em></strong></td>
+      <td>링크 생성</td>
+    </tr>
+    <tr>
+      <td><strong><em>mkdir(), rmdir()</em></strong></td>
+      <td>디렉터리 생성, 삭제</td>
+    </tr>
+    <tr>
+      <td><strong><em>opendir(), closedir(), fdopendir(), dirfd()</em></strong></td>
+      <td>디렉터리 열고 닫기</td>
+    </tr>
+    <tr>
+      <td><strong><em>readdir(), rewinddir(), seekdir(), telldir()</em></strong></td>
+      <td>디렉터리 읽기, 위치 변경/보고</td>
+    </tr>
+    <tr>
+      <td><strong><em>scandir(), alphasort()</em></strong></td>
+      <td>디렉터리 스캔</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="메모">메모</h2>
+<p>pread, pwrite, 
+만일 파일이 아닌 파이프에 입출력할 때는 read, write를 PIPE_BUF 이내의 길이로 입출력하는 경우에 atomic 보장
+(<span style="color:magenta">PIPE_BUF는 POSIX표준에서 _POSIX_PIPE_BUF(512 Byte)의 최소 기준을 세우고 있음)
+하지만, 대부분의 유닉스 계열의 PIPE_BUF는 이보다 훨씬 큰 값 지원(보통 Page의 영향을 받아 4KByte 배수)</span></p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/#file" class="page__taxonomy-item" rel="tag">file</a>
+    
+    </span>
+  </p>
+
+
+        
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2020-12-24T00:00:00+09:00">December 24, 2020</time></p>
+
+
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">Share on</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=%ED%8C%8C%EC%9D%BC+%EC%B2%98%EB%A6%AC%3A+%EC%A0%80%EC%88%98%EC%A4%80+vs+%EA%B3%A0%EC%88%98%EC%A4%80%20https%3A%2F%2Fmarkyang920413.github.io%2F%2Ffile%2Fsystem_programming-file-processing%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmarkyang920413.github.io%2F%2Ffile%2Fsystem_programming-file-processing%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fmarkyang920413.github.io%2F%2Ffile%2Fsystem_programming-file-processing%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/linux-tools/strace/" class="pagination--pager" title="strace - “-g” 컴파일 안된 바이너리 디버깅 유용 by syscall
+">Previous</a>
+    
+    
+      <a href="/file/system_programming-file-lowlevel_IO_1/" class="pagination--pager" title="lowlevel I/O &lt;1&gt; read(), write(), open(), posix_fadvise(), ftruncate()
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/linux-filesystem/linux-linux_filesystem-LVM/" rel="permalink">LVM
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/mac/m1_rosetta2/" rel="permalink">M1 Mac 로제타2 설치, 로제타 사용 brew 설치, M1용 jekyll설치
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/algorithm/algorithm-algorithm-time_complexity/" rel="permalink">Time complexity
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          less than 1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/algorithm/algorithm-algorithm-IO_STL/" rel="permalink">시험에서 입출력, STL
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          less than 1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2021 Dong-Hyeon Yang. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "https://markyang920413.github.io//file/system_programming-file-processing/";  /* Replace PAGE_URL with your page's canonical URL variable */
+      this.page.identifier = "/file/system_programming-file-processing"; /* Replace PAGE_IDENTIFIER with your page's unique identifier variable */
+    };
+    (function() { /* DON'T EDIT BELOW THIS LINE */
+      var d = document, s = d.createElement('script');
+      s.src = 'https://MarkYang920413.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+
+
+  </body>
+</html>

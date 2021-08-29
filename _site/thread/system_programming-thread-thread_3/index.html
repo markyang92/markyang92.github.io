@@ -1,0 +1,883 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.21.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>thread &lt;3&gt; Thread Pooling - 혼자 보려고 만든 블로그</title>
+<meta name="description" content="It is just my note">
+
+
+  <meta name="author" content="Dong-Heyon Yang">
+  
+  <meta property="article:author" content="Dong-Heyon Yang">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="혼자 보려고 만든 블로그">
+<meta property="og:title" content="thread &lt;3&gt; Thread Pooling">
+<meta property="og:url" content="https://markyang920413.github.io//thread/system_programming-thread-thread_3/">
+
+
+  <meta property="og:description" content="It is just my note">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2021-01-21T00:00:00+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://markyang920413.github.io//thread/system_programming-thread-thread_3/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "Dong-Hyeon Yang",
+      "url": "https://markyang920413.github.io//"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="혼자 보려고 만든 블로그 Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          혼자 보려고 만든 블로그
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/categories/">Category</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/">About</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+  
+    
+      
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox" />
+  <label for="ac-toc">Toggle menu</label>
+  <ul class="nav__items">
+    
+      <li>
+        
+          <span class="nav__sub-title">LINUX</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#linux-system">LINUX System</a></li>
+          
+            <li><a href="/categories/#linux-tools">LINUX Tools</a></li>
+          
+            <li><a href="/categories/#linux-compile">LINUX Compile</a></li>
+          
+            <li><a href="/categories/#linux-filesystem">LINUX Filesystem</a></li>
+          
+            <li><a href="/categories/#http">HTTP</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">System Programming</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#file">File, Memory</a></li>
+          
+            <li><a href="/categories/#env">Env</a></li>
+          
+            <li><a href="/categories/#process">Process</a></li>
+          
+            <li><a href="/categories/#thread">Thread</a></li>
+          
+            <li><a href="/categories/#ipc">IPC</a></li>
+          
+            <li><a href="/categories/#signal">Signal</a></li>
+          
+            <li><a href="/categories/#socket-programming">Socket Programming</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">C</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#c">C</a></li>
+          
+            <li><a href="/categories/#system-programming">System Programming</a></li>
+          
+            <li><a href="/categories/#stdio">Standard I/O</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">Python</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#python-language">Python Language</a></li>
+          
+            <li><a href="/categories/#python-pandas">Python Pandas</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">Algorithm</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#algorithm">Algorithm</a></li>
+          
+            <li><a href="/categories/#problem">Problem</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">MAC</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#mac">Mac</a></li>
+          
+        </ul>
+        
+      </li>
+    
+  </ul>
+</nav>
+
+    
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="thread &lt;3&gt; Thread Pooling">
+    <meta itemprop="description" content="">
+    <meta itemprop="datePublished" content="2021-01-21T00:00:00+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">thread &lt;3&gt; Thread Pooling
+</h1>
+          
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          3 minute read
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              <ul class="toc__menu"><li><a href="#조건-변수-이용-thread-pool">조건 변수 이용 Thread Pool</a><ul><li><a href="#개념">개념</a></li><li><a href="#자료구조">자료구조</a></li><li><a href="#스레드-풀-프로세스">스레드 풀 프로세스</a></li></ul></li><li><a href="#리얼-타임-시그널-thread-pool">리얼 타임 시그널 thread pool</a><ul><li><a href="#예제">예제</a></li></ul></li></ul>
+
+            </nav>
+          </aside>
+        
+        <h2 id="조건-변수-이용-thread-pool">조건 변수 이용 Thread Pool</h2>
+<h3 id="개념">개념</h3>
+<hr />
+<ul>
+  <li><strong>thread pool?</strong>
+    <ul>
+      <li>미리 스레드를 할당시켜 놓는 기법</li>
+      <li><strong>요청</strong> -&gt; <strong>pthread_create()</strong>의 반복은 생각보다 overhead</li>
+      <li>따라서 미리 100여 개의 스레드를 만들어 두고 연결하는 방식이라 생각하면 된다.
+<br /><br /></li>
+    </ul>
+  </li>
+  <li>다중 접속 네트워크 프로그램
+    <ul>
+      <li><strong>지정된 수</strong>만큼 <span style="color:blue"><strong>미리 스레드 만듬</strong></span></li>
+    </ul>
+  </li>
+</ul>
+
+<p>　　　　　	<img src="img1.png" width="70%" /></p>
+
+<p>　<span style="color:magenta"><strong>빨간 스레드</strong></span>: 작업 중인 스레드<br />
+　<span style="color:orange"><strong>노란 스레드</strong></span>: 휴식 중인 스레드
+	- <strong>accept()</strong>로 클라이언트 연결을 가져오면, 휴식 중인 스레드를 하나 <strong>깨운다.</strong> 이 때, <strong>연결 소켓</strong> <strong>get!!!</strong>
+<br /><br /></p>
+<ul>
+  <li><strong>스레드 풀</strong> 구현에서 <strong>중요한 것</strong>
+    <ol>
+      <li><strong>작업 지시가 있을때 까지</strong> <span style="color:navy"><strong><u>자식 스레드</u></strong></span> <strong><em><u>블럭</u></em></strong>
+        <ol>
+          <li><u>자식 스레드</u>는 <strong><em>pthread_cond_</em></strong><span style="color:red"><strong><em>wait</em></strong></span><strong><em>()</em></strong>로 <span style="color:magenta"><strong>부모 스레드</strong></span>가 깨울때까지 <strong><u>대기</u></strong></li>
+          <li><span style="color:magenta"><strong>부모 스레드</strong></span>가 <strong>깨우는 시점</strong>
+            <ul>
+              <li><strong><em>accept()</em></strong>함수가 반환하는 시점</li>
+              <li><strong><em>pthread_</em></strong><span style="color:navy"><strong><em>cond_</em></strong></span> <span style="color:steelblue"><strong><em>signal</em></strong></span><strong><em>()</em></strong>을 이용해 자식 깨움</li>
+            </ul>
+          </li>
+        </ol>
+      </li>
+      <li>해당 <span style="color:navy"><strong>자식 스레드</strong></span> <strong>블럭이 풀려서 작업 중</strong>일 때는 해당 <span style="color:navy"><strong>자식 스레드</strong></span>를 <span style="color:red"><strong>호출하지 않도록</strong></span> 할 것
+        <ul>
+          <li>해당 <span style="color:navy"><strong>자식 스레드</strong></span>가 블럭이 풀려서 <strong>작업 중</strong>인 것을 어떻게 아는가?
+            <ul>
+              <li><strong><em>pthread_mutex_</em></strong><strong><em><span style="color:red">trylock</span></em></strong><strong><em>()</em></strong>을 실시
+                <ul>
+                  <li><strong>부모 프로세스</strong>가 <strong>진입 가능</strong>함: 자식스레드는 노는 중</li>
+                  <li><strong>부모 프로세스</strong> <strong>진입 불가</strong>: 자식 스레드 작업중 -&gt; <span style="color:red"><strong>호출 금지</strong></span>
+  <img src="wait.png" width="80%" /></li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ol>
+  </li>
+</ul>
+
+<h3 id="자료구조">자료구조</h3>
+<hr />
+<ul>
+  <li><strong>부모</strong>스레드와 <strong>자식</strong>스레드가 <strong>공유</strong>
+    <ul>
+      <li>이 자료구조는 자식 스레드 갯수만큼 생성해야 하므로 배열로 관리한다(cpp vector).</li>
+    </ul>
+  </li>
+</ul>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">ThreadInfo</span><span class="p">{</span>
+	<span class="nl">private:</span>
+		<span class="n">pthread_cond_t</span> <span class="n">mcond</span><span class="p">;</span>	<span class="s">"스레드가 사용할 조건변수"</span>
+		<span class="n">pthread_mutex_t</span> <span class="n">mmutex</span><span class="p">;</span>	<span class="s">"스레드가 사용할 뮤텍스"</span>
+		<span class="kt">int</span> <span class="n">msocket</span><span class="p">;</span>
+	<span class="nl">public:</span>
+		<span class="n">ThreadInfo</span><span class="p">(</span><span class="n">pthread_cond_t</span><span class="p">,</span> <span class="n">pthread_mutex_t</span><span class="p">);</span>
+		<span class="kt">int</span> <span class="n">TryLock</span><span class="p">();</span>	<span class="s">"조건변수와 함께 사용할 뮤텍스 잠금을 얻기위한 메서드"</span>
+		<span class="kt">int</span> <span class="n">Job</span><span class="p">();</span>	<span class="s">"자식 스레드가 수행할 코드를 가진 메서드"</span>
+		<span class="kt">int</span> <span class="n">UnLock</span><span class="p">();</span>	<span class="s">"자식 스레드가 작업을 마치고 잠금을 되돌려주기 위해 사용"</span>
+<span class="p">};</span>
+
+<span class="n">vector</span><span class="o">&lt;</span><span class="n">ThreadInfo</span><span class="o">&gt;</span> <span class="n">ThreadList</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h3 id="스레드-풀-프로세스">스레드 풀 프로세스</h3>
+<hr />
+<ul>
+  <li>스레드 풀 프로세스: <strong>네트워크 서버</strong>
+    <ol>
+      <li><strong>스레드 풀</strong> 만든다.</li>
+      <li>지정한 갯수만큼 스레드 풀 만든다.</li>
+    </ol>
+  </li>
+  <li><strong>메인 스레드</strong>와 <strong>자식 스레드</strong>는 <strong>ThreadInfo</strong>클래스로 <strong>조건변수</strong>와 <strong>뮤텍스</strong>를 <strong>공유</strong>한다.</li>
+  <li>스레드는 <strong>조건변수</strong>와 <strong>뮤텍스</strong>를 <strong>초기화</strong> 하고, <strong>Job메서드</strong>를 <strong>실행</strong>한다. Job메서드는 대략 다음과 같다.</li>
+</ul>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Job</span><span class="p">(){</span>
+	<span class="n">GetLock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">mutex</span><span class="p">);</span>		<span class="s">"잠금을 얻는다."</span>
+	<span class="k">while</span><span class="p">(</span><span class="mi">1</span><span class="p">){</span>
+		<span class="s">"조건 변수로 기다린다. 조건 변수를 기다리면서 mutex잠금을 내놓으면,</span><span class="err">
+</span><span class="s">		부모 스레드는 mutex 잠금을 얻을 수 있는 상태가 된다.</span><span class="err">
+</span><span class="s">		이는 선택한 자식 스레드가 작업을 할 수 있는 상태를 의미한다."</span>
+		<span class="n">pthread_cond_wait</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cond</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">mutex</span><span class="p">);</span>
+		<span class="s">"부모 스레드가 cond_signal을 전송하면, _cond_wait는 반환하고 잠금을 얻는다"</span>
+
+		<span class="s">"작업을 한다."</span>
+
+		<span class="s">"작업을 마치면, while 문 처음으로 가서 pthread_cond_wait를 호출한다."</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<ul>
+  <li><strong>작업</strong>을 하는 동안은 <strong>자식스레드</strong>가 <span style="color:red"><strong>뮤텍스 잠금</strong></span>을 얻은 상태이므로 <strong>부모</strong>는 <strong>trylock 메서드</strong>를 <strong>호출</strong>하는 것으로 이 스레드가 <strong>작업 중</strong>임을 알 수 있다.</li>
+  <li><strong>작업을 마치면</strong> 다시 조건변수에서 <strong>기다린다.</strong></li>
+  <li>반복 …</li>
+</ul>
+
+<p>이 방식은 자식스레드가 잠금 권한을 가지고 실행하기 때문에, 동기화 문제에서 자유롭다는 장점을 가진다.<br />
+<span style="color:steelblue"><strong>자식 스레드</strong></span>는 단지 <strong><em>pthread_cond_</em></strong><span style="color:magenta"><strong><em>wait()</em></strong></span>를 <span style="color:blue"><strong>호출</strong></span><strong>할 때만</strong> <span style="color:red"><strong>Unlock!!!</strong></span> 잠금을 내놓는다.</p>
+
+<h2 id="리얼-타임-시그널-thread-pool">리얼 타임 시그널 thread pool</h2>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">스레드</span> <span class="err">정보</span> <span class="err">구조체</span>
+<span class="k">struct</span> <span class="n">ph</span><span class="p">{</span>
+	<span class="kt">int</span> <span class="n">sockfd</span><span class="p">;</span>	<span class="c1">// 처리 중인 소켓 지정번호</span>
+	<span class="kt">int</span> <span class="n">index_num</span><span class="p">;</span>	<span class="c1">// 스레드의 인덱스 번호</span>
+<span class="p">};</span>
+
+<span class="err">스레드</span> <span class="err">구조체</span> <span class="n">MAP</span>
+<span class="n">multimap</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="k">struct</span> <span class="n">ph</span><span class="o">&gt;</span> <span class="n">phinfo</span><span class="p">;</span>
+
+<span class="k">struct</span> <span class="n">schedul_info</span><span class="p">{</span>
+	<span class="kt">int</span> <span class="n">client_num</span><span class="p">;</span>	<span class="c1">// 총 연결중인 클라이언트 수</span>
+	<span class="kt">int</span> <span class="n">current_sockfd</span><span class="p">;</span>	<span class="c1">// 가장 최근에 연결된 소켓 지정 번호</span>
+	<span class="n">phinfo</span> <span class="n">mphinfo</span><span class="p">;</span>	<span class="c1">// 스레드 구조체 multimap</span>
+<span class="p">};</span>
+
+<span class="err">스레줄관련</span> <span class="err">자료구조</span>
+<span class="p">{</span>
+	<span class="err">현재</span> <span class="err">연결된</span> <span class="err">클라이언트</span> <span class="err">수</span>
+	<span class="err">현재</span> <span class="err">처리해야될</span> <span class="err">클라이언트</span> <span class="err">소켓지시자</span>
+
+	<span class="err">스레드</span> <span class="err">풀에</span> <span class="err">만들어진</span> <span class="err">스레드</span> <span class="err">상태</span><span class="o">:</span> <span class="err">스레드</span> <span class="err">풀</span> <span class="err">크기만큼의</span> <span class="err">배열</span>
+	<span class="p">{</span>
+		<span class="mi">0</span> <span class="err">이면</span> <span class="err">휴식</span> <span class="err">상태</span>
+		<span class="mi">1</span> <span class="err">이면</span> <span class="err">작업</span> <span class="err">상태</span>
+		<span class="err">처리</span> <span class="err">중인</span> <span class="err">소켓</span> <span class="err">지시자</span>
+	<span class="p">}</span>
+<span class="p">};</span>
+
+<span class="n">main</span><span class="err">함수</span>
+<span class="p">{</span>
+	<span class="err">아규먼트로</span> <span class="err">몇개의</span> <span class="err">스레드를</span> <span class="err">생성할지</span> <span class="err">받음</span>
+	<span class="k">while</span><span class="p">(</span><span class="err">스레드</span> <span class="err">생성수만큼</span><span class="p">){</span>
+		<span class="n">pthread_create</span><span class="err">를</span> <span class="err">이용해</span> <span class="err">스레드</span> <span class="err">생성</span>
+		<span class="p">{</span> <span class="c1">// 통신 스레드 함수</span>
+			<span class="nl">WAIT:</span>
+			<span class="n">main</span> <span class="err">스레드가</span> <span class="err">깨우길</span> <span class="err">기다린다</span><span class="p">.</span>
+			<span class="err">만약</span> <span class="n">main</span> <span class="err">스레드로</span> <span class="err">부터</span> <span class="err">깨움이</span> <span class="err">있다면</span>
+			<span class="p">{</span>
+				<span class="err">스케줄</span> <span class="err">자료구조</span> <span class="o">-&gt;</span> <span class="err">현재</span> <span class="err">처리해야될</span> <span class="err">소켓</span> <span class="err">지시자를</span> <span class="err">읽어온다</span><span class="p">.</span>
+				<span class="err">스케줄</span> <span class="err">자료구조</span> <span class="o">-&gt;</span> <span class="err">자신의</span> <span class="err">상태를</span> <span class="mi">1</span><span class="err">로</span> <span class="err">셋팅</span>
+				<span class="err">스케줄</span> <span class="err">자료구조</span> <span class="o">-&gt;</span> <span class="err">처리중인</span> <span class="err">소켓지시자를</span> <span class="err">셋팅</span>
+				<span class="k">while</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+				<span class="p">{</span>
+					<span class="err">클라이언트와</span> <span class="err">통신한다</span><span class="p">.</span>
+					<span class="err">만약</span> <span class="err">에러가</span> <span class="err">발생하면</span>
+					<span class="p">{</span>
+						<span class="err">스케줄</span> <span class="err">자료구조</span> <span class="o">-&gt;</span> <span class="err">처리</span> <span class="err">중인</span> <span class="err">소켓</span> <span class="err">지시자를</span> <span class="mi">0</span><span class="err">으로</span> <span class="err">셋팅</span>
+						<span class="err">스케줄</span> <span class="err">자료구조</span> <span class="o">-&gt;</span> <span class="err">자신의</span> <span class="err">상태를</span> <span class="mi">0</span><span class="err">으로</span> <span class="err">셋팅</span>
+						<span class="err">스케줄</span> <span class="err">자료구조</span> <span class="o">-&gt;</span> <span class="err">현재</span> <span class="err">연결된</span> <span class="err">클라이언트수</span> <span class="o">--</span><span class="p">;</span>
+						<span class="k">goto</span> <span class="n">WAIT</span><span class="o">:</span>
+					<span class="p">}</span>
+				<span class="p">}</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// main 스레드</span>
+<span class="k">while</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="err">만약</span> <span class="n">accept</span><span class="err">를</span> <span class="err">통해서</span> <span class="err">연결이</span> <span class="err">발생한다면</span>
+	<span class="p">{</span>
+		<span class="err">스케줄</span> <span class="err">관련</span> <span class="err">자료구조</span> <span class="o">-&gt;</span> <span class="err">현재</span> <span class="err">연결된</span> <span class="err">클라이언트</span> <span class="err">수가</span> <span class="n">MAX</span><span class="err">를</span> <span class="err">초과하지</span> <span class="err">않았다면</span>
+		<span class="p">{</span>
+			<span class="err">스케줄</span> <span class="err">관련</span> <span class="err">자료구조</span> <span class="o">-&gt;</span> <span class="err">현재</span> <span class="err">연결된</span> <span class="err">클라이언트</span> <span class="err">수</span> <span class="o">++</span><span class="p">;</span>
+			<span class="err">스케줄</span> <span class="err">관련</span> <span class="err">자료구조</span> <span class="o">-&gt;</span> <span class="err">현재</span> <span class="err">처리해야될</span> <span class="err">클라이언트</span> <span class="err">소켓</span> <span class="err">지시자</span> <span class="o">=</span> <span class="n">accept</span><span class="p">();</span>
+			<span class="err">스케줄</span> <span class="err">관련</span> <span class="err">자료구조</span> <span class="o">-&gt;</span> <span class="err">스레드</span> <span class="err">풀에</span> <span class="err">만들어진</span> <span class="err">스레드</span> <span class="err">상태가</span> <span class="mi">0</span><span class="err">인</span> <span class="err">스레드를</span> <span class="err">찾아서</span> <span class="err">해당</span> <span class="err">스레드</span> <span class="err">깨움</span>
+		<span class="p">}</span>
+		<span class="err">초과</span> <span class="err">했을</span> <span class="err">경우</span>
+		<span class="p">{</span>
+			<span class="err">클라이언트에게</span> <span class="err">에러메시지를</span> <span class="err">전송한다</span><span class="p">.</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<ul>
+  <li>multimap의 key는 활성화 여부로 1, 0 이다. value는 스레드 정보가 될 것이다.
+    <ul>
+      <li>multimap은 정렬연관 컨테이너로 key를 기준으로 자동적으로 정렬된다.</li>
+      <li>첫번 째 스레드가 처리중(1)으로 변경되면, 이 원소는 multimap의 가장 뒤로 정렬된다.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="예제">예제</h3>
+<hr />
+
+<p><img src="threadpool-example.png" /></p>
+
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/#thread" class="page__taxonomy-item" rel="tag">thread</a>
+    
+    </span>
+  </p>
+
+
+        
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2021-01-21T00:00:00+09:00">January 21, 2021</time></p>
+
+
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">Share on</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=thread+%3C3%3E+Thread+Pooling%20https%3A%2F%2Fmarkyang920413.github.io%2F%2Fthread%2Fsystem_programming-thread-thread_3%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmarkyang920413.github.io%2F%2Fthread%2Fsystem_programming-thread-thread_3%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fmarkyang920413.github.io%2F%2Fthread%2Fsystem_programming-thread-thread_3%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/thread/system_programming-thread-thread_2/" class="pagination--pager" title="thread &lt;2&gt; cond 조건변수, attribute, signal, cancel
+">Previous</a>
+    
+    
+      <a href="/c/c-c-pointer/" class="pagination--pager" title="aliasing restrict pointer
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/linux-filesystem/linux-linux_filesystem-LVM/" rel="permalink">LVM
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/mac/m1_rosetta2/" rel="permalink">M1 Mac 로제타2 설치, 로제타 사용 brew 설치, M1용 jekyll설치
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/algorithm/algorithm-algorithm-time_complexity/" rel="permalink">Time complexity
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          less than 1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/algorithm/algorithm-algorithm-IO_STL/" rel="permalink">시험에서 입출력, STL
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          less than 1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2021 Dong-Hyeon Yang. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "https://markyang920413.github.io//thread/system_programming-thread-thread_3/";  /* Replace PAGE_URL with your page's canonical URL variable */
+      this.page.identifier = "/thread/system_programming-thread-thread_3"; /* Replace PAGE_IDENTIFIER with your page's unique identifier variable */
+    };
+    (function() { /* DON'T EDIT BELOW THIS LINE */
+      var d = document, s = d.createElement('script');
+      s.src = 'https://MarkYang920413.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+
+
+  </body>
+</html>

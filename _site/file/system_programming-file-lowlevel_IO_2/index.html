@@ -1,0 +1,1390 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.21.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>lowlevel I/O &lt;2&gt; fd를 통한 파일제어, lseek(), dup(), dup2(), ioctl(), fcntl() - 혼자 보려고 만든 블로그</title>
+<meta name="description" content="lseek(), dup(), dup2(), ioctl(), fcntl(): fd를 통해 파일 제어">
+
+
+  <meta name="author" content="Dong-Heyon Yang">
+  
+  <meta property="article:author" content="Dong-Heyon Yang">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="혼자 보려고 만든 블로그">
+<meta property="og:title" content="lowlevel I/O &lt;2&gt; fd를 통한 파일제어, lseek(), dup(), dup2(), ioctl(), fcntl()">
+<meta property="og:url" content="https://markyang920413.github.io//file/system_programming-file-lowlevel_IO_2/">
+
+
+  <meta property="og:description" content="lseek(), dup(), dup2(), ioctl(), fcntl(): fd를 통해 파일 제어">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2020-12-25T00:00:00+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://markyang920413.github.io//file/system_programming-file-lowlevel_IO_2/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "Dong-Hyeon Yang",
+      "url": "https://markyang920413.github.io//"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="혼자 보려고 만든 블로그 Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          혼자 보려고 만든 블로그
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/categories/">Category</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/">About</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+  
+    
+      
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox" />
+  <label for="ac-toc">Toggle menu</label>
+  <ul class="nav__items">
+    
+      <li>
+        
+          <span class="nav__sub-title">LINUX</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#linux-system">LINUX System</a></li>
+          
+            <li><a href="/categories/#linux-tools">LINUX Tools</a></li>
+          
+            <li><a href="/categories/#linux-compile">LINUX Compile</a></li>
+          
+            <li><a href="/categories/#linux-filesystem">LINUX Filesystem</a></li>
+          
+            <li><a href="/categories/#http">HTTP</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">System Programming</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#file">File, Memory</a></li>
+          
+            <li><a href="/categories/#env">Env</a></li>
+          
+            <li><a href="/categories/#process">Process</a></li>
+          
+            <li><a href="/categories/#thread">Thread</a></li>
+          
+            <li><a href="/categories/#ipc">IPC</a></li>
+          
+            <li><a href="/categories/#signal">Signal</a></li>
+          
+            <li><a href="/categories/#socket-programming">Socket Programming</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">C</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#c">C</a></li>
+          
+            <li><a href="/categories/#system-programming">System Programming</a></li>
+          
+            <li><a href="/categories/#stdio">Standard I/O</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">Python</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#python-language">Python Language</a></li>
+          
+            <li><a href="/categories/#python-pandas">Python Pandas</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">Algorithm</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#algorithm">Algorithm</a></li>
+          
+            <li><a href="/categories/#problem">Problem</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">MAC</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#mac">Mac</a></li>
+          
+        </ul>
+        
+      </li>
+    
+  </ul>
+</nav>
+
+    
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="lowlevel I/O &lt;2&gt; fd를 통한 파일제어, lseek(), dup(), dup2(), ioctl(), fcntl()">
+    <meta itemprop="description" content="lseek(), dup(), dup2(), ioctl(), fcntl(): fd를 통해 파일 제어">
+    <meta itemprop="datePublished" content="2020-12-25T00:00:00+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">lowlevel I/O &lt;2&gt; fd를 통한 파일제어, lseek(), dup(), dup2(), ioctl(), fcntl()
+</h1>
+          
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          7 minute read
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              <ul class="toc__menu"><li><a href="#lseek2">lseek():2</a></li><li><a href="#dup2-dup22">dup():2, dup2():2</a></li><li><a href="#ioctl2">ioctl():2</a></li><li><a href="#fcntl2-파일-제어">fcntl():2 파일 제어</a><ul><li><a href="#close-on-exec에-대하여">close-on-exec에 대하여</a></li><li><a href="#f_dupfd">F_DUPFD</a></li><li><a href="#f_setfdf_getfd">F_SETFD/F_GETFD</a></li><li><a href="#f_getflf_setfl">F_GETFL/F_SETFL</a><ul><li><a href="#non_blocking-on">NON_BLOCKING ON</a></li></ul></li><li><a href="#f_getownf_setown">F_GETOWN/F_SETOWN</a></li></ul></li><li><a href="#fcntl을-통한-잠금방법">fcntl을 통한 잠금방법</a><ul><li><a href="#파일-잠그기-예제-by-fcntl">파일 잠그기 예제 by fcntl</a></li><li><a href="#레코드-잠그기">레코드 잠그기</a></li></ul></li></ul>
+
+            </nav>
+          </aside>
+        
+        <h2 id="lseek2">lseek():2</h2>
+
+<p><img src="img1.jpg" width="50%" height="50%" /><br />
+<strong>스트림</strong>은 파일의 특정 위치에 연결되어 있다.
+스트림이 연결되어 있는 위치를 <span style="color:red"><strong>파일 오프셋</strong></span>이라 한다.</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;sys/types.h&gt;
+#include &lt;unistd.h&gt;
+</span>
+<span class="n">Off_t</span> <span class="nf">lseek</span><span class="p">(</span><span class="kt">int</span> <span class="n">fd</span><span class="p">,</span> <span class="kt">off_t</span> <span class="n">offset</span><span class="p">,</span> <span class="kt">int</span> <span class="n">whence</span><span class="p">);</span>
+</code></pre></div></div>
+<p>기능: <strong>fd</strong> 내부의 파일 오프셋을 <strong>지정한 위치로 이동</strong></p>
+
+<table>
+  <tbody>
+    <tr>
+      <td><strong><em>return</em></strong></td>
+      <td><strong><em>value</em></strong></td>
+    </tr>
+    <tr>
+      <td>성공</td>
+      <td>파일의 시작으로 부터 오프셋 위치</td>
+    </tr>
+    <tr>
+      <td>실패</td>
+      <td>-1</td>
+    </tr>
+  </tbody>
+</table>
+
+<table>
+  <tbody>
+    <tr>
+      <td><strong><em>parameter</em></strong></td>
+      <td><strong><em>Description</em></strong></td>
+    </tr>
+    <tr>
+      <td><em>fd</em></td>
+      <td>파일 디스크립터</td>
+    </tr>
+    <tr>
+      <td><em>offset</em></td>
+      <td>오프셋</td>
+    </tr>
+    <tr>
+      <td><em>whence</em></td>
+      <td>모드</td>
+    </tr>
+  </tbody>
+</table>
+
+<table>
+  <tbody>
+    <tr>
+      <td><strong><em>whence</em></strong></td>
+      <td><strong>이동 위치</strong></td>
+    </tr>
+    <tr>
+      <td><strong>SEEK_SET</strong></td>
+      <td>파일의 <span style="color:red"><strong>처음</strong></span>을 <strong>기준</strong>으로 오프셋 계산 및 이동</td>
+    </tr>
+    <tr>
+      <td><strong>SEEK_CUR</strong></td>
+      <td>파일의 <span style="color:red"><strong>현재 위치</strong></span>을 <strong>기준</strong>으로 오프셋 계산 및 이동</td>
+    </tr>
+    <tr>
+      <td><strong>SEEK_END</strong></td>
+      <td>파일의 <span style="color:red"><strong>마지막</strong></span>을 <strong>기준</strong>으로 오프셋 계산 및 이동</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><img src="img2.jpg" width="80%" height="80%" /></p>
+
+<h2 id="dup2-dup22">dup():2, dup2():2</h2>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;unistd.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">dup</span><span class="p">(</span><span class="kt">int</span> <span class="n">oldfd</span><span class="p">);</span>
+<span class="kt">int</span> <span class="nf">dup2</span><span class="p">(</span><span class="kt">int</span> <span class="n">oldfd</span><span class="p">,</span> <span class="kt">int</span> <span class="n">newfd</span><span class="p">);</span>
+</code></pre></div></div>
+<p>기능: 인자로 지정한 <strong>파일 디스크립터 복제</strong></p>
+
+<p>활용은 <a href="https://markyang920413.github.io/ipc/system_programming-ipc-pipe/#dup2-dup22">pipe dup사용하기</a> 참고</p>
+
+<h2 id="ioctl2">ioctl():2</h2>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;sys/ioctl.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">ioctl</span><span class="p">(</span><span class="kt">int</span> <span class="n">fd</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="kt">long</span> <span class="n">request</span><span class="p">,</span> <span class="p">...);</span>
+</code></pre></div></div>
+<p>기능: <strong>스트림이 연결된 디바이스</strong>에 특화된 작업을 모두 포함하는 시스템 콜</p>
+<ul>
+  <li>DVD 드라이브 여닫기, 음악 CD 재생</li>
+  <li>프린터 구동이나 일시 정지</li>
+  <li>SCSI 디바이스 하드웨어 옵션 셜정</li>
+  <li>단말 통신 속도 설정 등</li>
+  <li>유닉스의 open(), read(), write(), close() 인터페이스 이외 기능들이 모두 ioctl()에 있다.</li>
+</ul>
+
+<table>
+  <tbody>
+    <tr>
+      <td><strong><em>parameter</em></strong></td>
+      <td><strong><em>Description</em></strong></td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <td><em>fd</em></td>
+      <td>처리할 파일 디스크립터</td>
+    </tr>
+    <tr>
+      <td><em>request</em></td>
+      <td>어떤 작업을 할 것인가?</td>
+    </tr>
+    <tr>
+      <td><strong>…</strong></td>
+      <td>_request_파라미터에 따라 추가 지정해야 하는 인자<br /><strong>man ioctl_list</strong>에서 확인 할 수 있다.</td>
+    </tr>
+  </tfoot>
+</table>
+
+<h2 id="fcntl2-파일-제어">fcntl():2 파일 제어</h2>
+<ul>
+  <li><strong>UNIX</strong>는 모든 것이 <strong>file</strong>로 되어 있다. 그래서.. <strong>file</strong>을 잘 다루어야한다!
+    <ul>
+      <li><strong>일반 파일</strong>, <strong>socket</strong>, <strong>IPC</strong>, <strong>device</strong>등 모든 것이 파일이고 이를 <span style="color:blue"><strong>특성 제어</strong></span>하는 것이 <span style="color:steelblue"><strong><em>fcntl()</em></strong></span>이다.</li>
+      <li>대표적 <span style="color:magenta"><strong>Non-Blocking</strong></span> 셋팅!</li>
+    </ul>
+  </li>
+</ul>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;unistd.h&gt;
+#include &lt;fcntl.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">fcntl</span><span class="p">(</span><span class="kt">int</span> <span class="n">fd</span><span class="p">,</span> <span class="kt">int</span> <span class="n">cmd</span><span class="p">);</span>
+<span class="kt">int</span> <span class="nf">fcntl</span><span class="p">(</span><span class="kt">int</span> <span class="n">fd</span><span class="p">,</span> <span class="kt">int</span> <span class="n">cmd</span><span class="p">,</span> <span class="kt">long</span> <span class="n">arg</span><span class="p">);</span>
+<span class="kt">int</span> <span class="nf">fcntl</span><span class="p">(</span><span class="kt">int</span> <span class="n">fd</span><span class="p">,</span> <span class="kt">int</span> <span class="n">cmd</span><span class="p">,</span> <span class="k">struct</span> <span class="n">flock</span> <span class="o">*</span><span class="n">lock</span><span class="p">);</span>
+</code></pre></div></div>
+<ul>
+  <li>기능: 지정한 <strong>fd</strong>에 <strong><em>cmd</em></strong>로 <strong>특성 제어</strong> 한다.</li>
+</ul>
+
+<table>
+  <tbody>
+    <tr>
+      <td><strong><em>parameter</em></strong></td>
+      <td><strong><em>Description</em></strong></td>
+      <td><strong><em>arg</em></strong></td>
+      <td><strong><em>비고</em></strong></td>
+    </tr>
+    <tr>
+      <td><em>fd</em></td>
+      <td>제어할 파일 디스크립터</td>
+      <td>　</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td><em>cmd</em></td>
+      <td><strong>F_DUPFD</strong><br />지정한 <strong>fd</strong>를 <strong>복사</strong>하기 위해 사용</td>
+      <td><strong>복사결과의 fd</strong>번호</td>
+      <td><strong>copied fd</strong> <strong>&gt;=</strong> <span style="color:magenta"><em>arg</em></span>이며, 이미 사용중이면 가능하면서 가장 적은후로 Copy</td>
+    </tr>
+    <tr>
+      <td>　</td>
+      <td><strong>F_GETFD</strong><br />리턴 값으로 <strong>FD</strong>에 대한 <strong>flag 값</strong>을 넘겨준다.</td>
+      <td><strong>0</strong></td>
+      <td>현재는 <strong>FD_CLOEXEC</strong>(close-on-exec) 정보만 넘겨준다</td>
+    </tr>
+    <tr>
+      <td>　</td>
+      <td><strong>F_SETFD</strong><br /><strong><em>arg</em></strong>로 준 비트값 설정을 <strong><em>fd</em></strong>에 <strong>set</strong></td>
+      <td>설정 bit</td>
+      <td><strong>FD_CLOEXEC</strong>(close-on-exec)설정 가능</td>
+    </tr>
+    <tr>
+      <td>　</td>
+      <td><strong>F_GETFL</strong><br /><strong><em>fd</em></strong>에 대한 <strong>open()</strong> 호출 했을 때, <strong><em>flags</em></strong> 읽어옴</td>
+      <td><strong>0</strong></td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td>　</td>
+      <td><strong>F_SETFL</strong><br /><strong><em>arg</em></strong>에 지정된 값으로 <strong><em>fd</em></strong> 특성 셋팅</td>
+      <td>설정 가능: <strong>O_APPEND, O_NONBLOCK, O_ASYNC</strong><br />읽기 가능: <strong>O_RDONLY, O_WRONLY, O_RDWR</strong></td>
+      <td>(O_ASYNC는 <u>비동기 입출력</u>모델을 구현하기 위해 사용)<br />읽기 권한 정보를 읽어오는 것은 <strong>O_ACCMODE</strong>와 bit연산을 함으로써 얻을 수 있다. 그 밖 정보는 각각의 플래그등과 비트연산한다.<br />ex) <strong>fcntl(fd, F_SETFL, O_RDWR | O_NONBLOCK | O_ASYNC)</strong></td>
+    </tr>
+    <tr>
+      <td>　</td>
+      <td><strong>F_GETOWN</strong><br />비동기 입출력과 관련되어 사용 됨</td>
+      <td>-</td>
+      <td><span style="color:magenta"><strong>SIGIO</strong></span>, <span style="color:magenta"><strong>SIGURG</strong></span> 신호를 받는 <strong><em>PID</em></strong>를 얻기위해 사용</td>
+    </tr>
+    <tr>
+      <td>　</td>
+      <td><strong>F_SETOWN</strong><br />비동기 입출력과 관련되어 사용</td>
+      <td><strong>getpid()</strong></td>
+      <td><span style="color:magenta"><strong>SIGIO</strong></span>, <span style="color:magenta"><strong>SIGURG</strong></span> 신호를 받는 <strong><em>PID</em></strong>(혹은 그룹)을 설정하기 위해 사용<br />ex) <strong>fcntl(fd, F_SETOWN, getpid())</strong></td>
+    </tr>
+    <tr>
+      <td>　</td>
+      <td><strong>F_SETAUXFL</strong></td>
+      <td><strong>O_ONESIGFD</strong>: 하나의 소켓당 하나의 이벤트가 대기열에 들어가도록 설정. RTS Overflow를 일어나지 않게한다.</td>
+      <td><a href="signal/system_programming-signal-signal_3/#rts-대기열의-크기에-따른-문제"><strong>RTS Overflow참고</strong></a></td>
+    </tr>
+    <tr>
+      <td>　</td>
+      <td><strong>F_SETSIG</strong></td>
+      <td><strong>시그널 번호</strong></td>
+      <td><strong>fd</strong>에 대해 <strong>시그널 셋</strong><br />ex) <strong>fclntl(fd, F_SETSIG, SIGRTMIN)</strong>: fd에 대해 RTS대응하도록 만든다.</td>
+    </tr>
+    <tr>
+      <td>　</td>
+      <td><strong>Other flags</strong></td>
+      <td>Refer to man page</td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
+
+<table>
+  <tbody>
+    <tr>
+      <td><strong><em>return</em></strong></td>
+      <td><strong><em>value</em></strong></td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <td>성공</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>실패</td>
+      <td>-1</td>
+    </tr>
+  </tfoot>
+</table>
+
+<h3 id="close-on-exec에-대하여">close-on-exec에 대하여</h3>
+<hr />
+<ul>
+  <li>보통 프로세스에서 <strong><em>exec()</em></strong>하면, 새로운 프로세스는 기존의 이미지를 덮어쓴다.</li>
+  <li>특별한 설정이 없으면 <span style="color:red"><strong>fd를 그대로</strong></span> 넘겨준다.</li>
+</ul>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;unistd.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;fcntl.h&gt;
+#include &lt;sys/types.h&gt;
+#include &lt;sys/stat.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(){</span>
+	<span class="kt">int</span> <span class="n">fd</span><span class="p">;</span>
+	<span class="kt">int</span> <span class="n">val</span><span class="p">;</span>
+	<span class="n">fd</span><span class="o">=</span><span class="n">open</span><span class="p">(</span><span class="s">"exec_copy.txt"</span><span class="p">,</span><span class="n">O_CREAT</span><span class="p">);</span>
+
+	<span class="n">execl</span><span class="p">(</span><span class="s">"/home/my_cvs/test/c_source/loop"</span><span class="p">,</span> <span class="s">"./loop"</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+<ul>
+  <li>그냥 무한 loop 시키는 프로그램이다.</li>
+  <li>실행 후, ps를 확인하고 /proc/pid/fd로 이동해서 ls를 보면
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">ls</span> <span class="nt">-al</span>
+합계 0
+dr-x------    2 root     root            0 10월 25 13:59 <span class="nb">.</span>
+dr-xr-xr-x    3 root     root            0 10월 25 13:59 ..
+lrwx------    1 root     root           64 10월 25 13:59 0 -&gt; /dev/ttyp0
+lrwx------    1 root     root           64 10월 25 13:59 1 -&gt; /dev/ttyp0
+lrwx------    1 root     root           64 10월 25 13:59 2 -&gt; /dev/ttyp0
+lr-x------    1 root     root           64 10월 25 13:59 3 -&gt; /home/mycvs/test/exec_copy.txt
+</code></pre></div>    </div>
+  </li>
+  <li><strong>exec</strong>하면서 <strong>fd</strong>가 <strong>상속</strong>되었음을 알 수 있다.</li>
+  <li>때때로 <strong>exec</strong>하면서 <span style="color:red"><strong>기존 fd를 정리</strong></span>하고 실행하고 싶을 때도 있다.
+    <ul>
+      <li>이러한 경우를 <span style="color:red"><strong>Close-on-exec</strong></span>이라고 한다.</li>
+      <li><span style="color:steelblue"><strong><em>fcntl()</em></strong></span>을 사용하면, <strong>fd</strong>에 대해 <strong>close-on-exec</strong>를 작동케할 수 있다.</li>
+      <li>이미 open()에서 close-on-exec를 애초에 설정하고 fd를 여는 방법도 있다. <a href="http://markyang920413.github.io/file/system_programming-file-lowlevel_IO_1/#close-on-exec"><strong>참고</strong></a></li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="f_dupfd">F_DUPFD</h3>
+<hr />
+<ul>
+  <li><strong>f_dupfd.c</strong></li>
+</ul>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;fcntl.h&gt;
+#include &lt;sys/types.h&gt;
+#include &lt;sys/stat.h&gt;
+#include &lt;stdio.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(){</span>
+	<span class="kt">int</span> <span class="n">testfd</span><span class="p">;</span>
+	<span class="kt">int</span> <span class="n">fd</span><span class="p">;</span>
+	<span class="n">fd</span><span class="o">=</span><span class="n">open</span><span class="p">(</span><span class="s">"test.txt"</span><span class="p">,</span> <span class="n">O_CREAT</span><span class="p">);</span>
+
+	<span class="n">testfd</span><span class="o">=</span><span class="n">fcntl</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span><span class="n">F_DUPFD</span><span class="p">,</span> <span class="mi">10</span><span class="p">);</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">"testfd: %d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">testfd</span><span class="p">);</span>
+	<span class="n">testfd</span><span class="o">=</span><span class="n">fcntl</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span><span class="n">F_DUPFD</span><span class="p">,</span> <span class="mi">10</span><span class="p">);</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">"testfd: %d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">testfd</span><span class="p">);</span>
+
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><img src="img3.png" width="30%" /></p>
+<ul>
+  <li><u>이미 사용중인 fd</u>라면 <em>arg</em>보다는 크지만 허용가능한 <strong>fd</strong> 수 중에서 가장 작은 수로 부여</li>
+</ul>
+
+<h3 id="f_setfdf_getfd">F_SETFD/F_GETFD</h3>
+<hr />
+<ul>
+  <li><strong>close-on-exec</strong> 값을 조절하기 위해 사용된다.</li>
+  <li><strong>F_GETFD</strong>를 이용해서, <strong>FD_CLOEXEC</strong> 값을 가져옴</li>
+  <li><strong>F_SETFD</strong>를 이용해 이 값을 변경한다.</li>
+  <li>기본적으로는 exec할 때 close되지 않는다. 그럼 <strong>f_dupfd.c</strong>를 <strong>close-on-exec</strong> 하도록 약간 변경해보자.</li>
+</ul>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;unistd.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;fcntl.h&gt;
+#include &lt;sys/types.h&gt;
+#include &lt;sys/stat.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(){</span>
+	<span class="kt">int</span> <span class="n">fd</span><span class="p">;</span>
+	<span class="kt">int</span> <span class="n">val</span><span class="p">;</span>
+	<span class="n">fd</span><span class="o">=</span><span class="n">open</span><span class="p">(</span><span class="s">"exec_copy.txt"</span><span class="p">,</span><span class="n">O_CREAT</span><span class="p">,</span><span class="mo">0600</span><span class="p">);</span>
+
+	<span class="c1">// FD_CLOEXEC 값을 fcntl을 이용해서 가져온 다음 세팅되어 있는지 검사한다 </span>
+	<span class="n">val</span><span class="o">=</span><span class="n">fcntl</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span><span class="n">F_GETFD</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">val</span><span class="o">&amp;</span><span class="n">FD_CLOEXEC</span><span class="p">)</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">"close-on-exec on</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+	<span class="k">else</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">"close-on-exec off</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+	
+	<span class="c1">// FD_CLOEXEC set</span>
+	<span class="n">val</span> <span class="o">|=</span> <span class="n">FD_CLOEXEC</span><span class="p">;</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">val</span><span class="o">&amp;</span><span class="n">FD_CLOEXEC</span><span class="p">)</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">"close-on-exec on</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+	<span class="k">else</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">"close-on-exec off</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+	<span class="n">fcntl</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span><span class="n">F_SETFD</span><span class="p">,</span><span class="n">val</span><span class="p">);</span> <span class="c1">// set val</span>
+
+	<span class="n">execl</span><span class="p">(</span><span class="s">"/home/my_cvs/test/c_source/loop"</span><span class="p">,</span> <span class="s">"./loop"</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span> <span class="c1">// It shouldn't be executed.</span>
+	
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="f_getflf_setfl">F_GETFL/F_SETFL</h3>
+<hr />
+<ul>
+  <li><strong>F_GETFL</strong>은 <strong>open()</strong>시 <strong>fd</strong>의 <strong><em>flags</em></strong>값을 가져온다.</li>
+  <li><strong>F_SETFL</strong>은 <strong>fd</strong>값 특성을 셋팅한다.
+    <ul>
+      <li><strong>F_SETFL</strong>을 이용해 변경할 수 있는 특성은 <strong>O_APPEND, O_NONBLOCK, O_OASYNC</strong>다. <strong>O_\RDONLY, O_WRONLY, O_RDWR</strong>은 읽기만 가능하다.</li>
+      <li>읽기 권한 정보를 읽어오는 것은 <strong>O_ACCMODE</strong>와 비트 연산</li>
+      <li>다른 정보는 각각의 플래그와 비트연산으로 얻는다.</li>
+    </ul>
+  </li>
+  <li><strong>fgetfl_test.c</strong></li>
+</ul>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;fcntl.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;sys/types.h&gt;
+#include &lt;sys/stat.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(){</span>
+	<span class="kt">int</span> <span class="n">mode</span><span class="p">,</span> <span class="n">fd</span><span class="p">,</span> <span class="n">value</span><span class="p">;</span>
+
+	<span class="n">fd</span><span class="o">=</span><span class="n">open</span><span class="p">(</span><span class="s">"test.sh"</span><span class="p">,</span> <span class="n">O_RDONLY</span><span class="o">|</span><span class="n">O_CREAT</span><span class="p">,</span> <span class="mo">0644</span><span class="p">);</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">fd</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">){</span>
+		<span class="n">perror</span><span class="p">(</span><span class="s">"open error</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+		<span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+	<span class="p">}</span>
+
+	<span class="n">value</span><span class="o">=</span><span class="n">fcntl</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span><span class="n">F_GETFL</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span> <span class="c1">// fd의 open시 flags 얻음 </span>
+
+	<span class="n">mode</span><span class="o">=</span><span class="n">value</span> <span class="o">&amp;</span> <span class="n">O_ACCMODE</span><span class="p">;</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">mode</span><span class="o">==</span><span class="n">O_RDONLY</span><span class="p">)</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">"O_RDONLY on</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+	<span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">mode</span> <span class="o">==</span> <span class="n">O_WRONLY</span><span class="p">)</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">"O_WRONLY on</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+	<span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">mode</span> <span class="o">==</span> <span class="n">O_RDWR</span><span class="p">)</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">"O_RDWR on</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+	
+	<span class="k">if</span><span class="p">(</span><span class="n">value</span> <span class="o">&amp;</span> <span class="n">O_NONBLOCK</span><span class="p">)</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">"O_NONBLOCK on</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+	<span class="k">else</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">"BLOCKING mode on</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">value</span> <span class="o">&amp;</span> <span class="n">O_ASYNC</span><span class="p">)</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">"O_ASYNC on</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+<p><img src="img4.png" width="40%" /></p>
+
+<h4 id="non_blocking-on">NON_BLOCKING ON</h4>
+
+<ul>
+  <li><strong>fsetfl_test.c</strong></li>
+</ul>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;fcntl.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;sys/types.h&gt;
+#include &lt;sys/stat.h&gt;
+#include &lt;string.h&gt;
+</span>
+<span class="cp">#define STDIN 0
+</span><span class="kt">int</span> <span class="nf">main</span><span class="p">(){</span>
+	<span class="kt">int</span> <span class="n">mode</span><span class="p">,</span> <span class="n">fd</span><span class="p">,</span> <span class="n">value</span><span class="p">;</span>
+	<span class="kt">char</span> <span class="n">buf</span><span class="p">[</span><span class="mi">255</span><span class="p">];</span>
+	<span class="n">memset</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="mh">0x0</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">buf</span><span class="p">));</span>
+
+	<span class="c1">// 처음 입력은 BLOCKING MODE</span>
+	<span class="n">read</span><span class="p">(</span><span class="n">STDIN</span><span class="p">,</span> <span class="n">buf</span><span class="p">,</span> <span class="mi">255</span><span class="p">);</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">"-&gt; %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">buf</span><span class="p">);</span>
+	<span class="n">memset</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="mh">0x0</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">buf</span><span class="p">));</span>
+
+	<span class="c1">// NON_BLOCKING 모드로 변경</span>
+	<span class="n">value</span><span class="o">=</span><span class="n">fcntl</span><span class="p">(</span><span class="n">STDIN</span><span class="p">,</span> <span class="n">F_GETFL</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+	<span class="n">value</span> <span class="o">|=</span> <span class="n">O_NONBLOCK</span><span class="p">;</span>
+	<span class="n">fcntl</span><span class="p">(</span><span class="n">STDIN</span><span class="p">,</span> <span class="n">F_SETFL</span><span class="p">,</span> <span class="n">value</span><span class="p">);</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">"Non blocking mode on</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+
+	<span class="c1">// wait 2 sec</span>
+	<span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+
+	<span class="c1">// busy wait start</span>
+	<span class="k">while</span><span class="p">(</span><span class="mi">1</span><span class="p">){</span>
+		<span class="n">read</span><span class="p">(</span><span class="n">STDIN</span><span class="p">,</span><span class="n">buf</span><span class="p">,</span><span class="k">sizeof</span><span class="p">(</span><span class="n">buf</span><span class="p">));</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">"-&gt; %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">buf</span><span class="p">);</span>
+		<span class="n">fflush</span><span class="p">(</span><span class="n">stdout</span><span class="p">);</span>
+		<span class="k">break</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p><img src="img5.png" width="40%" /></p>
+
+<ul>
+  <li><strong>blocking</strong>모드 일 땐, 입력을 기다리지만 <span style="color:red"><strong>NON_BLOCKING</strong></span> 모드일 땐 2초 뒤 그냥 끝낸다.</li>
+</ul>
+
+<h3 id="f_getownf_setown">F_GETOWN/F_SETOWN</h3>
+<hr />
+<ul>
+  <li><strong>F_GETFL/F_SETFL</strong>은 fd의 특성을 변경한다. 그 중 <strong>O_ASYNC</strong>는 <strong>비동기 입출력</strong>과 관련된 것이다.
+    <ul>
+      <li><strong>F_GETOWN/F_SETOWN</strong> 은 이 <strong>비동기 입출력과 관련된 flags</strong>이다.</li>
+      <li>이들 <strong><em>flag</em></strong>를 사용함으로써 비동기 입출력 모드로 fd가 설정되어 있을 때, 어떤 프로세스(그룹) 아이디로 부터 오는 시그널을 받을지를 지정해 줄 수 있다.</li>
+      <li>추후 명세</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="fcntl을-통한-잠금방법">fcntl을 통한 잠금방법</h2>
+<ul>
+  <li>fcntl을 통해 <strong>파일 잠금, 레코드 잠금</strong> 가능
+<br /></li>
+  <li><strong>잠금</strong>
+    <ul>
+      <li><span style="color:magenta"><strong>멀티 스레드</strong></span>프로그램에서, 여러 스레드가 <strong>하나의 파일</strong>에 동시에 접근하는 경우, 파일 잠금이 필요할 수 있다.<br />한번에 하나의 스레드만이 읽기 및 쓰기를 해야하는 경우가 있기 때문이다.</li>
+      <li>DB의 경우 파일잠금 + 레코드잠금이 필요하다. 특정 레코드에는 하나의 스레드만 접근 제어해야한다.
+        <ul>
+          <li><strong>레코드 잠금</strong>은 <strong>해당 프로세스</strong>가 <span style="color:red"><strong>액세스</strong></span>하는 부분만 <strong>잠금!</strong></li>
+        </ul>
+      </li>
+      <li>UNIX에서는 <strong>fcntl()</strong>을 통해 잠금 구현</li>
+    </ul>
+  </li>
+</ul>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;unistd.h&gt;
+#include &lt;fcntl.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">fcntl</span><span class="p">(</span><span class="kt">int</span> <span class="n">fd</span><span class="p">,</span> <span class="kt">int</span> <span class="n">cmd</span><span class="p">,</span> <span class="k">struct</span> <span class="n">flock</span><span class="o">*</span> <span class="n">lock</span><span class="p">);</span>
+</code></pre></div></div>
+<ul>
+  <li><span style="color:magenta"><strong><em>struct</em></strong></span> <span style="color:navy"><strong>flock*</strong></span> <span style="color:red"><strong>lock</strong></span>이 <strong>레코드 잠금</strong>을 위해 사용된다(잠금에 필요한 정보를 포함).</li>
+</ul>
+
+<table>
+  <tbody>
+    <tr>
+      <td><strong><em>parameter</em></strong></td>
+      <td><strong><em>description</em></strong></td>
+    </tr>
+    <tr>
+      <td><em>int</em> <strong><em>fd</em></strong></td>
+      <td>설정할 파일 디스크립터</td>
+    </tr>
+    <tr>
+      <td><em>int</em> <strong><em>cmd</em></strong></td>
+      <td>명령<br /><strong>F_SETLK</strong>: flock 구조체에 설정된 잠금을 얻기/잠금을 풀기위해 사용<br />　- 프로세스는 특정 영역의 잠금을 검사해서 잠금을 사용할 수 있으면 잠금을 얻음. 작업이 끝나면 잠금을 품<br />　- 잠금을 얻을 수 없으면, -1을 반환하고 errno EACCESS, EAGAIN을 설정<br />　- 잠금을 검사하는 용도로 사용할 수 있다.<br /><strong>F_SETLKW</strong>: F_SETLK와 같은 일을 하지만, 에러를 리턴하는 대신 잠금이 풀릴때까지 해당영역에서 기다린다(block).<br />　- F_SETLK의 봉쇄형이다.<br /><strong>F_GETLK</strong>: 잠금이 있는지 없는지 검사<br />　- 만약 잠금이 없다면 <strong><em>l_type</em></strong>을 <strong>F_UNLCK</strong>로 설정<br />　- 만약 잠금이 있다면, 현재의 flock 정보를 flock 구조체로 돌려준다.</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">struct</span> <span class="n">flock</span><span class="p">{</span>
+	<span class="kt">short</span> <span class="kt">int</span> <span class="n">l_type</span><span class="p">;</span>	<span class="cm">/* 잠김 타입: F_RDLCK, F_WRLCK, F_UNLCK */</span>
+	<span class="kt">short</span> <span class="kt">int</span> <span class="n">l_whence</span><span class="p">;</span>	<span class="cm">/* 파일의 절대 위치 */</span>
+	<span class="n">__off_t</span> <span class="n">l_start</span><span class="p">;</span>	<span class="cm">/* 파일의 offset */</span>
+	<span class="n">__off_t</span> <span class="n">l_len</span><span class="p">;</span>		<span class="cm">/* 잠그고자 하는 파일의 길이 */</span>
+	<span class="n">__pid_t</span> <span class="n">l_pid</span><span class="p">;</span>		<span class="cm">/* 잠금을 얻은 프로세스의 pid */</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<table>
+  <tbody>
+    <tr>
+      <td><span style="color:magenta"><strong><em>struct</em></strong></span> <span style="color:navy"><strong>flock</strong></span>의 멤버</td>
+      <td><strong><em>description</em></strong></td>
+    </tr>
+    <tr>
+      <td><em>short int</em> <strong><em>l_type</em></strong></td>
+      <td><strong>F_RDLCK</strong>: 읽기 전용<br /><strong>F_WRLCK</strong>: 쓰기 전용<br /><strong>F_UNLCK</strong>: 잠금 되지 않음</td>
+    </tr>
+    <tr>
+      <td><em>short int</em> <strong><em>l_whence</em></strong></td>
+      <td>파일에서 절대적 위치</td>
+    </tr>
+    <tr>
+      <td><em>__off_t</em> <strong><em>l_start</em></strong></td>
+      <td>l_whence로 부터 이동한 거리(offset)</td>
+    </tr>
+    <tr>
+      <td><em>__off_t</em> <strong><em>l_len</em></strong></td>
+      <td>잠그고자 하는 파일 길이</td>
+    </tr>
+  </tbody>
+</table>
+
+<ul>
+  <li>l_whence: SEEK_SET, l_start: 16, l_len: 16<br />　　=&gt; 레코드 위치: <u>처음 + 16</u> (16<sup>th</sup>) <u>~ 32</u> 사이 데이터 블럭 잠금
+    <ul>
+      <li><a href="https://markyang920413.github.io//system-programming/system_programming_2/#lseek2"><strong>whence 매크로참고</strong></a></li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="파일-잠그기-예제-by-fcntl">파일 잠그기 예제 by fcntl</h3>
+<hr />
+<p><img src="img6.png" width="70%" /></p>
+
+<p><strong>code</strong></p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;fcntl.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">fd_unlock</span><span class="p">(</span><span class="kt">int</span> <span class="n">fd</span><span class="p">);</span>
+<span class="kt">int</span> <span class="nf">fd_open</span><span class="p">(</span><span class="kt">int</span> <span class="n">fd</span><span class="p">);</span>
+<span class="kt">int</span> <span class="nf">fd_lock</span><span class="p">(</span><span class="kt">int</span> <span class="n">fd</span><span class="p">);</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(){</span>
+	<span class="kt">int</span> <span class="n">fd</span><span class="p">;</span>
+	<span class="kt">int</span> <span class="n">n_read</span><span class="p">;</span>
+	<span class="kt">char</span> <span class="n">buf</span><span class="p">[</span><span class="mi">11</span><span class="p">]</span><span class="o">=</span><span class="s">"1"</span><span class="p">;</span>
+	<span class="kt">char</span> <span class="n">wbuf</span><span class="p">[</span><span class="mi">11</span><span class="p">];</span>
+
+	<span class="n">fd</span><span class="o">=</span><span class="n">open</span><span class="p">(</span><span class="s">"counter.txt"</span><span class="p">,</span> <span class="n">O_CREAT</span> <span class="o">|</span> <span class="n">O_RDWR</span><span class="p">,</span> <span class="mo">0644</span><span class="p">);</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">fd</span><span class="o">==-</span><span class="mi">1</span><span class="p">){</span>
+		<span class="n">perror</span><span class="p">(</span><span class="s">"file open error : "</span><span class="p">);</span>
+		<span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+	<span class="p">}</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">fd_lock</span><span class="p">(</span><span class="n">fd</span><span class="p">)</span><span class="o">==-</span><span class="mi">1</span><span class="p">){</span> <span class="c1">// lock</span>
+		<span class="n">perror</span><span class="p">(</span><span class="s">"file is lock "</span><span class="p">);</span>
+		<span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+	<span class="p">}</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">"I get file lock</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+
+	<span class="n">write</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span><span class="n">buf</span><span class="p">,</span><span class="n">strlen</span><span class="p">(</span><span class="n">buf</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
+	<span class="n">memset</span><span class="p">(</span><span class="n">wbuf</span><span class="p">,</span> <span class="mh">0x0</span><span class="p">,</span> <span class="mi">11</span><span class="p">);</span>
+	<span class="k">if</span><span class="p">((</span><span class="n">n_read</span><span class="o">=</span><span class="n">read</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span><span class="n">buf</span><span class="p">,</span><span class="mi">11</span><span class="p">))</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">){</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">"%s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="n">buf</span><span class="p">);</span>
+	<span class="p">}</span>
+	<span class="c1">// 처음 위치로 되돌림</span>
+	<span class="n">lseek</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">SEEK_SET</span><span class="p">);</span>
+	<span class="n">sprintf</span><span class="p">(</span><span class="n">wbuf</span><span class="p">,</span><span class="s">"%d"</span><span class="p">,</span><span class="n">atoi</span><span class="p">(</span><span class="n">buf</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">);</span>
+	<span class="n">write</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span> <span class="n">wbuf</span><span class="p">,</span> <span class="mi">11</span><span class="p">);</span>
+
+	<span class="c1">// 숫자외의 필요없는 부분을 자른다.</span>
+	<span class="n">ftruncate</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span> <span class="n">strlen</span><span class="p">(</span><span class="n">wbuf</span><span class="p">));</span>
+
+	<span class="n">sleep</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+
+	<span class="c1">// 파일잠김을 푼다.</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">fd_unlock</span><span class="p">(</span><span class="n">fd</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">){</span>
+		<span class="n">perror</span><span class="p">(</span><span class="s">"file unlock error "</span><span class="p">);</span>
+	<span class="p">}</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">"file unlock success</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+	<span class="n">sleep</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
+
+	<span class="n">close</span><span class="p">(</span><span class="n">fd</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="cm">/* 파일이 잠겨있는지 확인하고 잠겨있지 않다면, 
+ * 잠금을 얻고
+ * 잠겨있으면, 잠김이 풀릴때까지 기다린다(F_STREAM)
+ */</span>
+
+<span class="kt">int</span> <span class="nf">fd_lock</span><span class="p">(</span><span class="kt">int</span> <span class="n">fd</span><span class="p">){</span>
+	<span class="k">struct</span> <span class="n">flock</span> <span class="n">lock</span><span class="p">;</span>
+
+	<span class="n">lock</span><span class="p">.</span><span class="n">l_type</span><span class="o">=</span><span class="n">F_WRLCK</span><span class="p">;</span>
+	<span class="n">lock</span><span class="p">.</span><span class="n">l_start</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+	<span class="n">lock</span><span class="p">.</span><span class="n">l_whence</span><span class="o">=</span><span class="n">SEEK_SET</span><span class="p">;</span>
+	<span class="n">lock</span><span class="p">.</span><span class="n">l_len</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+
+	<span class="k">return</span> <span class="n">fcntl</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span> <span class="n">F_SETLKW</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">lock</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="cm">/* 파일잠금을 얻은 후 모든 작업이 끝난다면 파일 잠금을 돌려줌 */</span>
+<span class="kt">int</span> <span class="nf">fd_unlock</span><span class="p">(</span><span class="kt">int</span> <span class="n">fd</span><span class="p">){</span>
+	<span class="k">struct</span> <span class="n">flock</span> <span class="n">lock</span><span class="p">;</span>
+
+	<span class="n">lock</span><span class="p">.</span><span class="n">l_type</span><span class="o">=</span><span class="n">F_UNLCK</span><span class="p">;</span>
+	<span class="n">lock</span><span class="p">.</span><span class="n">l_start</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+	<span class="n">lock</span><span class="p">.</span><span class="n">l_whence</span><span class="o">=</span><span class="n">SEEK_SET</span><span class="p">;</span>
+	<span class="n">lock</span><span class="p">.</span><span class="n">l_len</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+
+	<span class="k">return</span> <span class="n">fcntl</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span> <span class="n">F_SETLK</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">lock</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>./file_lock_using_fcntl
+I get file lock		<span class="c"># 이 단계에서, 프로그램은 counter.txt를 만들어 1을 write한다.</span>
+file unlock sucess
+<span class="nv">$ </span><span class="nb">cat </span>counter.txt
+2			<span class="c"># 원래 1이 있던 텍스트에서 +1하여 2를 write 된 파일</span>
+</code></pre></div></div>
+<ul>
+  <li>하나의 <strong>fd</strong>에 접근제어해서 사용하는 예</li>
+</ul>
+
+<h3 id="레코드-잠그기">레코드 잠그기</h3>
+<hr />
+<ul>
+  <li>
+    <p>기본적으로 파일을 잠그는 방법과 동일하다. 단지 <strong>특정 범위</strong>에 대해서만 잠금을 허용하는게 다르다.</p>
+  </li>
+  <li>
+    <p>테스트용 샘플 프로그램은 <strong>다중 프로세스 카운터</strong>로 하나의 파일에 여러 개의 프로세스가 자신에게 할당된 레코드에 카운팅한다.</p>
+    <ul>
+      <li>잠금, 풀기할 때 레코드의 영역 하나의 카운터 블럭은 16Byte로 고정 되며, 카운터 숫자 이외의 영역은 NULL로 채워 짐</li>
+    </ul>
+  </li>
+</ul>
+
+<p><img src="img7.png" /></p>
+
+<ul>
+  <li>프로세스가 1번째 counter 데이터에 접근할 때 굳이 1번부터 16번까지 전부다 잠글 필요는 없으므로 1번만 잠근다.
+    <ul>
+      <li>이때 프로세스가 1번째 counter데이터에 접근 중일때, 다른 프로세스는 접근하지 못하게한다.</li>
+    </ul>
+  </li>
+</ul>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;unistd.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+#include &lt;sys/types.h&gt;
+#include &lt;sys/stat.h&gt;
+#include &lt;fcntl.h&gt;
+#include &lt;stdlib.h&gt;
+</span>
+<span class="cp">#define BLOCK_SIZE 16
+</span><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">){</span>
+	<span class="kt">int</span> <span class="n">fd</span><span class="p">;</span>
+	<span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+	<span class="kt">char</span> <span class="n">buf</span><span class="p">[</span><span class="n">BLOCK_SIZE</span><span class="p">];</span>
+	<span class="k">if</span> <span class="p">((</span><span class="n">fd</span><span class="o">=</span><span class="n">open</span><span class="p">(</span><span class="s">"b_counter"</span><span class="p">,</span><span class="n">O_CREAT</span> <span class="o">|</span> <span class="n">O_WRONLY</span><span class="p">))</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">){</span>
+		<span class="n">perror</span><span class="p">(</span><span class="s">"file open error: "</span><span class="p">);</span>
+		<span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+	<span class="p">}</span>
+	<span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">4</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">){</span>
+		<span class="n">memset</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="mh">0x0</span><span class="p">,</span> <span class="n">BLOCK_SIZE</span><span class="p">);</span>
+		<span class="n">sprintf</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span><span class="s">"%d"</span><span class="p">,</span><span class="n">i</span><span class="p">);</span>
+		<span class="n">write</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span> <span class="n">buf</span><span class="p">,</span> <span class="n">BLOCK_SIZE</span><span class="p">);</span>
+	<span class="p">}</span>
+	<span class="n">close</span><span class="p">(</span><span class="n">fd</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<ul>
+  <li>위 코드는 <span style="color:green"><strong>b_counter</strong></span>라는 파일 만든다.</li>
+  <li><code class="language-plaintext highlighter-rouge">od -c</code> 명령어를 사용해 counter정보가 제대로 만들어 졌는지 확인한다.</li>
+</ul>
+
+<p><img src="img8.png" /></p>
+
+<p><img src="img9.png" /></p>
+
+<ul>
+  <li>데이터 블럭단위만 잠근다.</li>
+</ul>
+
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/#file" class="page__taxonomy-item" rel="tag">file</a>
+    
+    </span>
+  </p>
+
+
+        
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2020-12-25T00:00:00+09:00">December 25, 2020</time></p>
+
+
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">Share on</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=lowlevel+I%2FO+%3C2%3E+fd%EB%A5%BC+%ED%86%B5%ED%95%9C+%ED%8C%8C%EC%9D%BC%EC%A0%9C%EC%96%B4%2C+lseek%28%29%2C+dup%28%29%2C+dup2%28%29%2C+ioctl%28%29%2C+fcntl%28%29%20https%3A%2F%2Fmarkyang920413.github.io%2F%2Ffile%2Fsystem_programming-file-lowlevel_IO_2%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmarkyang920413.github.io%2F%2Ffile%2Fsystem_programming-file-lowlevel_IO_2%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fmarkyang920413.github.io%2F%2Ffile%2Fsystem_programming-file-lowlevel_IO_2%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/file/system_programming-file-lowlevel_IO_1/" class="pagination--pager" title="lowlevel I/O &lt;1&gt; read(), write(), open(), posix_fadvise(), ftruncate()
+">Previous</a>
+    
+    
+      <a href="/process/system_programming-process-processAPI_1/" class="pagination--pager" title="프로세스 API &lt;1&gt; fork(), wait(), exec(), posix_spawn()
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/linux-filesystem/linux-linux_filesystem-LVM/" rel="permalink">LVM
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/mac/m1_rosetta2/" rel="permalink">M1 Mac 로제타2 설치, 로제타 사용 brew 설치, M1용 jekyll설치
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/algorithm/algorithm-algorithm-time_complexity/" rel="permalink">Time complexity
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          less than 1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/algorithm/algorithm-algorithm-IO_STL/" rel="permalink">시험에서 입출력, STL
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          less than 1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2021 Dong-Hyeon Yang. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "https://markyang920413.github.io//file/system_programming-file-lowlevel_IO_2/";  /* Replace PAGE_URL with your page's canonical URL variable */
+      this.page.identifier = "/file/system_programming-file-lowlevel_IO_2"; /* Replace PAGE_IDENTIFIER with your page's unique identifier variable */
+    };
+    (function() { /* DON'T EDIT BELOW THIS LINE */
+      var d = document, s = d.createElement('script');
+      s.src = 'https://MarkYang920413.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+
+
+  </body>
+</html>

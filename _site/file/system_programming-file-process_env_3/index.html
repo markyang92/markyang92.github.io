@@ -1,0 +1,917 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.21.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>자격 증명, 사용자와 그룹 API, EUID RUID EGID RGID - 혼자 보려고 만든 블로그</title>
+<meta name="description" content="set-uid, getuid(), geteuid(), getgid(), getegid(), getgroups(), setuid(), setgid(), initgroups(), getpwuid(), getpwnam()">
+
+
+  <meta name="author" content="Dong-Heyon Yang">
+  
+  <meta property="article:author" content="Dong-Heyon Yang">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="혼자 보려고 만든 블로그">
+<meta property="og:title" content="자격 증명, 사용자와 그룹 API, EUID RUID EGID RGID">
+<meta property="og:url" content="https://markyang920413.github.io//file/system_programming-file-process_env_3/">
+
+
+  <meta property="og:description" content="set-uid, getuid(), geteuid(), getgid(), getegid(), getgroups(), setuid(), setgid(), initgroups(), getpwuid(), getpwnam()">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2021-01-02T00:00:00+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://markyang920413.github.io//file/system_programming-file-process_env_3/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "Dong-Hyeon Yang",
+      "url": "https://markyang920413.github.io//"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="혼자 보려고 만든 블로그 Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          혼자 보려고 만든 블로그
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/categories/">Category</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/">About</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+  
+    
+      
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox" />
+  <label for="ac-toc">Toggle menu</label>
+  <ul class="nav__items">
+    
+      <li>
+        
+          <span class="nav__sub-title">LINUX</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#linux-system">LINUX System</a></li>
+          
+            <li><a href="/categories/#linux-tools">LINUX Tools</a></li>
+          
+            <li><a href="/categories/#linux-compile">LINUX Compile</a></li>
+          
+            <li><a href="/categories/#linux-filesystem">LINUX Filesystem</a></li>
+          
+            <li><a href="/categories/#http">HTTP</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">System Programming</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#file">File, Memory</a></li>
+          
+            <li><a href="/categories/#env">Env</a></li>
+          
+            <li><a href="/categories/#process">Process</a></li>
+          
+            <li><a href="/categories/#thread">Thread</a></li>
+          
+            <li><a href="/categories/#ipc">IPC</a></li>
+          
+            <li><a href="/categories/#signal">Signal</a></li>
+          
+            <li><a href="/categories/#socket-programming">Socket Programming</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">C</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#c">C</a></li>
+          
+            <li><a href="/categories/#system-programming">System Programming</a></li>
+          
+            <li><a href="/categories/#stdio">Standard I/O</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">Python</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#python-language">Python Language</a></li>
+          
+            <li><a href="/categories/#python-pandas">Python Pandas</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">Algorithm</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#algorithm">Algorithm</a></li>
+          
+            <li><a href="/categories/#problem">Problem</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">MAC</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#mac">Mac</a></li>
+          
+        </ul>
+        
+      </li>
+    
+  </ul>
+</nav>
+
+    
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="자격 증명, 사용자와 그룹 API, EUID RUID EGID RGID">
+    <meta itemprop="description" content="set-uid, getuid(), geteuid(), getgid(), getegid(), getgroups(), setuid(), setgid(), initgroups(), getpwuid(), getpwnam()">
+    <meta itemprop="datePublished" content="2021-01-02T00:00:00+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">자격 증명, 사용자와 그룹 API, EUID RUID EGID RGID
+</h1>
+          
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          2 minute read
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              <ul class="toc__menu"><li><a href="#자격-증명">자격 증명</a><ul><li><a href="#set-uid-프로그램">set-uid 프로그램</a></li><li><a href="#getuideuidgidegid2-현재-자격-증명-획득">get{uid,euid,gid,egid}():2 현재 자격 증명 획득</a></li><li><a href="#getgroups2-보조-그룹-id-얻기">getgroups():2 보조 그룹 ID 얻기</a></li><li><a href="#setuidgid-initgroups2-다른-자격-증명으로-이행하기">set{uid,gid}(), initgroups():2 다른 자격 증명으로 이행하기</a></li></ul></li><li><a href="#사용자와-그룹">사용자와 그룹</a><ul><li><a href="#getpwuidnam3-사용자-정보-검색">getpw{uid,nam}():3 사용자 정보 검색</a></li><li><a href="#getgrgidnam3-그룹-정보-검색">getgr{gid,nam}():3 그룹 정보 검색</a></li></ul></li></ul>
+
+            </nav>
+          </aside>
+        
+        <h2 id="자격-증명">자격 증명</h2>
+<h3 id="set-uid-프로그램">set-uid 프로그램</h3>
+<hr />
+<ul>
+  <li><strong>인증</strong>: <strong>프로세스 속성</strong>, 관리 주체는 <strong>커널</strong></li>
+</ul>
+
+<p><strong>set-uid 프로그램</strong>: 명령어를 실행하는 사용자와 관계없이 <strong>특정 사용자의 권한</strong>으로 실행하고 싶은 경우가 있다.</p>
+<ul>
+  <li><strong>passwd</strong>: 암호 변경
+    <ul>
+      <li>암호는 <strong>/etc/passwd, /etc/shadow</strong>에 저장되기 때문에 암호를 변경하려면 이 파일을 수정해야 한다.</li>
+      <li>모든 사람에게 Permission을 부여할 순 없다.<br />
+<br /></li>
+    </ul>
+  </li>
+</ul>
+
+<p>이러한 상황을 위해 존재하는 것이 <strong>파일 권한 set-uid bit</strong>이다.</p>
+<ul>
+  <li>특정 <strong>프로그램</strong>에 <strong>set-uid bit set</strong> 시, 실행한 사용자와 관계 없이 <span style="color:steelblue"><strong>프로그램 파일의 소유자 권한</strong></span>으로 기동한다.</li>
+</ul>
+
+<p><br />
+<code class="language-plaintext highlighter-rouge">ls -l</code> 명령으로 passwd를 살펴보자</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">ls</span> <span class="nt">-l</span> /usr/bin/passwd
+<span class="nt">-rwsr-xr-x</span>	1	root	root	54256	May	17	08:37	/usr/bin/passwd
+</code></pre></div></div>
+<ul>
+  <li><strong>'rwx'</strong>가 아닌 <strong>'rw</strong><code class="language-plaintext highlighter-rouge">s</code><strong>'</strong> 로 되어 있다.
+    <ul>
+      <li>이는 <strong>set-uid bit set</strong>되었다는 뜻이다.</li>
+    </ul>
+  </li>
+  <li>
+    <p>소유자는 <strong>root</strong>이기 때문에 <strong>passwd</strong>는 누가 시작해도 <span style="color:steelblue"><strong>root 권한</strong></span>으로 실행된다.
+<br />
+<br /></p>
+  </li>
+  <li><strong>set-uid</strong>프로그램으로 부터 기동된 프로세스에는 두 종류의 인증이 있다.
+    <ul>
+      <li><strong>시작한 사용자</strong>: <span style="color:steelblue"><strong>RUID</strong></span> <strong>실제 사용자 ID</strong>(real user ID)</li>
+      <li><strong>set-uid 프로그램 소유자</strong>: <span style="color:red"><strong>EUID</strong></span> <strong>실효 사용자 ID</strong>(effective user ID)</li>
+    </ul>
+  </li>
+</ul>
+
+<p><span style="color:red"><strong>주의!!</strong></span> <strong>setuid() 시스템 콜</strong>은 <strong>set-uid 프로그램</strong>과 <span style="color:red"><strong>관계 XX</strong></span></p>
+
+<ul>
+  <li><strong>set-gid bit</strong>: 그룹의 자동 상승 구조를 지시하는 권한 플래그
+    <ul>
+      <li><strong>시작한 사용자 그룹</strong>: <span style="color:steelblue"><strong>RGID</strong></span> <strong>실제 그룹 ID</strong>(real group ID)</li>
+      <li><strong>프로그램 소유자</strong>: <span style="color:red"><strong>EGID</strong></span> <strong>실효 그룹 ID</strong>(effective group ID)</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="getuideuidgidegid2-현재-자격-증명-획득">get{uid,euid,gid,egid}():2 현재 자격 증명 획득</h3>
+<hr />
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;unistd.h&gt;
+#include &lt;sys/types.h&gt;
+</span>
+<span class="n">uid_t</span> <span class="nf">getuid</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>	<span class="s">"현재 프로세스의 실제 사용자 ID를 반환"</span>
+<span class="n">uid_t</span> <span class="nf">geteuid</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>	<span class="s">"현재 프로세스의 실효 사용자 ID를 반환"</span>
+<span class="n">gid_t</span> <span class="nf">getgid</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>	<span class="s">"현재 프로세스의 실제 그룹 ID를 반환"</span>
+<span class="n">gid_t</span> <span class="nf">getegid</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>	<span class="s">"현재 프로세스의 실효 그룹 ID를 반환"</span>
+</code></pre></div></div>
+
+<p>위 시스템 콜은 절대 실패하지 않는다.</p>
+
+<h3 id="getgroups2-보조-그룹-id-얻기">getgroups():2 보조 그룹 ID 얻기</h3>
+<hr />
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;unistd.h&gt;
+#include &lt;sys/types.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">getgroups</span><span class="p">(</span><span class="kt">int</span> <span class="n">bufsize</span><span class="p">,</span> <span class="n">gid_t</span> <span class="o">*</span><span class="n">buf</span><span class="p">);</span>
+</code></pre></div></div>
+<ul>
+  <li>기능: 현재 프로세스의 <strong>보조 그룹 ID를</strong> <strong>buf</strong>에 쓴다.<br />그러나 프로세스의 보조 그룹 ID가 <em>bufsize</em>로 지정한 개수보다 많으면, <em>buf</em> 에 아무 것도 쓰지 않고 오류반환한다.</li>
+</ul>
+
+<table>
+  <tbody>
+    <tr>
+      <td>return</td>
+      <td>value</td>
+    </tr>
+    <tr>
+      <td>성공</td>
+      <td><strong>보조 그룹 ID 수(0 이상)</strong></td>
+    </tr>
+    <tr>
+      <td>실패</td>
+      <td>-1, errno set</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="setuidgid-initgroups2-다른-자격-증명으로-이행하기">set{uid,gid}(), initgroups():2 다른 자격 증명으로 이행하기</h3>
+<hr />
+<ul>
+  <li>현재의 권한 버리고 <strong>새로운 자격 증명</strong> 이행: <strong>setuid(), setgid(), initgroups()</strong></li>
+</ul>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;unistd.h&gt;
+#include &lt;sys/types.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">setuid</span><span class="p">(</span><span class="n">uid_t</span> <span class="n">id</span><span class="p">);</span>
+<span class="kt">int</span> <span class="nf">setgid</span><span class="p">(</span><span class="n">gid_t</span> <span class="n">id</span><span class="p">);</span>
+</code></pre></div></div>
+<ul>
+  <li><strong>setuid()</strong>: 현재 프로세스의 실제 사용자 ID와 실효 사용자 ID를 <strong>id</strong>로 변경한다.</li>
+  <li><strong>setgid()</strong>: 현재 프로세스의 실제 그룹 ID와 실효 그룹 ID를 <strong>id</strong>로 변경한다.</li>
+</ul>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#define _BSD_SOURCE
+#include &lt;grp.h&gt;
+#include &lt;sys/types.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">initgroups</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">user</span><span class="p">,</span> <span class="n">gid_t</span> <span class="n">group</span><span class="p">);</span>
+</code></pre></div></div>
+<ul>
+  <li>/etc/group 등의 데이터베이스를 보고, user가 속한 보조 그룹을 현재 프로세스의 보조 그룹으로 설정</li>
+  <li>두 번째 아규먼트 <strong>group</strong>을 추가한다.</li>
+  <li><strong>group</strong>은 일반적으로 사용자 그룹(primary group)을 보조 그룹에도 추가하기 위해 사용한다.</li>
+</ul>
+
+<p><span style="color:red"><strong>주의!</strong></span> 슈퍼 사용자가 아니면 성공 할 수 없음!</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>return</td>
+      <td>value</td>
+    </tr>
+    <tr>
+      <td>성공</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>실패</td>
+      <td>-1, errno set</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>위의 <strong>API</strong>를 사용해 완전히 다른 사용자가 되게 하려면 다음의 순서를 따른다.</p>
+<ol>
+  <li>슈퍼 사용자(root)로서 프로그램을 시작한다.</li>
+  <li>원하는 사용자의 사용자명과 ID, 그룹 ID를 얻어 둔다.</li>
+  <li>setgid(변경할 그룹 ID)</li>
+  <li>initgroup(변경할 사용자명, 그룹 ID)</li>
+  <li>setuid(변경할 사용자 ID)</li>
+</ol>
+
+<h2 id="사용자와-그룹">사용자와 그룹</h2>
+<ul>
+  <li>사용자나 그룹에 대한 정보 취급은 <strong>커널이 관리 X</strong></li>
+</ul>
+
+<h3 id="getpwuidnam3-사용자-정보-검색">getpw{uid,nam}():3 사용자 정보 검색</h3>
+<hr />
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;pwd.h&gt;
+#include &lt;sys/types.h&gt;
+</span>
+<span class="k">struct</span> <span class="n">passwd</span> <span class="o">*</span><span class="nf">getpwuid</span><span class="p">(</span><span class="n">uid_t</span> <span class="n">id</span><span class="p">);</span>
+<span class="k">struct</span> <span class="n">passwd</span> <span class="o">*</span><span class="nf">getpwnam</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">name</span><span class="p">);</span>
+
+<span class="k">struct</span> <span class="n">passwd</span><span class="p">{</span>
+	<span class="kt">char</span> <span class="o">*</span><span class="n">pw_name</span><span class="p">;</span>		<span class="s">"사용자 이름"</span>
+	<span class="kt">char</span> <span class="o">*</span><span class="n">pw_passwd</span><span class="p">;</span>	<span class="s">"패스워드"</span>
+	<span class="n">uid_t</span> <span class="n">pw_uid</span><span class="p">;</span>		<span class="s">"사용자 ID"</span>
+	<span class="n">gid_t</span> <span class="n">pw_gid</span><span class="p">;</span>		<span class="s">"그룹 ID"</span>
+	<span class="kt">char</span> <span class="o">*</span><span class="n">pw_gecos</span><span class="p">;</span>		<span class="s">"본명"</span>
+	<span class="kt">char</span> <span class="o">*</span><span class="n">pw_dir</span><span class="p">;</span>		<span class="s">"홈 디렉터리"</span>
+	<span class="kt">char</span> <span class="o">*</span><span class="n">pw_shell</span><span class="p">;</span>		<span class="s">"셸"</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<ul>
+  <li><strong>getpwuid()</strong>: <span style="color:magenta">지정한 <strong>id</strong></span>로 <strong>사용자 정보 검색</strong></li>
+  <li><strong>getpwnam()</strong>: <span style="color:magenta">지정한 <strong>이름</strong></span>로 <strong>사용자 정보 검색</strong></li>
+</ul>
+
+<table>
+  <tbody>
+    <tr>
+      <td>return</td>
+      <td>value</td>
+    </tr>
+    <tr>
+      <td>성공</td>
+      <td>사용자 정보를 <span style="color:magenta"><em>struct</em></span> <span style="color:steelblue"><strong>passwd</strong></span> 타입으로 반환</td>
+    </tr>
+    <tr>
+      <td>실패</td>
+      <td>NULL, errno set</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><span style="color:red"><strong>주의!</strong></span> 다시 getpw{uid,nam}()을 호출하면 덮어 쓰일 수 있음</p>
+
+<h3 id="getgrgidnam3-그룹-정보-검색">getgr{gid,nam}():3 그룹 정보 검색</h3>
+<hr />
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;grp.h&gt;
+#include &lt;sys/types.h&gt;
+</span>
+<span class="k">struct</span> <span class="n">group</span> <span class="o">*</span><span class="nf">getgrgid</span><span class="p">(</span><span class="n">gid_t</span> <span class="n">id</span><span class="p">);</span>
+<span class="k">struct</span> <span class="n">group</span> <span class="o">*</span><span class="nf">getgrnam</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">name</span><span class="p">);</span>
+
+<span class="k">struct</span> <span class="n">group</span><span class="p">{</span>
+	<span class="kt">char</span> <span class="o">*</span><span class="n">gr_name</span><span class="p">;</span>		<span class="s">"그룹명"</span>
+	<span class="kt">char</span> <span class="o">*</span><span class="n">gr_passwd</span><span class="p">;</span>	<span class="s">"그룹 패스워드"</span>
+	<span class="n">gid_t</span> <span class="n">gr_gid</span><span class="p">;</span>		<span class="s">"그룹 ID"</span>
+	<span class="kt">char</span> <span class="o">**</span><span class="n">gr_mem</span><span class="p">;</span>		<span class="s">"그룹에 속하는 멤버(사용자명 리스트)"</span>
+<span class="p">};</span>
+</code></pre></div></div>
+<ul>
+  <li><strong>getgrgid()</strong>: <strong>지정한 id</strong>로 <strong>그룹 정보 검색</strong></li>
+  <li><strong>getgrnam()</strong>: <strong>그룹 이름</strong>으로 <strong>그룹 정보 검색</strong></li>
+</ul>
+
+<table>
+  <tbody>
+    <tr>
+      <td>return</td>
+      <td>value</td>
+    </tr>
+    <tr>
+      <td>성공</td>
+      <td>사용자 정보를 <span style="color:magenta"><em>struct</em></span> <span style="color:steelblue"><strong>group</strong></span> 타입으로 반환</td>
+    </tr>
+    <tr>
+      <td>실패</td>
+      <td>NULL, errno set</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><span style="color:red"><strong>주의!</strong></span> 다시 getpw{uid,nam}()을 호출하면 덮어 쓰일 수 있음</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/#file" class="page__taxonomy-item" rel="tag">file</a>
+    
+    </span>
+  </p>
+
+
+        
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2021-01-02T00:00:00+09:00">January 2, 2021</time></p>
+
+
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">Share on</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=%EC%9E%90%EA%B2%A9+%EC%A6%9D%EB%AA%85%2C+%EC%82%AC%EC%9A%A9%EC%9E%90%EC%99%80+%EA%B7%B8%EB%A3%B9+API%2C+EUID+RUID+EGID+RGID%20https%3A%2F%2Fmarkyang920413.github.io%2F%2Ffile%2Fsystem_programming-file-process_env_3%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmarkyang920413.github.io%2F%2Ffile%2Fsystem_programming-file-process_env_3%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fmarkyang920413.github.io%2F%2Ffile%2Fsystem_programming-file-process_env_3%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/file/system_programming-file-process_env_2/" class="pagination--pager" title="환경 변수 API environ, getenv()
+">Previous</a>
+    
+    
+      <a href="/linux-system/linux_linux-system_ssh-setting/" class="pagination--pager" title="SSH 설정, 공개키 설정, PORT 및 SSH 관리
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/linux-filesystem/linux-linux_filesystem-LVM/" rel="permalink">LVM
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/mac/m1_rosetta2/" rel="permalink">M1 Mac 로제타2 설치, 로제타 사용 brew 설치, M1용 jekyll설치
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/algorithm/algorithm-algorithm-time_complexity/" rel="permalink">Time complexity
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          less than 1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/algorithm/algorithm-algorithm-IO_STL/" rel="permalink">시험에서 입출력, STL
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          less than 1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2021 Dong-Hyeon Yang. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "https://markyang920413.github.io//file/system_programming-file-process_env_3/";  /* Replace PAGE_URL with your page's canonical URL variable */
+      this.page.identifier = "/file/system_programming-file-process_env_3"; /* Replace PAGE_IDENTIFIER with your page's unique identifier variable */
+    };
+    (function() { /* DON'T EDIT BELOW THIS LINE */
+      var d = document, s = d.createElement('script');
+      s.src = 'https://MarkYang920413.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+
+
+  </body>
+</html>

@@ -1,0 +1,933 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.21.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>프로세스 API &lt;3&gt; 프로세스 관계, pstree, getpid(), 프로세스그룹 setpgid(), 세션 setsid(), 대몬 프로세스 - 혼자 보려고 만든 블로그</title>
+<meta name="description" content="다양한 프로세스들, pstree, getpid(), setpgid(), setsid(), daemon">
+
+
+  <meta name="author" content="Dong-Heyon Yang">
+  
+  <meta property="article:author" content="Dong-Heyon Yang">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="혼자 보려고 만든 블로그">
+<meta property="og:title" content="프로세스 API &lt;3&gt; 프로세스 관계, pstree, getpid(), 프로세스그룹 setpgid(), 세션 setsid(), 대몬 프로세스">
+<meta property="og:url" content="https://markyang920413.github.io//process/system_programming-process-processAPI_3/">
+
+
+  <meta property="og:description" content="다양한 프로세스들, pstree, getpid(), setpgid(), setsid(), daemon">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2020-12-25T00:00:00+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://markyang920413.github.io//process/system_programming-process-processAPI_3/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "Dong-Hyeon Yang",
+      "url": "https://markyang920413.github.io//"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="혼자 보려고 만든 블로그 Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          혼자 보려고 만든 블로그
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/categories/">Category</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/">About</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+  
+    
+      
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox" />
+  <label for="ac-toc">Toggle menu</label>
+  <ul class="nav__items">
+    
+      <li>
+        
+          <span class="nav__sub-title">LINUX</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#linux-system">LINUX System</a></li>
+          
+            <li><a href="/categories/#linux-tools">LINUX Tools</a></li>
+          
+            <li><a href="/categories/#linux-compile">LINUX Compile</a></li>
+          
+            <li><a href="/categories/#linux-filesystem">LINUX Filesystem</a></li>
+          
+            <li><a href="/categories/#http">HTTP</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">System Programming</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#file">File, Memory</a></li>
+          
+            <li><a href="/categories/#env">Env</a></li>
+          
+            <li><a href="/categories/#process">Process</a></li>
+          
+            <li><a href="/categories/#thread">Thread</a></li>
+          
+            <li><a href="/categories/#ipc">IPC</a></li>
+          
+            <li><a href="/categories/#signal">Signal</a></li>
+          
+            <li><a href="/categories/#socket-programming">Socket Programming</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">C</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#c">C</a></li>
+          
+            <li><a href="/categories/#system-programming">System Programming</a></li>
+          
+            <li><a href="/categories/#stdio">Standard I/O</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">Python</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#python-language">Python Language</a></li>
+          
+            <li><a href="/categories/#python-pandas">Python Pandas</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">Algorithm</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#algorithm">Algorithm</a></li>
+          
+            <li><a href="/categories/#problem">Problem</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">MAC</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#mac">Mac</a></li>
+          
+        </ul>
+        
+      </li>
+    
+  </ul>
+</nav>
+
+    
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="프로세스 API &lt;3&gt; 프로세스 관계, pstree, getpid(), 프로세스그룹 setpgid(), 세션 setsid(), 대몬 프로세스">
+    <meta itemprop="description" content="다양한 프로세스들, pstree, getpid(), setpgid(), setsid(), daemon">
+    <meta itemprop="datePublished" content="2020-12-25T00:00:00+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">프로세스 API &lt;3&gt; 프로세스 관계, pstree, getpid(), 프로세스그룹 setpgid(), 세션 setsid(), 대몬 프로세스
+</h1>
+          
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          2 minute read
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              <ul class="toc__menu"><li><a href="#pstree-명령">pstree 명령</a></li><li><a href="#getpid2-getppid2">getpid():2, getppid():2</a></li><li><a href="#다른-프로세스-정보">다른 프로세스 정보</a></li><li><a href="#프로세스-그룹과-세션">프로세스 그룹과 세션</a><ul><li><a href="#프로세스-그룹과-세션-리더">프로세스 그룹과 세션 리더</a></li></ul></li><li><a href="#대몬-프로세스">대몬 프로세스</a><ul><li><a href="#대몬-프로세스-만들기">대몬 프로세스 만들기</a></li></ul></li><li><a href="#setpgid2">setpgid():2</a></li><li><a href="#setsid2">setsid():2</a></li></ul>
+
+            </nav>
+          </aside>
+        
+        <h2 id="pstree-명령">pstree 명령</h2>
+<ul>
+  <li>리눅스에서는 <span style="color:steelblue"><strong>어떠한 프로세스</strong></span>도 <span style="color:red"><strong>fork() &amp; exec()</strong></span>나 비슷한 API로 생성된다.<br />프로세스를 부모/자식 관계로 이어 가면 하나의 트리 구조로 구성할 수 있다.</li>
+  <li><span style="color:steelblue"><strong>pstree</strong></span> 명령은 프로세스 부모/자식 관계 트리를 표시한다.</li>
+</ul>
+
+<p><img src="img1.png" width="50%" height="50%" /></p>
+<ul>
+  <li><strong>systemd</strong>: 부팅 시 커널이 직접 실행, <span style="color:steelblue"><strong>모든 프로세스의 시작</strong></span>
+    <ul>
+      <li><a href="https://pllpokko2.github.io/system-programming/process_env_4/#systemd-getty"><strong>getty</strong></a> <strong>프로그램 시작</strong>하는 역할도 함</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="getpid2-getppid2">getpid():2, getppid():2</h2>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;sys/types.h&gt;
+#include &lt;unistd.h&gt;
+</span>
+<span class="n">pid_t</span> <span class="nf">getpid</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<span class="n">pid_t</span> <span class="nf">getppid</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+</code></pre></div></div>
+<ul>
+  <li>기능
+    <ul>
+      <li><strong>getpid()</strong>: <strong>자신</strong>의 PID 반환</li>
+      <li><strong>get</strong><span style="color:magenta"><strong>ppid</strong></span><strong>()</strong>: <strong>부모</strong>의 PID 반환</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="다른-프로세스-정보">다른 프로세스 정보</h2>
+<p><strong>/proc/[PID]</strong>에서 얻을 수 있다.</p>
+
+<p><a href="https://pllpokko2.github.io//linux-system/linux_directory/#proc"><strong>참고</strong></a></p>
+
+<h2 id="프로세스-그룹과-세션">프로세스 그룹과 세션</h2>
+<p><img src="img2.png" width="75%" height="75%" /></p>
+<ul>
+  <li><strong>프로세스 그룹</strong>: <strong>셸</strong>때문에 존재한다.
+    <ul>
+      <li>셸을 사용해서 <strong>여러 개의 명령어를 파이프로 연결해 기동</strong>했다고 하자.
+        <ul>
+          <li>파이프로 연결된 <strong>명령어 중 하나에 문제</strong>가 있어 ctrl+c로 중단했다면, 프로세스 중 어떤 것이 종료되어야 할까?</li>
+          <li>답은 파이프로 연결된 <strong>모든 프로세스가 멈춰야한다</strong>.</li>
+        </ul>
+      </li>
+      <li><span style="color:steelblue"><strong>파이프로 연결된 프로세스 집단</strong></span>을 <span style="color:magenta"><strong>하나의 프로세스 그룹으로 통합</strong></span>하여 그룹의 프로세스에 <span style="color:red"><strong>시그널 한방으로 관리</strong></span><br />
+<br /><br /></li>
+    </ul>
+  </li>
+  <li><strong>세션</strong>: 사용자의 <strong>로그인 ~ 로그아웃까지</strong> 흐름을 관리하기 위한 개념
+    <ul>
+      <li><strong><u>로그인 셸을 기점</u></strong>으로 사용자가 동일 단말로 부터 기동한 프로세스를 하나로 통합할수 있다.</li>
+      <li>하나의 세션은 <span style="color:red"><strong>복수의 프로세스 그룹</strong></span>을 통합하는 형태</li>
+      <li>세션과 연결된 단말을 프로세스의 <strong>제어 단말</strong>(controlling terminal)이라고 한다.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="프로세스-그룹과-세션-리더">프로세스 그룹과 세션 리더</h3>
+<hr />
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">ps j</code> 로 <strong>프로세스 그룹</strong>, <strong>세션</strong>을 볼 수 있다.</li>
+</ul>
+
+<p><img src="img3.png" /></p>
+<ul>
+  <li><strong>PPID</strong>: 부모 프로세스 ID</li>
+  <li><strong>PID</strong>: 프로세스 ID</li>
+  <li><strong>PGID</strong>: 프로세스 그룹 ID</li>
+  <li><strong>SID</strong>: 세션 ID
+<br /></li>
+  <li><span style="color:steelblue"><strong>프로세스 그룹 리더</strong></span>: 처음으로 그 프로세스 그룹을 만든 프로세스가 리더
+    <ul>
+      <li><strong>PID == P<span style="color:steelblue">G</span>ID</strong></li>
+    </ul>
+  </li>
+  <li><span style="color:magenta"><strong>세션 리더</strong></span>: 처음으로 그 세션을 만든 프로세스가 리더
+    <ul>
+      <li><strong>PID == <span style="color:magenta">S</span>ID</strong></li>
+    </ul>
+  </li>
+  <li><strong>리더</strong>: 특별히 권한이 강한 것은 없고, <strong>새로운</strong> <u>프로세스 그룹, 세션</u>을 <strong>만들 수 없는 프로세스</strong>다.</li>
+</ul>
+
+<h2 id="대몬-프로세스">대몬 프로세스</h2>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">ps -ef</code>: <strong>시스템에서 작동</strong>하고 있는 <strong>모든 프로세스</strong>표시</li>
+</ul>
+
+<p><img src="img4.png" width="60%" height="60%" /></p>
+<ul>
+  <li><strong>대몬 프로세스</strong>: TTY에 <strong>?</strong> 되있는 프로세스들이 있는데, <code class="language-plaintext highlighter-rouge">제어 단말이 없는 프로세스</code>이다.
+    <ul>
+      <li>서버로 동작하기 위해서~!</li>
+      <li>특정 단말로 로그인해 서버를 돌리다가 로그아웃 시, 그 세션 프로세스들 모두 종료되기 때문에 대몬 프로세스를 둔다.</li>
+    </ul>
+  </li>
+  <li><strong>대몬 프로세스가 되기 위한 조건</strong>
+    <ol>
+      <li><strong>고아 프로세스</strong>가 되어야 한다.
+        <ul>
+          <li>대몬 프로세스는 완전히 <strong>독립된</strong> 프로세스다.</li>
+        </ul>
+      </li>
+      <li>표준 입력, 출력, 에러를 닫아야한다.
+        <ul>
+          <li>대몬 프로세스와 상호작용은 <strong>IPC</strong>로만 할 것</li>
+        </ul>
+      </li>
+      <li>터미널을 가지지 않는다.
+        <ul>
+          <li>단말 X</li>
+        </ul>
+      </li>
+    </ol>
+  </li>
+</ul>
+
+<h3 id="대몬-프로세스-만들기">대몬 프로세스 만들기</h3>
+<hr />
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(){</span>
+	<span class="kt">int</span> <span class="n">pid</span><span class="p">;</span>
+	<span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+
+	<span class="n">i</span><span class="o">=</span><span class="mi">1000</span><span class="p">;</span>
+	<span class="n">pid</span><span class="o">=</span><span class="n">fork</span><span class="p">();</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">pid</span><span class="o">==-</span><span class="mi">1</span><span class="p">){</span>
+		<span class="n">perror</span><span class="p">(</span><span class="s">"fork error</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+		<span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+	<span class="p">}</span> <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">pid</span><span class="o">==</span><span class="mi">0</span><span class="p">){</span>
+		<span class="c1">// 자식 프로세스가 실행시키는 코드</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">"자식: 내 PID는 %d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">getpid</span><span class="p">());</span>
+
+		<span class="cm">/* 표준 IO, ERR 닫기 */</span>
+		<span class="n">close</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+		<span class="n">close</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+		<span class="n">close</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+
+		<span class="cm">/* setsid()를 통해서 자신만의 독립적인 환경 만든다.
+		   기존의 환경이 리셋되면서, 터미널이 사라진다. */</span>
+		<span class="n">setsid</span><span class="p">();</span>
+		<span class="k">while</span><span class="p">(</span><span class="mi">1</span><span class="p">){</span>
+			<span class="n">printf</span><span class="p">(</span><span class="s">"---&gt;%d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">i</span><span class="p">);</span>
+			<span class="n">i</span><span class="o">++</span><span class="p">;</span>
+			<span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+		<span class="p">}</span>
+	<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+		<span class="c1">// 부모 프로세스가 실행시키는 코드</span>
+
+		<span class="cm">/* 대몬 프로세스는 고아가 되어야한다.
+		   따라서, 부모 프로세스는 바로 종료 */</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">" 부모 : 내가 낳은 자식의 PID는 %d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">pid</span><span class="p">);</span>
+		<span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">"부모 종료</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+		<span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ps <span class="nt">-efjc</span> | <span class="nb">grep </span>daemon
+UID		PID	PPID	PGID	SID	CLS	PRI	STIME	TTY		TIME	CMD
+yundream	8282	1	8252	8252	TS	24	00:43	?	00:00:00	./daemon
+</code></pre></div></div>
+<ul>
+  <li><strong>PPID</strong>가 1이고 새로운 Session ID 8252인 대몬 생성됨</li>
+</ul>
+
+<h2 id="setpgid2">setpgid():2</h2>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;unistd.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">setpgid</span><span class="p">(</span><span class="n">pid_t</span> <span class="n">pid</span><span class="p">,</span> <span class="n">pid_t</span> <span class="n">pgid</span><span class="p">);</span>
+</code></pre></div></div>
+<ul>
+  <li>기능: 새로운 <span style="color:steelblue"><strong>프로세스 그룹</strong></span>만듬</li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">return</th>
+      <th style="text-align: left">value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">성공</td>
+      <td style="text-align: left">0</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">실패</td>
+      <td style="text-align: left">-1<br />errno set</td>
+    </tr>
+  </tbody>
+</table>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left"><em>parameter</em></th>
+      <th style="text-align: left">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left"><em>pid</em></td>
+      <td style="text-align: left">설정할 <strong>pid</strong><br /><strong>0</strong> 지정 시, <strong>현재 프로세스가 대상</strong></td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><em>pgid</em></td>
+      <td style="text-align: left">위 프로세스에게 부여할 <span style="color:steelblue"><strong>프로세스 그룹 ID</strong></span><br /><strong>0</strong> 지정 시, <strong>현재 PID가 PGID로 사용</strong><br />즉, 자신이 리더가 되어 새로운 프로세스 그룹을 만들고 싶은 경우 <code class="language-plaintext highlighter-rouge">(0, 0)</code> 설정</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="setsid2">setsid():2</h2>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;unistd.h&gt;
+</span>
+<span class="n">pid_t</span> <span class="nf">setsid</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+</code></pre></div></div>
+<ul>
+  <li>기능: 새로운 <span style="color:magenta"><strong>세션</strong></span>을 만들고 스스로 <span style="color:magenta"><strong>세션 리더</strong></span>, 그 세션에 <span style="color:steelblue"><strong>최초의 프로세스 그룹 작성</strong></span>하고 <span style="color:steelblue"><strong>프로세스 그룹 리더</strong></span>가 된다.</li>
+  <li>만들어진 세션은 <strong>제어 단말을 가지지 않는다</strong>.
+    <ul>
+      <li>즉, 세션 리더가 되는 동시에 <span style="color:red"><strong>대몬</strong></span><strong>이 되는 것</strong>이다.</li>
+    </ul>
+  </li>
+  <li><span style="color:red"><strong>주의</strong></span>: 현 프로세스가 <strong>프로세스 그룹 리더</strong>라면 setsid()는 <span style="color:steelblue"><strong>실패</strong></span></li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">return</th>
+      <th style="text-align: left">value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">성공</td>
+      <td style="text-align: left">세션ID(일반적으로 현 프로세스 PID)</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">실패</td>
+      <td style="text-align: left">-1<br />errno set</td>
+    </tr>
+  </tbody>
+</table>
+
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/#process" class="page__taxonomy-item" rel="tag">process</a>
+    
+    </span>
+  </p>
+
+
+        
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2020-12-25T00:00:00+09:00">December 25, 2020</time></p>
+
+
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">Share on</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=%ED%94%84%EB%A1%9C%EC%84%B8%EC%8A%A4+API+%3C3%3E+%ED%94%84%EB%A1%9C%EC%84%B8%EC%8A%A4+%EA%B4%80%EA%B3%84%2C+pstree%2C+getpid%28%29%2C+%ED%94%84%EB%A1%9C%EC%84%B8%EC%8A%A4%EA%B7%B8%EB%A3%B9+setpgid%28%29%2C+%EC%84%B8%EC%85%98+setsid%28%29%2C+%EB%8C%80%EB%AA%AC+%ED%94%84%EB%A1%9C%EC%84%B8%EC%8A%A4%20https%3A%2F%2Fmarkyang920413.github.io%2F%2Fprocess%2Fsystem_programming-process-processAPI_3%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmarkyang920413.github.io%2F%2Fprocess%2Fsystem_programming-process-processAPI_3%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fmarkyang920413.github.io%2F%2Fprocess%2Fsystem_programming-process-processAPI_3%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/process/system_programming-process-processAPI_2/" class="pagination--pager" title="프로세스 API &lt;2&gt; 좀비프로세스 피하기, exit()
+">Previous</a>
+    
+    
+      <a href="/linux-tools/valgrind/" class="pagination--pager" title="valgrind 메모리 누수 체크 디버거
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/linux-filesystem/linux-linux_filesystem-LVM/" rel="permalink">LVM
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/mac/m1_rosetta2/" rel="permalink">M1 Mac 로제타2 설치, 로제타 사용 brew 설치, M1용 jekyll설치
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/algorithm/algorithm-algorithm-time_complexity/" rel="permalink">Time complexity
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          less than 1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/algorithm/algorithm-algorithm-IO_STL/" rel="permalink">시험에서 입출력, STL
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          less than 1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2021 Dong-Hyeon Yang. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "https://markyang920413.github.io//process/system_programming-process-processAPI_3/";  /* Replace PAGE_URL with your page's canonical URL variable */
+      this.page.identifier = "/process/system_programming-process-processAPI_3"; /* Replace PAGE_IDENTIFIER with your page's unique identifier variable */
+    };
+    (function() { /* DON'T EDIT BELOW THIS LINE */
+      var d = document, s = d.createElement('script');
+      s.src = 'https://MarkYang920413.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+
+
+  </body>
+</html>

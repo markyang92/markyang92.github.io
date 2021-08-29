@@ -1,0 +1,1138 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.21.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>라이브러리의 종류 및 컴파일 - 혼자 보려고 만든 블로그</title>
+<meta name="description" content="라이브러리에 대해여">
+
+
+  <meta name="author" content="Dong-Heyon Yang">
+  
+  <meta property="article:author" content="Dong-Heyon Yang">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="혼자 보려고 만든 블로그">
+<meta property="og:title" content="라이브러리의 종류 및 컴파일">
+<meta property="og:url" content="https://markyang920413.github.io//linux-system/library/">
+
+
+  <meta property="og:description" content="라이브러리에 대해여">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2020-12-18T00:00:00+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://markyang920413.github.io//linux-system/library/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "Dong-Hyeon Yang",
+      "url": "https://markyang920413.github.io//"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="혼자 보려고 만든 블로그 Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          혼자 보려고 만든 블로그
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/categories/">Category</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/">About</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+  
+    
+      
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox" />
+  <label for="ac-toc">Toggle menu</label>
+  <ul class="nav__items">
+    
+      <li>
+        
+          <span class="nav__sub-title">LINUX</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#linux-system">LINUX System</a></li>
+          
+            <li><a href="/categories/#linux-tools">LINUX Tools</a></li>
+          
+            <li><a href="/categories/#linux-compile">LINUX Compile</a></li>
+          
+            <li><a href="/categories/#linux-filesystem">LINUX Filesystem</a></li>
+          
+            <li><a href="/categories/#http">HTTP</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">System Programming</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#file">File, Memory</a></li>
+          
+            <li><a href="/categories/#env">Env</a></li>
+          
+            <li><a href="/categories/#process">Process</a></li>
+          
+            <li><a href="/categories/#thread">Thread</a></li>
+          
+            <li><a href="/categories/#ipc">IPC</a></li>
+          
+            <li><a href="/categories/#signal">Signal</a></li>
+          
+            <li><a href="/categories/#socket-programming">Socket Programming</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">C</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#c">C</a></li>
+          
+            <li><a href="/categories/#system-programming">System Programming</a></li>
+          
+            <li><a href="/categories/#stdio">Standard I/O</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">Python</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#python-language">Python Language</a></li>
+          
+            <li><a href="/categories/#python-pandas">Python Pandas</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">Algorithm</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#algorithm">Algorithm</a></li>
+          
+            <li><a href="/categories/#problem">Problem</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">MAC</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#mac">Mac</a></li>
+          
+        </ul>
+        
+      </li>
+    
+  </ul>
+</nav>
+
+    
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="라이브러리의 종류 및 컴파일">
+    <meta itemprop="description" content="라이브러리에 대해여">
+    <meta itemprop="datePublished" content="2020-12-18T00:00:00+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">라이브러리의 종류 및 컴파일
+</h1>
+          
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          6 minute read
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              <ul class="toc__menu"><li><a href="#library">Library</a></li><li><a href="#library-종류">Library 종류</a></li><li><a href="#static-library">static library</a><ul><li><a href="#static-library-만들기">static library 만들기</a></li><li><a href="#static-link">static link</a></li></ul></li><li><a href="#shared-library">shared library</a><ul><li><a href="#shared-libary">shared libary</a></li><li><a href="#shared-library의-숫자">shared library의 숫자</a></li><li><a href="#soname">soname</a><ul><li><a href="#soname-찾는-법">soname 찾는 법</a></li></ul></li><li><a href="#symbolic-link-to-library">symbolic link to library</a></li><li><a href="#shared-library를-사용하는-응용-프로그램-컴파일">Shared library를 사용하는 응용 프로그램 컴파일</a></li><li><a href="#응용-프로그램-실행">응용 프로그램 실행</a><ul><li><a href="#ldd-ldconfig-ld_library_path">ldd, ldconfig, LD_LIBRARY_PATH</a></li></ul></li></ul></li><li><a href="#runtime-loaded-librarydynamic-library">Runtime loaded library(Dynamic Library)</a></li><li><a href="#readelf-어떤-라이브러리와-링크">readelf: 어떤 라이브러리와 링크?</a></li></ul>
+
+            </nav>
+          </aside>
+        
+        <h2 id="library">Library</h2>
+<ul>
+  <li><strong>linker</strong>(<strong><em>collect2</em></strong>)..?</li>
+</ul>
+
+<ol>
+  <li>source.c가 <em>printf()</em>함수를 사용한다.</li>
+  <li><em>printf()</em>의 사용법은 <strong>#include &lt;stdio.h&gt;</strong>를 통해<br />
+<strong><em>extern int printf(const char *fmt, …)</em></strong> 라는 것을 알았다.</li>
+  <li>사용자는 일단 사용법만 알면 코드를 작성할 수 있다.
+    <ul>
+      <li><em>printf()</em>가 내부에선 어케 동작하는진 모르겠고.. return 값, argument 값만 제대로 쓰지 뭐~</li>
+    </ul>
+  </li>
+  <li>사용자는 코드를 완성하고 컴파일한다.
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>gcc <span class="nt">-L</span>/usr/lib <span class="nt">-I</span>/usr/include foo.c <span class="nt">-lc</span> <span class="nt">-o</span> bar
+</code></pre></div>    </div>
+    <ul>
+      <li><strong>-lc</strong> : <em>printf()</em>는 <strong>libc</strong> 라는 라이브러리에 있다. 링커는 <strong>-lc</strong>를 보고 <strong>libc</strong> 라이브러리를 찾아본다.</li>
+      <li><strong>-L</strong>/usr/lib : 그래서 <strong>libc의 위치</strong>가 어딨는데? -L 옵션으로 지정한다.</li>
+      <li><strong>-I</strong>/usr/include: printf()의 사용법이 있는 stdio.h 파일의 위치  <br /></li>
+      <li>물론 -lc, -L/usr/lib, -I/usr/include는 컴파일러가 default로 보는 곳이라 평소 생략</li>
+    </ul>
+  </li>
+  <li>gcc 컴파일러는 <strong>.c -&gt; .i -&gt; .s -&gt; .o</strong> 를 거쳐왔다. <strong>.o</strong>파일까지 왔는데, 이제 진짜 printf()가 어떻게 작동하는지 알아야한다.
+    <ul>
+      <li>컴파일 옵션 정보를 통해 libc라는 라이브러리속에 printf() symbol을 찾았다.</li>
+      <li><strong>링커</strong>는 내 source의 함수 symbol을 라이브러리와 <strong>링크하는 역할</strong>을 한다.</li>
+    </ul>
+  </li>
+  <li>링크가 끝나고 최종적으로 바이너리 bar가 완성되었다.</li>
+</ol>
+
+<h2 id="library-종류">Library 종류</h2>
+
+<p><br />
+<br /></p>
+
+<ol>
+  <li><strong>정적</strong> 라이브러리(<strong><em>Static library</em></strong>) - <strong>(<span style="color:red">static linking</span>)</strong> <strong><em><span style="color:red">*.a</span></em></strong>
+    <ul>
+      <li>.a 파일들이 <strong>스태틱</strong>라이브러리이다.</li>
+      <li>컴파일 타임에 링크되어 <strong>(static linking)</strong> 바이너리에 같이 적재 된다.</li>
+      <li>장점: 바이너리 속도가 다소 더 빠르다. 바이너리 배포에 제한이 없다.</li>
+      <li>단점: 바이너리 사이즈가 커진다. 라이브러리만 업데이트하고 싶어도, 프로그램을 다시 전부 빌드해야 한다.
+<br /><br /></li>
+      <li>라이브러리 이름
+        <ul>
+          <li><strong><span style="color:black">lib[라이브러리_이름].a</span></strong> 형식</li>
+        </ul>
+      </li>
+      <li>응용 프로그램에서 사용 예
+        <ul>
+          <li>라이브러리 이름: <strong>OpenCL</strong>, 파일 명: <strong>libOpenCL.a</strong></li>
+          <li>gcc <strong><span style="color:red">-static -L[libOpenCL.a 위치]</span></strong> like.c <strong><span style="color:red">-lOpenCL</span></strong> -o like
+<br /><br /></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><strong>공유</strong> 라이브러리(<strong><em>Shared library 中 Dependent libary</em></strong>) - <strong><span style="color:#0BA6D6"><em>*.so</em></span></strong>
+    <ul>
+      <li>Shared library 중에서 Dependent library이다. 그냥 공유라이브러리라고 하겠다.</li>
+      <li>프로그램과 따로 존재</li>
+      <li>프로그램 <strong><span style="color:red">시작 할 때</span>(dynamic linking)</strong> 적재된다.</li>
+    </ul>
+    <ul>
+      <li>프로그램 바이너리가 시작 시 마다 찾아서 메모리에 적재해야 하면 너무늦다.
+        <ul>
+          <li><strong>/etc/ld.so.conf</strong> 파일에 적힌 기반으로 <strong>ldconfig</strong> 프로그램에 의해 생성된, <strong>/etd/ld.so.cache</strong>를 참고해 공유 라이브러리 로딩때마다 캐시보고 로드</li>
+        </ul>
+      </li>
+      <li>장점: 바이너리의 사이즈가 작아진다(따로 따로 있으므로). 라이브러리 업데이트 시, 라이브러리만 재 빌드하면된다.</li>
+      <li>
+        <p>단점: 속도가 약간 느리다(실행시 마다 링킹). 다른 시스템에 바이너리를 이식 시, 같은 메이저 버전을 가지는 shared library가 존재해야한다.<br />
+<br /></p>
+      </li>
+      <li>라이브러리 이름
+        <ul>
+          <li><strong><span style="color:#0BA6D6">lib[라이브러리_이름].so</span></strong> 형식</li>
+        </ul>
+      </li>
+      <li>응용 프로그램에서 사용 예
+        <ul>
+          <li>라이브러리 이름: <strong>OpenCL</strong>, 파일 명: <strong><span style="color:#0BA6D6">libOpenCL.so</span></strong></li>
+          <li>gcc <strong><span style="color:red">-shared -L[libOpenCL.so 위치]</span></strong> like.c <strong><span style="color:red">-lOpenCL</span></strong> -o like</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><strong>동적탑재</strong> 라이브러리(<strong><em>Shared library 中 Runtime loaded library</em></strong>) - <strong><span style="color:#0BA6D6"><em>*.so</em></span></strong>
+    <ul>
+      <li>프로그램 <strong>동작 중 필요 시</strong> 적재되는 <strong>동적 탑재 라이브러리</strong></li>
+      <li>공유 라이브러리랑 똑같으나, <strong>응용 프로그램에서 <span style="color:red"><code class="language-plaintext highlighter-rouge">-ldl</code> <code class="language-plaintext highlighter-rouge">-rdynamic</code> 지정 컴파일, 함수 사용법</span>등이 다르다.</strong></li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="static-library">static library</h2>
+<h3 id="static-library-만들기">static library 만들기</h3>
+<hr />
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// file.h</span>
+<span class="kt">void</span> <span class="nf">func1</span><span class="p">();</span>
+<span class="kt">void</span> <span class="nf">func2</span><span class="p">();</span>
+<span class="kt">void</span> <span class="nf">func3</span><span class="p">();</span>
+<span class="c1">// ================================================================ //</span>
+
+<span class="c1">// file1.c</span>
+<span class="cp">#include &lt;stdio.h&gt;
+#include "file.h"
+</span>
+<span class="kt">void</span> <span class="nf">func1</span><span class="p">(){</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">"hello fund1</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="kt">void</span> <span class="nf">fund2</span><span class="p">(){</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">"hello func2</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="c1">// ================================================================ //</span>
+
+<span class="c1">// file2.c</span>
+<span class="cp">#include &lt;stdio.h&gt;
+#include "file.h"
+</span>
+<span class="kt">void</span> <span class="nf">func3</span><span class="p">(){</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">"hello func3</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="c1">// ================================================================ //</span>
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>gcc <span class="nt">-c</span> <span class="nt">-o</span> file1.o file1.c file.h	<span class="c"># .o 파일 만들기</span>
+<span class="nv">$ </span>gcc <span class="nt">-c</span> <span class="nt">-o</span> file2.o file2.c file.h
+<span class="nv">$ </span>ar rc libfile.a file1.o file2.o	<span class="c"># .a static lib만들기</span>
+</code></pre></div></div>
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">ar</code></strong>: 스태틱 라이브러리 만드는 커맨드(.o -&gt; .a)</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">r</code></strong>: 라이브러리 아카이브에 새로운 오브젝트를 추가할 것이다라는 옵션</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">c</code></strong>: 아카이브가 존재하지 않을 경우 생성하라는 옵션</li>
+</ul>
+
+<p><strong><em>ar 명령</em></strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Command</th>
+      <th style="text-align: left">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">ar rus [라이브러리 이름] [O 파일]</td>
+      <td style="text-align: left">기존 아카이브 파일에 오브젝트 추가</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">ar ds [라이브러리 이름] [O 파일]</td>
+      <td style="text-align: left">기존 아카이브 파일에서 오브젝터 제거</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">ar x [라이브러리 이름]</td>
+      <td style="text-align: left">아카이브에서 오브젝트 파일 추출</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">ar t [라이브러리 이름]</td>
+      <td style="text-align: left">아카이브에 잇는 파일 리스트 출력</td>
+    </tr>
+  </tbody>
+</table>
+
+<ul>
+  <li>file1.c, file2.c의 내용을 담은 스태틱 라이브러리 <strong>libfile.a</strong>가 완성되었다.</li>
+</ul>
+
+<h3 id="static-link">static link</h3>
+<hr />
+<ul>
+  <li>static link: 라이브러리를 <strong>컴파일 타임에 로드</strong>해서 같이 빌드</li>
+  <li>위 예제에서 만든 <strong>libfile.a</strong> 스태틱 라이브러리를 사용하는 응용프로그램을 컴파일 한다.</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>gcc <span class="nt">-static</span> <span class="nt">-L</span>./lib/path main.c <span class="nt">-lfile</span> <span class="nt">-o</span> main
+</code></pre></div></div>
+<ul>
+  <li><strong>-L[library path]</strong>로 라이브러리 위치 지정, -static 옵션, <strong>libfile.a</strong>를 링크해라.</li>
+</ul>
+
+<h2 id="shared-library">shared library</h2>
+<h3 id="shared-libary">shared libary</h3>
+<hr />
+<ul>
+  <li>그냥 <strong>공유</strong>라이브러리, <strong>shared library</strong>라고 칭하겠음</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>gcc <span class="nt">-fPIC</span> <span class="nt">-c</span> file1.c file.h
+<span class="nv">$ </span>gcc <span class="nt">-fPIC</span> <span class="nt">-c</span> file2.c file.h
+<span class="nv">$ </span>gcc <span class="nt">-shared</span> <span class="nt">-Wl</span>,-soname,libmy.so.0 <span class="nt">-o</span> libmy.so.0.0.0 file1.o file2.o
+</code></pre></div></div>
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">-fPIC</code></strong>: <a href="http://pllpokko2.github.io/linux-compile/compile/#-fpic">-fPIC 옵션</a> 링크 참고</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">-Wl,-soname,libmyso.0</code></strong>: <strong>soname</strong>은 <strong>libmyso.0</strong> 으로 지정</li>
+  <li>
+    <p><strong>파일 명</strong>: <strong><span style="color:green">libmy.so.0.0.0</span></strong><br /><strong>soname</strong>: <strong><span style="color:red">libmy.so.0</span></strong> 을 가진 쉐어드 라이브러리가 만들어졌다.</p>
+  </li>
+  <li>shared 라이브러리는 두 개의 소프트링크가 필요하다. 이유는 <a href="http://pllpokko2.github.io/linux-system/library/#symbolic-link-to-library"><strong>symbolic link to library</strong></a> 참조</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">ln</span> <span class="nt">-s</span> libmy.so.0.0.0 libmy.so		<span class="c"># 라이브러리 이름까지만!</span>
+<span class="nv">$ </span><span class="nb">ln</span> <span class="nt">-s</span> libmy.so.0.0.0 libmy.so.0	<span class="c"># soname과 똑같은 이름의 소프트링크</span>
+</code></pre></div></div>
+
+<h3 id="shared-library의-숫자">shared library의 숫자</h3>
+<hr />
+<ul>
+  <li>쉐어드 라이브러리의 이름은 &lt;<strong>lib라이브러리명.so.<code class="language-plaintext highlighter-rouge">Major번호</code></strong>.<strong><code class="language-plaintext highlighter-rouge">Minor번호</code></strong>.<strong><code class="language-plaintext highlighter-rouge">배포번호</code></strong>&gt;의 의미</li>
+  <li>예: <strong>libjpeg.so.8.0.2</strong>
+    <ul>
+      <li>라이브러리 이름: jpeg</li>
+      <li>라이브러리 종류: shared</li>
+      <li>메이저 번호: 8</li>
+      <li>마이너 번호: 0</li>
+      <li>배포 번호: 2</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="soname">soname</h3>
+<hr />
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>gcc <span class="nt">-fPIC</span> <span class="nt">-c</span> file1.c file.h
+<span class="nv">$ </span>gcc <span class="nt">-fPIC</span> <span class="nt">-c</span> file2.c file.h
+<span class="nv">$ </span>gcc <span class="nt">-shared</span> <span class="nt">-Wl</span>,-soname,libmy.so.0 <span class="nt">-o</span> libmy.so.0.0.0 file1.o file2.o
+</code></pre></div></div>
+<ul>
+  <li>만들어진 <strong><span style="color:green">libmy.so.0.0.0</span></strong> 공유 라이브러리는 <strong><em>soname:</em></strong> <strong><span style="color:red">libmy.so.0</span></strong>를 가진다.</li>
+  <li><strong><em>soname</em></strong>을 사용하는 이유는 <strong>파일명과 상관없이 서로 다른 버전의 공유(shared) 라이브러리 사용</strong>하기 위해</li>
+  <li>이 라이브러리에 링크 건 응용 프로그램들은 실행 시, <strong>Dynamic loader</strong>가 <em>Shared library</em>를 메모리 탑재 하려 하는데, <strong>soname</strong>을 이용해 <strong>라이브러리 파일명을 찾는다.</strong></li>
+</ul>
+
+<h4 id="soname-찾는-법">soname 찾는 법</h4>
+<hr />
+<p><strong>libjpeg.so.8.0.2</strong>의 <strong>soname</strong>을 찾는다면 아래 커맨드 처럼 사용하자</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>readelf <span class="nt">-a</span> /usr/lib/libjpeg.so.8.0.2 | <span class="nb">grep </span>SONAME
+0x000000000000000e <span class="o">(</span>SONAME<span class="o">)</span> Library soname:
+<span class="o">[</span>libjpeg.so.8]
+</code></pre></div></div>
+
+<h3 id="symbolic-link-to-library">symbolic link to library</h3>
+<hr />
+<p>/usr/lib의 라이브러리들을 보면 <strong>한 라이브러리</strong>와 <strong>여러 심볼릭 링크</strong>로 연결 된 것을 볼 수 있다.</p>
+
+<ul>
+  <li><strong><em>libGL.so</em></strong>의 경우의 예:<br />
+와 같이 존재한다.<br />
+<br />
+<strong><span style="color:#0BA6D6">libGL.so.1</span> -&gt; <span style="color:green">libGL.so.1.0.0</span></strong>로 심볼릭 링크되어있다.<br /><br />
+즉, <strong><span style="color:#0BA6D6">libGL.so.1</span></strong>는 소프트링크고, 진짜 라이브러리는 <strong><span style="color:green">libGL.so.1.0.0</span></strong>이다.  <br />여기서 <strong><span style="color:green">libGL.so.1.0.0</span></strong>의 <strong>soname</strong>은 <strong><span style="color:red">libGL.so.1</span></strong>이다.<br /><br />
+그렇다면, 왜 <strong>soname의 이름을 가진 소프트링크를 만든 것</strong>인가?<br />또한 진짜 라이브러리는 <strong>libGL.so.1.0.0</strong>인데 심볼릭 링크는 왜 두는 것인가?</li>
+  <li>보통 하나의 라이브러리를 검색하면 최대 4개까지 뜬다(여기선 libGL을 4개 있다 가정).
+    <ol>
+      <li><strong>libGL.a</strong><br /> GL 라이브러리의 static library</li>
+      <li><strong><span style="color:#0BA6D6">libGL.so</span></strong><br /> 응용 프로그램이 컴파일할 때 <strong><code class="language-plaintext highlighter-rouge">-lGL</code></strong>로 링크 사용하는 용도<br />-&gt; <strong><span style="color:green">libGL.so.1.0.0</span></strong>에 소프트링크되어 있음<br />이 소프트 링크 없으면 컴파일 시, <strong>-lGL</strong> 걸어도 <strong><span style="color:green">libGL.so.1.0.0</span></strong>을 못찾음<br />$ gcc test.c <strong><code class="language-plaintext highlighter-rouge">-lGL</code></strong> -o test &lt;- 컴파일 할 때, 저 링크 옵션이 이 소프트링크 사용</li>
+      <li><strong><span style="color:red">libGL.so.1</span></strong><br /> 응용 프로그램 실행 시, <strong>dynamic loder가 <span style="color:red">soname</span></strong>보고 라이브러리를 찾아가는 용도<br />-&gt;<strong><span style="color:green">libGL.so.1.0.0</span></strong>에 소프트링크되어 있음<br />위 <strong>libGL.so</strong>파일이 있어서 응용프로그램이 컴파일은 됬어도 이 파일이 없으면 응용프로그램 실행 시, shared 라이브러리 탑재를 못함!<br />dynamic loader가 soname을 보고 찾는데 soname파일이 없잖아..</li>
+      <li><strong><span style="color:green">libGL.so.1.0.0</span></strong><br /> 리얼 라이브러리 파일</li>
+    </ol>
+  </li>
+</ul>
+
+<p>그래서 shared library를 만들면 <strong>두 개의 소프트링크</strong>도 만들어야한다.</p>
+
+<h3 id="shared-library를-사용하는-응용-프로그램-컴파일">Shared library를 사용하는 응용 프로그램 컴파일</h3>
+<hr />
+<p>c 파일은 <a href="http://pllpokko2.github.io/linux-system/library/#static-library-만들기">file.c</a> 참조</p>
+
+<p><strong><span style="color:red">주의!</span></strong> 간단한 소스코드라도 <strong>헤더 파일에 함수 선언</strong> 필수!<br />
+어짜피 함수 정의는 라이브러리에 있잖아? 하고 함수 사용 선언 안하면 에러!</p>
+
+<p><strong><span style="color:#0BA6D6">libmy.so</span></strong>을 사용하는 응용 프로그램을 컴파일 해본다.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>gcc <span class="nt">-L</span>/library/path source.c <span class="nt">-lmy</span> <span class="nt">-o</span> a.out
+</code></pre></div></div>
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">-L[path]</code></strong>: <strong><span style="color:#0BA6D6">libmy.so</span></strong> 라이브러리 위치
+    <ul>
+      <li>라이브러리가 <strong>/lib, /usr/lib, /usr/local/lib</strong>같은 Default Path에 있으면 -L 생략</li>
+    </ul>
+  </li>
+  <li><strong><code class="language-plaintext highlighter-rouge">-l[라이브러리이름]</code></strong>: -l로 라이브러리 링크<br /><br /></li>
+  <li>컴파일러는 <strong>-L 위치</strong>에서 <strong>-l로 걸어진 라이브러리</strong>를 찾는다.
+    <ul>
+      <li>여기서 <strong><span style="color:green">libmy.so.0.0.0</span></strong>이 원본이라도, 소프트링크인 <strong><span style="color:#0BA6D6">libmy.so</span></strong>가 없으면 안된다!</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="응용-프로그램-실행"><strong>응용 프로그램 실행</strong></h3>
+<hr />
+<ul>
+  <li>위 예제로 바이너리 <strong><span style="color:green">a.out</span></strong>이 생성 되었다. 하지만 사용 안될 수 있다!<br />라이브러리의 위치가 <strong>Specific path</strong>에 있으면 바로 안됨!</li>
+</ul>
+
+<h4 id="ldd-ldconfig-ld_library_path">ldd, ldconfig, LD_LIBRARY_PATH</h4>
+<hr />
+<ul>
+  <li>의존성 체크 <strong><code class="language-plaintext highlighter-rouge">ldd</code></strong>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ldd <span class="o">[</span>binary]
+</code></pre></div>    </div>
+  </li>
+  <li>ldd 명령어를 치면 바이너리가 의존하는 <strong>공유 라이브러리</strong>를 볼 수 있다.</li>
+  <li>예제에서는 <strong>libclsched.so.0</strong>를 찾을 수 없어서 실행이 안된다.<br />
+<strong><span style="color:red">soname</span></strong>을 보고 라이브러리를 찾기 때문에, <strong><span style="color:green">libclsched.so.0.0.0</span></strong>이 원본이라도, 소프트링크인 <strong><span style="color:#0BA6D6">libclsched.so.0</span></strong>가 없으면 안된다!</li>
+</ul>
+
+<ol>
+  <li><strong><code class="language-plaintext highlighter-rouge">ldconfig</code></strong><br />
+<strong>ldconfig</strong> 프로그램은 <strong>/etc/ld.so.conf</strong> 파일을 기반으로 <strong>공유 라이브러리 위치를 등록</strong>한다.
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>vi /etc/ld.so.conf
+<span class="c"># /etc/ld.so.conf 파일 내부===========</span>
+/library/path	<span class="c"># 라이브러리 path 명시</span>
+<span class="c"># ====================================</span>
+<span class="nv">$ </span>ldconfig	<span class="c"># ldconfig 실행</span>
+</code></pre></div>    </div>
+  </li>
+  <li><strong><code class="language-plaintext highlighter-rouge">LD_LIBRARY_PATH</code></strong>를 환경변수 등록
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">export </span><span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span>/library/path:<span class="nv">$LD_LIBRARY_PATH</span>
+</code></pre></div>    </div>
+  </li>
+  <li>애초에 컴파일 시, <strong><code class="language-plaintext highlighter-rouge">-rpath</code></strong> 등록<br />
+응용 프로그램 바이너리 빌드 시, <strong><code class="language-plaintext highlighter-rouge">-Wl,-rapth,[path]</code></strong>로 라이브러리 위치 등록
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>gcc <span class="nt">-L</span>/library/path <span class="nt">-Wl</span>,-rpath,/library/path source.c <span class="nt">-lmy</span> <span class="nt">-o</span> a.out
+<span class="nv">$ </span>readelf <span class="nt">-d</span> a.out | <span class="nb">grep </span>RPATH
+0x000000000000000f <span class="o">(</span>RPATH<span class="o">)</span>	Library rpath: <span class="o">[</span>/library/path]
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<h2 id="runtime-loaded-librarydynamic-library">Runtime loaded library(Dynamic Library)</h2>
+<ul>
+  <li>Dynamic library 중에서 Runtime loaded library</li>
+  <li>그냥 <strong>동적 탑재</strong>라이브러리라고 칭함</li>
+  <li><strong><span style="color:#0BA6D6"><em>*.so</em></span></strong> 이며, 공유 라이브러리랑 똑같으나 코드와 옵션등이 조금 다름</li>
+</ul>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;dlfcn.h&gt;
+</span>
+<span class="kt">void</span> <span class="o">*</span><span class="nf">dlopen</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">filename</span><span class="p">,</span> <span class="kt">int</span> <span class="n">flag</span><span class="p">);</span>
+<span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="nf">dlerror</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<span class="kt">void</span> <span class="o">*</span><span class="nf">dlsym</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">handle</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">symbol</span><span class="p">);</span>
+<span class="kt">int</span> <span class="nf">dlclose</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">handle</span><span class="p">);</span>
+</code></pre></div></div>
+
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">dlopen()</code></strong><br />
+기능: 동적라이브러리를 적재하기 위해 사용</li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">return</th>
+      <th style="text-align: left">value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">성공</td>
+      <td style="text-align: left">-</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">실패</td>
+      <td style="text-align: left">-</td>
+    </tr>
+  </tbody>
+</table>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">parameter</th>
+      <th style="text-align: left">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center"><em>*filename</em></td>
+      <td style="text-align: left">적재하기 윈하는 라이브러리 이름<br />ex) /usr/my/lib/libmysum.so<br />만약 적재시킬 라이브러리의 이름이 절대경로로 지정되어 있지 않으면, LD_LIBRARY_PATH에 등록된 디렉터리에서 찾고, 여기에도 없다면 /etc/ld.so.cache에서 찾는다.</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><em>flag</em></td>
+      <td style="text-align: left"><strong>RTLD_LAZY</strong>와 <strong>RTLD_NOW</strong> 중 하나 정의<br /><strong>RTLD_LAZY</strong>: 라이브러리의 코드가 실행 시간에 정의되지 않은 심볼을 해결<br /><strong>RTLD_NOW</strong>: dlopen의 실행이 끝나기 전에(return 전) 라이브러리에 정의되지 않은 심볼을 해결</td>
+    </tr>
+  </tbody>
+</table>
+
+<ul>
+  <li>
+    <p><strong><code class="language-plaintext highlighter-rouge">dlerror</code></strong><br />
+기능: dl관련 함수들이 제대로 작동을 수행하지 않았을 경우 에러메세지 되돌려준다.<br />
+dleooro(), dlsym(), dlclose(), dlopen():3 중 마지막 호출된 함수의 에러메시지 돌려줌</p>
+  </li>
+  <li>
+    <p><strong><code class="language-plaintext highlighter-rouge">dlsym</code></strong><br />
+기능: dlopen():3을 통해서 열린 라이브러리를 사용할 수 있도록 심볼 값을 찾아준다. 심볼은 열린 라이브러리에서 실제 호출할 함수 이름</p>
+  </li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">return</th>
+      <th style="text-align: left">value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">성공</td>
+      <td style="text-align: left">dlopen()으로 열린 라이브러리의 호출함수를 가르킴<br />void*형으로 되어 있는데, 호출함수가 리턴하는 형을 직접명시하도록하자! 그러면 유지보수가 훨씬 수월하다.</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">실패</td>
+      <td style="text-align: left">-</td>
+    </tr>
+  </tbody>
+</table>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">parameter</th>
+      <th style="text-align: left">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center"><em>*handle</em></td>
+      <td style="text-align: left">dlopen()에 의해 반환된 값</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><em>*symbol</em></td>
+      <td style="text-align: left">열린 라이브러리에서 실제 호출할 함수 이름</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="readelf-어떤-라이브러리와-링크">readelf: 어떤 라이브러리와 링크?</h2>
+
+<ul>
+  <li>readelf 명령으로 이 프로그램이나 다른 프로그램이 <span style="color:red"><strong>어떤 라이브러리와 링크됐는지 확인</strong></span>할 수 있다.</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>arm-starfishmllib32-linux-gnueabi-readelf <span class="nt">-a</span> <span class="o">[</span>shared lib] | <span class="nb">grep</span> <span class="s1">'Shared library'</span>
+</code></pre></div></div>
+
+<ul>
+  <li>shared 라이브러리는 <span style="color:red"><strong>런타임 링커</strong></span> 필요한데, 런타임 링커를 알 수 있다.</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>arm-starfishmllib32-linux-gnueabi-readelf <span class="nt">-a</span> <span class="o">[</span>shared lib] | <span class="nb">grep</span> <span class="s1">'program interpreter'</span>
+</code></pre></div></div>
+
+<ul>
+  <li>readelf 명령으로 프로그램의 다양한 정보를 얻을 수 있다.</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>arm-starfishmllib32-linux-gnueabi-readelf <span class="nt">-a</span> <span class="o">[</span>shared library]
+</code></pre></div></div>
+
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/#linux-system" class="page__taxonomy-item" rel="tag">linux-system</a>
+    
+    </span>
+  </p>
+
+
+        
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2020-12-18T00:00:00+09:00">December 18, 2020</time></p>
+
+
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">Share on</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=%EB%9D%BC%EC%9D%B4%EB%B8%8C%EB%9F%AC%EB%A6%AC%EC%9D%98+%EC%A2%85%EB%A5%98+%EB%B0%8F+%EC%BB%B4%ED%8C%8C%EC%9D%BC%20https%3A%2F%2Fmarkyang920413.github.io%2F%2Flinux-system%2Flibrary%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmarkyang920413.github.io%2F%2Flinux-system%2Flibrary%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fmarkyang920413.github.io%2F%2Flinux-system%2Flibrary%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/c/inline_assembly/" class="pagination--pager" title="인라인 어셈블리(inline assembly)
+">Previous</a>
+    
+    
+      <a href="/linux-tools/gdb/" class="pagination--pager" title="gdb
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/linux-filesystem/linux-linux_filesystem-LVM/" rel="permalink">LVM
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/mac/m1_rosetta2/" rel="permalink">M1 Mac 로제타2 설치, 로제타 사용 brew 설치, M1용 jekyll설치
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/algorithm/algorithm-algorithm-time_complexity/" rel="permalink">Time complexity
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          less than 1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/algorithm/algorithm-algorithm-IO_STL/" rel="permalink">시험에서 입출력, STL
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          less than 1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2021 Dong-Hyeon Yang. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "https://markyang920413.github.io//linux-system/library/";  /* Replace PAGE_URL with your page's canonical URL variable */
+      this.page.identifier = "/linux-system/library"; /* Replace PAGE_IDENTIFIER with your page's unique identifier variable */
+    };
+    (function() { /* DON'T EDIT BELOW THIS LINE */
+      var d = document, s = d.createElement('script');
+      s.src = 'https://MarkYang920413.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+
+
+  </body>
+</html>

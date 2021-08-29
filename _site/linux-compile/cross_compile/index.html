@@ -1,0 +1,1172 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.21.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>cross compile - 혼자 보려고 만든 블로그</title>
+<meta name="description" content="cross compile">
+
+
+  <meta name="author" content="Dong-Heyon Yang">
+  
+  <meta property="article:author" content="Dong-Heyon Yang">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="혼자 보려고 만든 블로그">
+<meta property="og:title" content="cross compile">
+<meta property="og:url" content="https://markyang920413.github.io//linux-compile/cross_compile/">
+
+
+  <meta property="og:description" content="cross compile">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2020-12-21T00:00:00+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://markyang920413.github.io//linux-compile/cross_compile/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "Dong-Hyeon Yang",
+      "url": "https://markyang920413.github.io//"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="혼자 보려고 만든 블로그 Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          혼자 보려고 만든 블로그
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/categories/">Category</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/">About</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+  
+    
+      
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox" />
+  <label for="ac-toc">Toggle menu</label>
+  <ul class="nav__items">
+    
+      <li>
+        
+          <span class="nav__sub-title">LINUX</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#linux-system">LINUX System</a></li>
+          
+            <li><a href="/categories/#linux-tools">LINUX Tools</a></li>
+          
+            <li><a href="/categories/#linux-compile">LINUX Compile</a></li>
+          
+            <li><a href="/categories/#linux-filesystem">LINUX Filesystem</a></li>
+          
+            <li><a href="/categories/#http">HTTP</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">System Programming</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#file">File, Memory</a></li>
+          
+            <li><a href="/categories/#env">Env</a></li>
+          
+            <li><a href="/categories/#process">Process</a></li>
+          
+            <li><a href="/categories/#thread">Thread</a></li>
+          
+            <li><a href="/categories/#ipc">IPC</a></li>
+          
+            <li><a href="/categories/#signal">Signal</a></li>
+          
+            <li><a href="/categories/#socket-programming">Socket Programming</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">C</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#c">C</a></li>
+          
+            <li><a href="/categories/#system-programming">System Programming</a></li>
+          
+            <li><a href="/categories/#stdio">Standard I/O</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">Python</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#python-language">Python Language</a></li>
+          
+            <li><a href="/categories/#python-pandas">Python Pandas</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">Algorithm</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#algorithm">Algorithm</a></li>
+          
+            <li><a href="/categories/#problem">Problem</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">MAC</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#mac">Mac</a></li>
+          
+        </ul>
+        
+      </li>
+    
+  </ul>
+</nav>
+
+    
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="cross compile">
+    <meta itemprop="description" content="cross compile">
+    <meta itemprop="datePublished" content="2020-12-21T00:00:00+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">cross compile
+</h1>
+          
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          4 minute read
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              <ul class="toc__menu"><li><a href="#keyward">Keyward</a><ul><li><a href="#toolchain-program">Toolchain Program</a></li><li><a href="#build-host-target">build, host, target</a></li><li><a href="#compiler-vendor">compiler vendor</a></li></ul></li><li><a href="#cross-compile-option-for-arm">cross compile option for ARM</a><ul><li><a href="#neon-vfp-지원-유무">NEON, VFP 지원 유무</a></li></ul></li><li><a href="#arm-toolchian-setting">ARM toolchian Setting</a><ul><li><a href="#1-arm-toolchain---linaro">1. ARM toolchain - linaro</a><ul><li><a href="#update-alternatives">update-alternatives</a></li><li><a href="#raspberry-pi-toolchain-등록하기">Raspberry pi Toolchain 등록하기</a></li></ul></li><li><a href="#2-arm-toolchain---수동-설치">2. ARM toolchain - 수동 설치</a></li></ul></li><li><a href="#cross-compile-기본">cross-compile 기본</a><ul><li><a href="#sysroot">sysroot</a></li></ul></li></ul>
+
+            </nav>
+          </aside>
+        
+        <h2 id="keyward">Keyward</h2>
+<ul>
+  <li><strong>EABI</strong>: 임베디드 응용 프로그램 이진 인터페이스</li>
+</ul>
+
+<h3 id="toolchain-program">Toolchain Program</h3>
+<hr />
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">명령</th>
+      <th style="text-align: left">설명</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">addr2line</td>
+      <td style="text-align: left">실행 파일 안의 디버그 심볼을 읽어서 프로그램 주소를 파일 이름과 행 번호로 변환한다.<br />시스템 크래시 리포트에 출력된 주소를 해독할 때 매우 유용하다.</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><strong>ar</strong></td>
+      <td style="text-align: left">아카이브 유틸리티<br /><span style="color:red"><strong>static 라이브러리를 만들 때</strong></span>쓰인다.</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><strong>as</strong></td>
+      <td style="text-align: left">GNU <span style="color:red"><strong>어셈블러</strong></span></td>
+    </tr>
+    <tr>
+      <td style="text-align: center">c++filt</td>
+      <td style="text-align: left">C++와 자바 심볼을 복원(demangle)할 때 쓰인다.</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><strong>cpp</strong></td>
+      <td style="text-align: left">C 전처리기, #define #include 등의 지시자를 확장할 때 쓰인다.</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><strong>ld</strong></td>
+      <td style="text-align: left">GNU <span style="color:red"><strong>링커</strong></span></td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><strong>nm</strong></td>
+      <td style="text-align: left"><strong>오브젝트 파일의 심볼 나열</strong></td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><strong>strip</strong></td>
+      <td style="text-align: left">오브젝트 파일의 <strong>디버그 심볼 테이블을 없애 <span style="color:red">파일 크기를 줄여준다.</span></strong><br />흔히 <span style="color:blue"><strong>타깃에 복사할 모든 실행 코드에 적용한다.</strong></span></td>
+    </tr>
+    <tr>
+      <td style="text-align: center">elfedit</td>
+      <td style="text-align: left">ELF 파일의 ELF 헤더를 업데이트할 때 쓰인다.</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">g++</td>
+      <td style="text-align: left">GNU C++</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">gcc</td>
+      <td style="text-align: left">GNU C</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">gconv</td>
+      <td style="text-align: left">코드 커버리지 도구</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">gdb</td>
+      <td style="text-align: left">GNU 디버거</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">gprof</td>
+      <td style="text-align: left">프로그램 프로파일링 도구</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">objcopy</td>
+      <td style="text-align: left">오브젝트 파일 복사 및 번역</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">objdump</td>
+      <td style="text-align: left">오브젝트 파일 정보 출력시 사용</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">ranlib</td>
+      <td style="text-align: left">static 라이브러리 안의 인덱스를 만들거나 수정해 링크 단계를 더 빠르게 한다.</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">readelf</td>
+      <td style="text-align: left">ELF 오브젝트 형식의 파일에 정보를 출력한다.</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">size</td>
+      <td style="text-align: left">섹션 크기와 전체 크기를 나열한다.</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">strings</td>
+      <td style="text-align: left">파일 안의 인쇄 가능 문자열들을 출력한다.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="build-host-target">build, host, target</h3>
+<hr />
+<ul>
+  <li><strong>build</strong>: 현재 플랫폼</li>
+  <li><strong>host</strong>: 설치될 플랫폼</li>
+  <li><strong>target</strong>: 실행될 플랫폼</li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center"><strong>Types</strong></th>
+      <th style="text-align: left"><strong>Set Keyword</strong></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center"><strong>native build, install</strong></td>
+      <td style="text-align: left"><strong>build = host = Target</strong></td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><span style="color:red"><strong>native build, cross-compile</strong></span></td>
+      <td style="text-align: left"><span style="color:red"><strong>build != host = target</strong></span></td>
+    </tr>
+    <tr>
+      <td style="text-align: center">libc for cross-compiler</td>
+      <td style="text-align: left">build = host != target</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">libc for a cross-compiler, cross-compile</td>
+      <td style="text-align: left">build != host != target</td>
+    </tr>
+  </tbody>
+</table>
+
+<ol>
+  <li>x86에서 컴파일러 빌드, arm에서 eabi쓰는 임베디드 환경에서 바이너리 실행 할 것
+    <ul>
+      <li><strong>build</strong>=i686-pc-linux-gnu <strong>host</strong>=arm-none-linux-gnueabi &lt;Native Compiler&gt;</li>
+    </ul>
+  </li>
+  <li>x86 linux에서 컴파일러 빌드, ARM용 바이너리를 putty로 내 x86컴퓨터에서 디버깅
+    <ul>
+      <li>(“gdbserver:1234 a.out”, to start debugging and listen on port 1234)</li>
+      <li><strong>build</strong>=i686-pc-linux-gnu <strong>host</strong>=i686-pc-linux-gnu <strong>target</strong>=arm-none-gnu</li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="compiler-vendor">compiler vendor</h3>
+<hr />
+<ul>
+  <li><strong>arch-vendor-os-toolsupport-cmd</strong> 형식</li>
+  <li><span style="color:blue"><strong>arm 32bit -march=<code class="language-plaintext highlighter-rouge">armv7-a</code></strong></span>
+    <ul>
+      <li>arm-linux-gnueabi-gcc</li>
+      <li>arm-starfishmllib32-linux-gnueabi-g++</li>
+      <li>arm-unknown-android-gnueabihf-ld</li>
+    </ul>
+  </li>
+  <li><span style="color:blue"><strong>arm 64bit -march=<code class="language-plaintext highlighter-rouge">armv8-a</code></strong></span>
+    <ul>
+      <li>aarc64-linux-gnueabihf-gcc</li>
+      <li>aarc64-linux-android28-clang</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="cross-compile-option-for-arm">cross compile option for ARM</h2>
+<h3 id="neon-vfp-지원-유무">NEON, VFP 지원 유무</h3>
+<hr />
+<ol>
+  <li><strong>NEON</strong>
+    <ul>
+      <li>ARM SIMD Extension NEON 기술</li>
+      <li>ARM에서 개발한 64/128bit 복합 <span style="blue"><strong>SIMD</strong></span> Architecture</li>
+      <li>Single precision</li>
+      <li>프로세서의 일부지만, 자체 실행 파이프라인 가짐</li>
+      <li>ARM 레지스터 배읔와는 별개의 레지스터 뱅크를 가짐</li>
+      <li>NEON 명령어는 ARM, Thumb-2에서 모두 사용 가능</li>
+      <li><strong>ARMv7-A, ARMv8-A 등 <code class="language-plaintext highlighter-rouge">Cortex-A 계열</code>은 모두 지원</strong></li>
+    </ul>
+  </li>
+  <li><strong>VFP</strong>
+    <ul>
+      <li><span style="color:red"><strong>부동 소수점을 위한</strong></span> <span style="color:blue"><strong>HW</strong></span> 가속기</li>
+      <li>Double precision 지원</li>
+      <li>NEON과 달리 병렬 아키텍처 가지지 않는다.</li>
+      <li>단순히 ARM과 같은 프로세서에서 SW math lib에 의존해 느려지는 부동 소수점 연산의 속도 향상 목적</li>
+    </ul>
+  </li>
+</ol>
+
+<p><strong>속도: NEON &gt; VFP</strong></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>arm-none-linux-gnueabi-gcc <span class="nt">-O3</span> <span class="nt">-march</span><span class="o">=</span>armv7-a <span class="nt">-mtune</span><span class="o">=</span>cortex-a8 <span class="nt">-mfpu</span><span class="o">=</span>neon <span class="nt">-ftree-vectorize</span> <span class="nt">-mfloat-abi</span><span class="o">=</span>softfp
+
+<span class="nv">$ </span>arm-none-linux-gnueabi-gcc <span class="nt">-O3</span> <span class="nt">-march</span><span class="o">=</span>armv7-a <span class="nt">-mtune</span><span class="o">=</span>cortex-a8 <span class="nt">-mfpu</span><span class="o">=</span>vfp <span class="nt">-ftree-vectorize</span> <span class="nt">-mfloat-abi</span><span class="o">=</span>softfp
+</code></pre></div></div>
+
+<ul>
+  <li><strong>-mfloat-abi=</strong><em>[name]</em> <strong>-mfpu=</strong><em>[fpu]</em><br /> 어떤 floating-point ABI를 사용할 것인가? fpu는 neon? vfp?</li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left"><strong>name</strong></th>
+      <th style="text-align: left">description</th>
+      <th style="text-align: left"><strong>fpu</strong></th>
+      <th style="text-align: left"><strong><em>gnueabi[hf]</em></strong></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left"><strong>soft</strong></td>
+      <td style="text-align: left">GCC가 floating-point operation에 대한 라이브러리 콜들을 포함하는 아웃풋을 생성한다.</td>
+      <td style="text-align: left">-</td>
+      <td style="text-align: left"><strong>gnueabi</strong></td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><span style="color:red"><strong>softfp</strong></span></td>
+      <td style="text-align: left"><span style="color:red"><strong>HW</strong></span> floating-point inst를 사용하는 코드의 생성을 허락<br />하지만, <strong>soft-float</strong> 호출 규약 사용</td>
+      <td style="text-align: left"><strong>neon</strong><br /><strong>vfp</strong></td>
+      <td style="text-align: left"><strong>gnueabi</strong></td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><span style="color:blue"><strong>hard</strong></span></td>
+      <td style="text-align: left"><span style="color:blue"><strong>FPU특화</strong></span> 호출 규약 사용</td>
+      <td style="text-align: left"><strong>neon</strong></td>
+      <td style="text-align: left"><strong>gnueabi<span style="color:red">hf</span></strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="arm-toolchian-setting">ARM toolchian Setting</h2>
+<h3 id="1-arm-toolchain---linaro">1. ARM toolchain - linaro</h3>
+<hr />
+<ul>
+  <li><strong>64-bit ARM-v8a</strong></li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>apt <span class="nb">install </span>binutils-aarch64-linux-gnu gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
+</code></pre></div></div>
+<ul>
+  <li><strong>32-bit ARM-v7a</strong> <span style="color:blue"><strong>-mfloat-abi=hard -mpfu=FPU</strong></span></li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>apt <span class="nb">install </span>gcc-arm-linux-gnueabihf
+</code></pre></div></div>
+
+<ul>
+  <li><strong>32-bit ARM-v7a</strong> <span style="color:blue"><strong>-mfloat-abi=soft/softfp -mfpu=neon/vfp</strong></span></li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>apt <span class="nb">install </span>gcc-arm-linux-gnueabi
+</code></pre></div></div>
+
+<ul>
+  <li><strong>Bare-metal ARM</strong></li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>apt <span class="nb">install </span>gcc-arm-none-eabi
+</code></pre></div></div>
+
+<h4 id="update-alternatives">update-alternatives</h4>
+<hr />
+<ul>
+  <li><strong>update-alternatives</strong>: 여러 버전의 gcc 선택적 사용 가능</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>update-alternatives <span class="nt">--query</span> gcc
+</code></pre></div></div>
+
+<p><strong>등록</strong></p>
+<ul>
+  <li>여기서 사용하는 여러 gcc 버전들을 설치한 후에 다음과 같은 명령어로 등록할 수 있다.</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>update-alternatives <span class="nt">--install</span> &lt;<span class="nb">link</span><span class="o">&gt;</span> &lt;name&gt; &lt;path&gt; &lt;priority&gt;
+</code></pre></div></div>
+
+<ul>
+  <li><strong>link</strong>: 실행파일 이름으로 /etc/alternatives/ 를 가리킨다.
+    <ul>
+      <li>예: /usr/bin/gcc</li>
+    </ul>
+  </li>
+  <li><strong>name</strong>: 해당 링크 그룹의 대표 이름으로, 여러 가지 버전의 패키지들을 대표하는 이름으로 보면 될 것이다.
+    <ul>
+      <li>예: gcc</li>
+    </ul>
+  </li>
+  <li><strong>path</strong>: alternatives로 실제 연결할 실행파일 이름으로, 시스템에 설치한 패키지의 실행파일 이름이다.
+    <ul>
+      <li>예: /usr/bin/gcc-4.8</li>
+    </ul>
+  </li>
+  <li><strong>priority</strong>: automatic 모드에서 어떤 것을 자동으로 선택해서 사용할지 결정할 때 사용되는 우선순위로, 높은 수가 더 높은 우선순위</li>
+</ul>
+
+<p><strong>1. gcc 등록</strong></p>
+<ul>
+  <li>만약 gcc-4.8, g++-4.8 사용 중인 경우</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>update-alternatives <span class="nt">--install</span> /usr/bin/gcc gcc /usr/bin/gcc-4.8 50 <span class="nt">--slave</span> /usr/bin/g++ g++ /usr/bin/g++-4.8
+</code></pre></div></div>
+<ul>
+  <li>master를 gcc로, slave를 g++로 등록해봄</li>
+</ul>
+
+<p><strong>2. 설정된 버전 표기</strong></p>
+
+<ul>
+  <li><strong>gcc</strong> 버전 보기</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>update-alternatives <span class="nt">--list</span> gcc
+/usr/bin/gcc-4.8
+/usr/bin/gcc-5
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>update-alternatives <span class="nt">--display</span> gcc
+</code></pre></div></div>
+
+<p><strong>3. gcc 버전 교체하기</strong></p>
+<ul>
+  <li><strong>–config</strong>를 사용해서 교체해서 사용할 수 있다.
+    <ul>
+      <li>gcc 버전을 교체해보자</li>
+    </ul>
+  </li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>update-alternatives <span class="nt">--config</span> gcc
+There are 2 choices <span class="k">for </span>the alternative gcc <span class="o">(</span>providing /usr/bin/gcc<span class="o">)</span><span class="nb">.</span>
+
+  Selection    Path              Priority   Status
+<span class="nt">------------------------------------------------------------</span>
+<span class="k">*</span> 0            /usr/bin/gcc-4.8   20        auto mode
+  1            /usr/bin/gcc-4.8   20        manual mode
+  2            /usr/bin/gcc-5     10        manual mode
+
+Press &lt;enter&gt; to keep the current choice[<span class="k">*</span><span class="o">]</span>, or <span class="nb">type </span>selection number: 2
+
+
+<span class="nv">$ </span>g++ <span class="nt">--version</span>
+g++ <span class="o">(</span>Ubuntu 5.4.0-6ubuntu1~16.04.4<span class="o">)</span> 5.4.0 20160609
+Copyright <span class="o">(</span>C<span class="o">)</span> 2015 Free Software Foundation, Inc.
+</code></pre></div></div>
+
+<p><strong>3. 삭제</strong></p>
+<ul>
+  <li>설정한 내역을 지워버리고 싶을 때에는 <strong>–remove</strong> 옵션 사용</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>update-alternatives <span class="nt">--remove</span> &lt;name&gt; &lt;path&gt;
+<span class="nv">$ </span><span class="nb">sudo </span>update-alternatives <span class="nt">--remove-all</span> gcc	<span class="c"># gcc 설정내역 전부 제거</span>
+</code></pre></div></div>
+
+<h4 id="raspberry-pi-toolchain-등록하기">Raspberry pi Toolchain 등록하기</h4>
+<hr />
+<ul>
+  <li><strong>라즈베리파이 툴체인 등록하는 경우</strong></li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>git clone https://github.com/raspberrypi/tools ~/raspberrypi/tools
+</code></pre></div></div>
+<ul>
+  <li>다운로드한 tools 밑에 32bit, 64bit 컴파일러가 있다.
+    <ul>
+      <li>32bit: ~/raspberrypi/tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian/bin</li>
+      <li>64bit: ~/raspberrypi/tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin
+<br /><br /><br /></li>
+    </ul>
+  </li>
+  <li><strong>라즈베리파이용 컴파일러를 등록하자</strong></li>
+  <li>64bit raspberrypi gcc 등록</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>update-alternatives <span class="nt">--install</span> /usr/bin/arm-linux-gnueabihf-gcc arm-linux<span class="o">=</span>gnueabihf ~/raspberrypi/tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin/arm-linux-gnueabihf-gcc-4.8.3 30 <span class="se">\</span>
+<span class="nt">--slave</span> /usr/bin/arm-linux-gnueabihf-g++ arm-linux-gnueabihf-g++ ~/raspberrypi/tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian-x64/bin/arm-linux-gnueabihf-g++
+</code></pre></div></div>
+<ul>
+  <li>32bit raspberrypi gcc 등록</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>update-alternatives <span class="nt">--install</span> /usr/bin/arm-linux-gnueabihf-gcc arm-linux<span class="o">=</span>gnueabihf ~/raspberrypi/tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian/bin/arm-linux-gnueabihf-gcc-4.8.3 20 <span class="se">\</span>
+<span class="nt">--slave</span> /usr/bin/arm-linux-gnueabihf-g++ arm-linux-gnueabihf-g++ ~/raspberrypi/tools/arm-bcm2708/gcc-linaro-arm-linux-gnueabihf-raspbian/bin/arm-linux-gnueabihf-g++
+</code></pre></div></div>
+
+<ul>
+  <li><strong>GNU Tools 그룹 추가</strong></li>
+</ul>
+
+<p>크로스 플랫폼 환경에서 소스를 빌드하다 보면 GNU Tools를 해당 그룹에 추가할 필요가 있다.<br />여기서 예로든 python 3.6 빌드시 <strong>readelf</strong> 유틸리티를 요구하는데 우분투 배포본에 <em>arm-linux-gnueabihf-gcc</em> 그룹에 슬레이브로 <em>arm-linux-gnueabihf-readelf</em> 바이너리를 추가해 준다.</p>
+
+<p>이제 <em>arm-linux-gnueabihf-</em> 버전을 교환할 수 있는 환경이 준비됨</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>update-alternatives <span class="nt">--display</span> arm-linux-gnueabihf
+<span class="nv">$ </span><span class="nb">sudo </span>update-alternatives <span class="nt">--list</span> arm-linux-gnueabihf
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>update-alternatives <span class="nt">--list</span> gcc
+/usr/bin/gcc-4.8
+/usr/bin/gcc-5
+
+<span class="nv">$ </span><span class="nb">sudo </span>update-alternatives <span class="nt">--display</span> gcc
+</code></pre></div></div>
+
+<p><strong>cross-compiler로 교체</strong></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>update-alternatives <span class="nt">--config</span> arm-linux-gnueabihf
+</code></pre></div></div>
+
+<p><strong>hello world - C</strong></p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;stdio.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">){</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">"hello world!</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>arm-linux-gnueabihf-gcc hello.c <span class="nt">-o</span> hello
+</code></pre></div></div>
+
+<p><strong>hello world - C++</strong></p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;iostream&gt;
+</span>
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span><span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[]){</span>
+	<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"hello world!</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>arm-linux-gnueabi-g++ hello.cpp <span class="nt">-o</span> hello_cpp
+</code></pre></div></div>
+<h3 id="2-arm-toolchain---수동-설치">2. ARM toolchain - 수동 설치</h3>
+<hr />
+<p><img src="img1.png" width="30%" height="30%" /></p>
+
+<ul>
+  <li>
+    <p>툴체인 압축풀기 at /opt/starfish-sdk-x86_64/….</p>
+  </li>
+  <li>
+    <p>환경변수 설정</p>
+  </li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>vim ~/.bashrc
+<span class="c"># ~/.bashrc 파일 =========================================</span>
+<span class="nb">export </span><span class="nv">PATH</span><span class="o">=</span>/opt/starfish-sdk-x86_64/5.0.0-20190307/sysroots/x86_64-starfishsdk-linux/usr/bin/arm-starfishmllib32-linux-gnueabi:<span class="nv">$PATH</span>
+<span class="nb">export </span><span class="nv">SYSROOT</span><span class="o">=</span>/opt/starfish-sdk-x86_64/5.0.0-20190307/sysroots/ca9v1-starfishmllib32-linux-gnueabi
+</code></pre></div></div>
+
+<ul>
+  <li>build 파일은 x86_64(build 컴퓨터)가 읽을 수 있어야함</li>
+  <li><strong>sysroot</strong>는 크로스 컴파일 때, <strong>루트 ‘/’</strong>로 보는 경로
+    <ul>
+      <li>ex) 컴파일시 CFLAGS에 <span style="color:green"><strong>–sysroot=$SYSROOT</strong></span>로 설정 함<br />그러면, 환경 변수에 지정된 <strong>…sysroots/ca9v1-starfishmllib32-linux-gnueabi</strong>를 <strong>target</strong>이 <span style="color:blue"><strong>’/’</strong> 루트 디렉터리로 인식</span></li>
+    </ul>
+  </li>
+  <li>따로 필요한 헤더파일들은 <code class="language-plaintext highlighter-rouge">$SYSROOT/usr/include</code>에 저장</li>
+  <li>컴파일 install 결과는 <strong><code class="language-plaintext highlighter-rouge">$SYSROOT/usr/bin</code> <code class="language-plaintext highlighter-rouge">$SYSROOT/usr/lib</code></strong>등에 저장됨</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># OpenCL 헤더 파일이 필요하다면</span>
+<span class="nv">$ </span><span class="nb">cp</span> <span class="nt">-R</span> /usr/include/CL <span class="nv">$SYSROOT</span>/usr/include
+</code></pre></div></div>
+
+<h2 id="cross-compile-기본">cross-compile 기본</h2>
+<h3 id="sysroot">sysroot</h3>
+<hr />
+<ol>
+  <li><strong>sysroot</strong>: 크로스 컴파일에선 sysroot가 필수!<br />
+<strong>export SYSROOT=”toolchain의 sysroot”</strong><br /><strong>Target</strong>은 <strong>지정한 SYSROOT</strong>를 <span style="color:blue"><strong>’/’</strong> 루트 디렉터리로 인식</span> 
+<strong>Target</strong>용 파일은 <code class="language-plaintext highlighter-rouge">$SYSROOT/usr</code>, <code class="language-plaintext highlighter-rouge">$SYSROOT/usr/lib</code>, <code class="language-plaintext highlighter-rouge">$SYSROOT/usr/include</code> 등에서 가져와 컴파일 함
+    <ul>
+      <li>컴파일 install 결과는 <strong><code class="language-plaintext highlighter-rouge">$SYSROOT/usr/bin</code> <code class="language-plaintext highlighter-rouge">$SYSROOT/usr/lib</code></strong>등에 저장됨</li>
+    </ul>
+  </li>
+  <li>따로 지정하지 않았는데 컴파일이 된다면
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>arm-linux-gnueabi-gcc <span class="nt">-v</span>	<span class="c"># 이 명령로 컴파일러에 셋된 옵션 확인</span>
+<span class="nv">$ </span>arm-linux-gnueabi-gcc <span class="nt">-print-sysroot</span>	<span class="c"># sysroot만 print</span>
+</code></pre></div>    </div>
+    <p>입력 시, gcc가 미리 셋 해둔 <strong>sysroot</strong> 등이 출력됨. 이걸 써서 그럼.</p>
+  </li>
+  <li>완전 수동으로 한다면..
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>arm-linux-gnueabi-gcc <span class="nt">--sysroot</span><span class="o">=</span>/opt/starfish-sdk&lt;생략&gt; like.c <span class="nt">-o</span> like
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/#linux-compile" class="page__taxonomy-item" rel="tag">linux-compile</a>
+    
+    </span>
+  </p>
+
+
+        
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2020-12-21T00:00:00+09:00">December 21, 2020</time></p>
+
+
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">Share on</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=cross+compile%20https%3A%2F%2Fmarkyang920413.github.io%2F%2Flinux-compile%2Fcross_compile%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmarkyang920413.github.io%2F%2Flinux-compile%2Fcross_compile%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fmarkyang920413.github.io%2F%2Flinux-compile%2Fcross_compile%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/linux-compile/configure_file/" class="pagination--pager" title="configure 파일 셋팅 - Cross compile용
+">Previous</a>
+    
+    
+      <a href="/linux-tools/ctags_cscope/" class="pagination--pager" title="ctags, cscope
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/linux-filesystem/linux-linux_filesystem-LVM/" rel="permalink">LVM
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/mac/m1_rosetta2/" rel="permalink">M1 Mac 로제타2 설치, 로제타 사용 brew 설치, M1용 jekyll설치
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/algorithm/algorithm-algorithm-time_complexity/" rel="permalink">Time complexity
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          less than 1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/algorithm/algorithm-algorithm-IO_STL/" rel="permalink">시험에서 입출력, STL
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          less than 1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2021 Dong-Hyeon Yang. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "https://markyang920413.github.io//linux-compile/cross_compile/";  /* Replace PAGE_URL with your page's canonical URL variable */
+      this.page.identifier = "/linux-compile/cross_compile"; /* Replace PAGE_IDENTIFIER with your page's unique identifier variable */
+    };
+    (function() { /* DON'T EDIT BELOW THIS LINE */
+      var d = document, s = d.createElement('script');
+      s.src = 'https://MarkYang920413.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+
+
+  </body>
+</html>

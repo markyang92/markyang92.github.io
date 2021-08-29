@@ -1,0 +1,826 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.21.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>ctags, cscope - 혼자 보려고 만든 블로그</title>
+<meta name="description" content="ctags, cscope">
+
+
+  <meta name="author" content="Dong-Heyon Yang">
+  
+  <meta property="article:author" content="Dong-Heyon Yang">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="혼자 보려고 만든 블로그">
+<meta property="og:title" content="ctags, cscope">
+<meta property="og:url" content="https://markyang920413.github.io//linux-tools/ctags_cscope/">
+
+
+  <meta property="og:description" content="ctags, cscope">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2020-12-21T00:00:00+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://markyang920413.github.io//linux-tools/ctags_cscope/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "Dong-Hyeon Yang",
+      "url": "https://markyang920413.github.io//"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="혼자 보려고 만든 블로그 Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          혼자 보려고 만든 블로그
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/categories/">Category</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/">About</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+  
+    
+      
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox" />
+  <label for="ac-toc">Toggle menu</label>
+  <ul class="nav__items">
+    
+      <li>
+        
+          <span class="nav__sub-title">LINUX</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#linux-system">LINUX System</a></li>
+          
+            <li><a href="/categories/#linux-tools">LINUX Tools</a></li>
+          
+            <li><a href="/categories/#linux-compile">LINUX Compile</a></li>
+          
+            <li><a href="/categories/#linux-filesystem">LINUX Filesystem</a></li>
+          
+            <li><a href="/categories/#http">HTTP</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">System Programming</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#file">File, Memory</a></li>
+          
+            <li><a href="/categories/#env">Env</a></li>
+          
+            <li><a href="/categories/#process">Process</a></li>
+          
+            <li><a href="/categories/#thread">Thread</a></li>
+          
+            <li><a href="/categories/#ipc">IPC</a></li>
+          
+            <li><a href="/categories/#signal">Signal</a></li>
+          
+            <li><a href="/categories/#socket-programming">Socket Programming</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">C</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#c">C</a></li>
+          
+            <li><a href="/categories/#system-programming">System Programming</a></li>
+          
+            <li><a href="/categories/#stdio">Standard I/O</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">Python</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#python-language">Python Language</a></li>
+          
+            <li><a href="/categories/#python-pandas">Python Pandas</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">Algorithm</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#algorithm">Algorithm</a></li>
+          
+            <li><a href="/categories/#problem">Problem</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">MAC</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#mac">Mac</a></li>
+          
+        </ul>
+        
+      </li>
+    
+  </ul>
+</nav>
+
+    
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="ctags, cscope">
+    <meta itemprop="description" content="ctags, cscope">
+    <meta itemprop="datePublished" content="2020-12-21T00:00:00+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">ctags, cscope
+</h1>
+          
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          1 minute read
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              <ul class="toc__menu"><li><a href="#ctags">ctags</a><ul><li><a href="#ctags-커맨드">ctags 커맨드</a></li></ul></li><li><a href="#cscope">cscope</a><ul><li><a href="#mkcscopesh">mkcscope.sh</a></li><li><a href="#vim연동">vim연동</a></li><li><a href="#cscope-커맨드">cscope 커맨드</a></li></ul></li></ul>
+
+            </nav>
+          </aside>
+        
+        <h2 id="ctags">ctags</h2>
+<blockquote>
+  <p>Ctags is a programming tool that generates an index (or tag) file of names found in source and header files of various programming languages to aid code comprehension.<br />  The original Ctags was introduced in BSD Unix 3.0 and was written by Ken Arnold<br />  from Wiki</p>
+</blockquote>
+
+<ul>
+  <li>아래 커맨드를 입력시 tags가 만들어 진다.
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ctags <span class="nt">-R</span>
+</code></pre></div>    </div>
+  </li>
+  <li>vim과 연동해야 vim에서 먹힌다.
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># vim을 열고...!</span>
+:set <span class="nv">tags</span><span class="o">=[</span>tags file 위치]
+</code></pre></div>    </div>
+  </li>
+  <li>vim을 열때마다 이럴 순 없지 않은가..! 자동 연동 설정하자!
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>vim ~/.vimrc	<span class="c"># vim 설정 파일 진입</span>
+<span class="nv">$ </span><span class="nb">set </span><span class="nv">tags</span><span class="o">=</span>./tags
+</code></pre></div>    </div>
+    <ul>
+      <li>설정을 보면 알겠지만, <code class="language-plaintext highlighter-rouge">./tags</code>가 먹히는 위치에서 vim을 켜야 자동 연동</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="ctags-커맨드">ctags 커맨드</h3>
+<hr />
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">ctrl + ]</code>:</li>
+  <li><code class="language-plaintext highlighter-rouge">ctrl + t</code>:</li>
+</ul>
+
+<h2 id="cscope">cscope</h2>
+<ul>
+  <li>ctags만으로는 local, global variable이 사용된 곳이나, 함수가 사용된 곳 찾기 힘들다.</li>
+</ul>
+
+<ol>
+  <li><strong>cscope.out</strong> 파일을 만들어야 한다.</li>
+</ol>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>find ./ <span class="nt">-name</span> <span class="s2">"*.[csSh]"</span> <span class="o">&gt;</span> file_list
+<span class="nv">$ </span>find ./ <span class="nt">-name</span> <span class="s2">"*.cpp"</span> <span class="o">&gt;&gt;</span> file_list
+<span class="nv">$ </span>find ./ <span class="nt">-name</span> <span class="s2">"*.cc"</span> <span class="o">&gt;&gt;</span> file_list
+
+<span class="nv">$ </span>cscope <span class="nt">-i</span> file_list
+ctrl + d
+</code></pre></div></div>
+
+<ul>
+  <li>커맨드를 보면 알겠지만, 현재 폴더에서 .c, .s, .S, .h, .cpp, .cc 파일을 찾아서 file_list에 넣는다.</li>
+  <li>cscope -i file_list는 file_list내에 파일을 cscope가 한 줄씩 읽어서 cscope.out 파일 생성한다.</li>
+</ul>
+
+<p>그런데 이거 매번 하기 귀찮으니 쉘로 만들고 어디에서나 사용가능하게 /usr/local/bin에 넣자</p>
+<h3 id="mkcscopesh">mkcscope.sh</h3>
+<hr />
+<p><code class="language-plaintext highlighter-rouge">mkcscope.sh</code></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/bin/bash</span>
+<span class="nb">rm</span> <span class="nt">-rf</span> cscope.files file_list
+find ./ <span class="nt">-name</span> <span class="s2">"*.[csSh]"</span> <span class="o">&gt;</span> file_list
+find ./ <span class="nt">-name</span> <span class="s2">"*.cpp"</span> <span class="o">&gt;&gt;</span> file_list
+find ./ <span class="nt">-name</span> <span class="s2">"*.cc"</span> <span class="o">&gt;&gt;</span> file_list
+
+cscope <span class="nt">-i</span> file_list
+</code></pre></div></div>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">chmod</span> +x mkcscope.sh
+<span class="nv">$ </span><span class="nb">sudo mv</span> ./mkcscope.sh /usr/local/bin
+</code></pre></div></div>
+
+<p>어디서든 <code class="language-plaintext highlighter-rouge">mkcscope.sh</code> 실행 시, 내 현재 위치에 cscope.out을 만들어 준다.</p>
+
+<h3 id="vim연동">vim연동</h3>
+<hr />
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">set </span><span class="nv">csprg</span><span class="o">=</span>/usr/local/bin/cscope
+<span class="nb">set </span>nocsverb
+
+<span class="k">if </span>filereadable<span class="o">(</span><span class="s2">"./cscope.out"</span><span class="o">)</span>
+cs add cscope.out
+<span class="k">else
+</span>cs add /usr/local/bin/cscope.out
+endif
+
+<span class="nb">set </span>csverb
+<span class="nb">set </span><span class="nv">csto</span><span class="o">=</span>0
+<span class="nb">set </span>cst
+</code></pre></div></div>
+
+<h3 id="cscope-커맨드">cscope 커맨드</h3>
+<hr />
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># vim에서</span>
+:cs f <span class="o">[</span>질의 종류] <span class="o">[</span>심볼]
+:cs f s start_kernel		<span class="c"># 예</span>
+</code></pre></div></div>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">search type</th>
+      <th style="text-align: center">number</th>
+      <th style="text-align: left">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">s</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: left">C 심볼을 검색<br />변수, 함수, 매크로, 구조체 등</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">g</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: left">전역 선언, 정의 검색</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">d</td>
+      <td style="text-align: center">2</td>
+      <td style="text-align: left">함수에 의해 호출되는 함수들 검색<br />cs f 2 <strong>get_src</strong> ==&gt; <strong>get_src함수가 Call</strong>하는 함수들 나열<br />get_src==&gt; main, others</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">c</td>
+      <td style="text-align: center">3</td>
+      <td style="text-align: left">함수를 호출하는 함수들 검색<br />cs f 3 get_src ==&gt; <strong>get_src를 호출</strong>하는 함수들 나열<br />main, others ==&gt; get_src</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">t</td>
+      <td style="text-align: center">4</td>
+      <td style="text-align: left">텍스트 문자열 검색</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">e</td>
+      <td style="text-align: center">5</td>
+      <td style="text-align: left">확장 정규식을 사용해 검색</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">f</td>
+      <td style="text-align: center">6</td>
+      <td style="text-align: left">파일 이름을 검색</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">i</td>
+      <td style="text-align: center">7</td>
+      <td style="text-align: left">파일을 인클루드하는 파일 검사</td>
+    </tr>
+  </tbody>
+</table>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">space bar</code>: 내리기</li>
+  <li><code class="language-plaintext highlighter-rouge">q</code>: 나가기</li>
+</ul>
+
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/#linux-tools" class="page__taxonomy-item" rel="tag">linux-tools</a>
+    
+    </span>
+  </p>
+
+
+        
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2020-12-21T00:00:00+09:00">December 21, 2020</time></p>
+
+
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">Share on</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=ctags%2C+cscope%20https%3A%2F%2Fmarkyang920413.github.io%2F%2Flinux-tools%2Fctags_cscope%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmarkyang920413.github.io%2F%2Flinux-tools%2Fctags_cscope%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fmarkyang920413.github.io%2F%2Flinux-tools%2Fctags_cscope%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/linux-compile/cross_compile/" class="pagination--pager" title="cross compile
+">Previous</a>
+    
+    
+      <a href="/linux-system/linux_linux-system_hooking/" class="pagination--pager" title="후킹(Hooking)
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/linux-filesystem/linux-linux_filesystem-LVM/" rel="permalink">LVM
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/mac/m1_rosetta2/" rel="permalink">M1 Mac 로제타2 설치, 로제타 사용 brew 설치, M1용 jekyll설치
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/algorithm/algorithm-algorithm-time_complexity/" rel="permalink">Time complexity
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          less than 1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/algorithm/algorithm-algorithm-IO_STL/" rel="permalink">시험에서 입출력, STL
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          less than 1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2021 Dong-Hyeon Yang. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "https://markyang920413.github.io//linux-tools/ctags_cscope/";  /* Replace PAGE_URL with your page's canonical URL variable */
+      this.page.identifier = "/linux-tools/ctags_cscope"; /* Replace PAGE_IDENTIFIER with your page's unique identifier variable */
+    };
+    (function() { /* DON'T EDIT BELOW THIS LINE */
+      var d = document, s = d.createElement('script');
+      s.src = 'https://MarkYang920413.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+
+
+  </body>
+</html>

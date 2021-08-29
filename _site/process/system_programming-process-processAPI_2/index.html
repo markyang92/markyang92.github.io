@@ -1,0 +1,1189 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.21.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>프로세스 API &lt;2&gt; 좀비프로세스 피하기, exit() - 혼자 보려고 만든 블로그</title>
+<meta name="description" content=" exit(), exit(), 좀비프로세스 피하는 방법">
+
+
+  <meta name="author" content="Dong-Heyon Yang">
+  
+  <meta property="article:author" content="Dong-Heyon Yang">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="혼자 보려고 만든 블로그">
+<meta property="og:title" content="프로세스 API &lt;2&gt; 좀비프로세스 피하기, exit()">
+<meta property="og:url" content="https://markyang920413.github.io//process/system_programming-process-processAPI_2/">
+
+
+  <meta property="og:description" content=" exit(), exit(), 좀비프로세스 피하는 방법">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2020-12-25T00:00:00+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://markyang920413.github.io//process/system_programming-process-processAPI_2/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "Dong-Hyeon Yang",
+      "url": "https://markyang920413.github.io//"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="혼자 보려고 만든 블로그 Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          혼자 보려고 만든 블로그
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/categories/">Category</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/">About</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+  
+    
+      
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox" />
+  <label for="ac-toc">Toggle menu</label>
+  <ul class="nav__items">
+    
+      <li>
+        
+          <span class="nav__sub-title">LINUX</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#linux-system">LINUX System</a></li>
+          
+            <li><a href="/categories/#linux-tools">LINUX Tools</a></li>
+          
+            <li><a href="/categories/#linux-compile">LINUX Compile</a></li>
+          
+            <li><a href="/categories/#linux-filesystem">LINUX Filesystem</a></li>
+          
+            <li><a href="/categories/#http">HTTP</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">System Programming</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#file">File, Memory</a></li>
+          
+            <li><a href="/categories/#env">Env</a></li>
+          
+            <li><a href="/categories/#process">Process</a></li>
+          
+            <li><a href="/categories/#thread">Thread</a></li>
+          
+            <li><a href="/categories/#ipc">IPC</a></li>
+          
+            <li><a href="/categories/#signal">Signal</a></li>
+          
+            <li><a href="/categories/#socket-programming">Socket Programming</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">C</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#c">C</a></li>
+          
+            <li><a href="/categories/#system-programming">System Programming</a></li>
+          
+            <li><a href="/categories/#stdio">Standard I/O</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">Python</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#python-language">Python Language</a></li>
+          
+            <li><a href="/categories/#python-pandas">Python Pandas</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">Algorithm</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#algorithm">Algorithm</a></li>
+          
+            <li><a href="/categories/#problem">Problem</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">MAC</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#mac">Mac</a></li>
+          
+        </ul>
+        
+      </li>
+    
+  </ul>
+</nav>
+
+    
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="프로세스 API &lt;2&gt; 좀비프로세스 피하기, exit()">
+    <meta itemprop="description" content=" exit(), exit(), 좀비프로세스 피하는 방법">
+    <meta itemprop="datePublished" content="2020-12-25T00:00:00+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">프로세스 API &lt;2&gt; 좀비프로세스 피하기, exit()
+</h1>
+          
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          6 minute read
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              <ul class="toc__menu"><li><a href="#_exit2">_exit():2</a></li><li><a href="#exit3">exit():3</a></li><li><a href="#좀비-프로세스-피하는방법">좀비 프로세스 피하는방법</a></li><li><a href="#wait2">wait():2</a><ul><li><a href="#simple-fork-예제">simple fork 예제</a></li></ul></li><li><a href="#copy-on-write-방식의-fork">Copy on Write 방식의 fork()</a><ul><li><a href="#copy-on-write-실험">Copy On Write 실험</a></li><li><a href="#copy_on_writec">copy_on_write.c</a></li></ul></li><li><a href="#exec2">exec():2</a></li><li><a href="#세-가지를-다-써보는-예제">세 가지를 다 써보는 예제</a></li></ul>
+
+            </nav>
+          </aside>
+        
+        <h2 id="_exit2">_exit():2</h2>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;unistd.h&gt;
+</span>
+<span class="kt">void</span> <span class="nf">_exit</span><span class="p">(</span><span class="kt">int</span> <span class="n">status</span><span class="p">);</span>
+</code></pre></div></div>
+<ul>
+  <li>기능: argument로 지정한 <strong>status</strong>를 종료 상태로 하여 종료한다. 절대 실패하지 않는다.</li>
+</ul>
+
+<h2 id="exit3">exit():3</h2>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;stdlib.h&gt;
+</span>
+<span class="kt">void</span> <span class="nf">exit</span><span class="p">(</span><span class="kt">int</span> <span class="n">status</span><span class="p">);</span>
+</code></pre></div></div>
+<ul>
+  <li>
+    <p>기능: argument로 지정한 <strong>status</strong>를 종료 상태로 하여 종료한다. 절대 실패하지 않는다.</p>
+  </li>
+  <li><strong>_exit() exit()</strong>의 차이
+    <ul>
+      <li><strong>exit()</strong>는 <strong>stdio버퍼를 전부 해제</strong>한다.</li>
+      <li><strong>exit()</strong>는 <strong>atexit()로 등록한 처리를 실행</strong>한다.</li>
+      <li>즉, <strong>exit()</strong>는 <em>libc</em> 함수이므로, <em>libc</em>와 관련된 각종 뒤처리를 수행한다.</li>
+    </ul>
+  </li>
+  <li><strong>exit(</strong><span style="color:blue"><strong>0</strong></span><strong>): 성공</strong>, <strong>exit(</strong><span style="color:red"><strong>1</strong></span><strong>): 실패</strong>는 <em>UNIX</em>에선 맞지만, 그 외 시스템에서는 다를 수도 있다.</li>
+  <li>exit(EXIT_SUCCESS), exit(EXIT_FAILURE)라는 매크로를 사용하면 호환성이 좋다.</li>
+</ul>
+
+<h2 id="좀비-프로세스-피하는방법">좀비 프로세스 피하는방법</h2>
+<ol>
+  <li><strong>fork()</strong>시 <strong>parent</strong>가 <strong>wait</strong></li>
+  <li><span style="color:steelblue"><strong>이중 fork()</strong></span></li>
+  <li><span style="color:magenta"><strong>sigaction()</strong></span> 사용</li>
+</ol>
+
+<p><img src="img1.jpg" width="30%" height="30%" /></p>
+<ul>
+  <li><span style="color:red"><strong>wait</strong></span>를 하는 권리는 <span style="color:red"><strong>직계 부모</strong></span>에게만 있다.</li>
+  <li><strong>자식 프로세스가 없어지면</strong>, <strong>손자 프로세스</strong>를 <span style="color:red"><strong>wait</strong></span>하는 권리를 가진 프로세스도 없어진다. 따라서, 커널도 손자 프로세스를 좀비로 두지 않고 종료하면 즉시 정리한다.</li>
+</ul>
+
+<p>3번 sigaction은 추후 설명</p>
+
+<h2 id="wait2">wait():2</h2>
+<ul>
+  <li><strong>child process</strong>를 기다리는데는 <strong>wait()</strong>나 <strong>waitpid()</strong>를 사용한다.</li>
+</ul>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;sys/types.h&gt;
+#include &lt;sys/wait.h&gt;
+</span>
+<span class="n">pid_t</span> <span class="nf">wait</span><span class="p">(</span><span class="kt">int</span> <span class="o">*</span><span class="n">status</span><span class="p">);</span>
+<span class="n">pid_t</span> <span class="nf">waitpid</span><span class="p">(</span><span class="n">pid_t</span> <span class="n">pid</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">status</span><span class="p">,</span> <span class="kt">int</span> <span class="n">options</span><span class="p">);</span>
+
+<span class="n">wait</span><span class="p">(</span><span class="o">&amp;</span><span class="n">status</span><span class="p">)</span> <span class="o">==</span> <span class="n">waitpid</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">status</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span> <span class="c1">// 같은 기능</span>
+</code></pre></div></div>
+<ul>
+  <li><strong>wait()</strong>는 <span style="color:red"><strong><u>임의</u></strong></span>의 child <strong><u>기다림</u></strong> + 기다린 프로세스 <strong>정보 Get!!</strong></li>
+  <li><strong>waitpid()</strong>는<code class="language-plaintext highlighter-rouge">pid 명시</code>해 <strong><u>기다림</u></strong> + 기다린 프로세스 <strong>정보 Get!!</strong></li>
+  <li>wait는 child process가 종료될 때까지 <strong>호출한 프로세스는 <span style="color:red">중지</span></strong>된다.</li>
+  <li><strong>state 변화 정보</strong>를 얻는다.
+    <ul>
+      <li>child process 종료, signal에 의한 stop, signal에 의한 resume…</li>
+    </ul>
+  </li>
+  <li>wait는 <strong>child process</strong>에 관련된 <strong>자원을 release</strong> 한다.<br /><span style="color:red"><strong>Parent의 wait가 동작하지 않으면</strong></span>, child process는 <span style="color:magenta"><strong><em>zomebie</em></strong></span> 프로세스가 된다.</li>
+  <li>child process가 <strong>이미 state가 바뀌었다면</strong>, wait는 <strong>즉시 리턴</strong>된다.</li>
+</ul>
+
+<p><br /></p>
+<ul>
+  <li><strong>wait(), waitpid() return</strong></li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">상황</th>
+      <th style="text-align: left"><strong>&amp;status에 기록되는 값</strong></th>
+      <th style="text-align: left">waitpid return 값</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">child process<br /><strong>정상적 종료</strong></td>
+      <td style="text-align: left"><strong>WIFEXITED(status)</strong> = child process가 exit로 정상적 종료 시, <strong>0이 아닌 값</strong><br /><strong>WEXITSTATUS(status)</strong> = 하위 8bit 참조해 child process의 return 값 얻음</td>
+      <td style="text-align: left">process ID</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">child process<br /><span style="color:magenta"><strong>비정상적</strong></span><strong>종료</strong></td>
+      <td style="text-align: left"><strong>WIFSIGNAL(status)</strong> = 시그널로 종료 시, <strong>0이 아닌 값</strong><br /><strong>WTERMSIG(status)</strong> = 시그널로 종료했으면 <strong>시그널 번호를 반환!</strong></td>
+      <td style="text-align: left">process ID</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>waitpid 함수 오류</strong></td>
+      <td style="text-align: left"><strong>ECHILD</strong>: 호출 프로세스의 child process 미생성<br /><strong>EINTR</strong>: 시스템 콜이 인터럽트 되었음</td>
+      <td style="text-align: left">-1</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><br /></p>
+<ul>
+  <li>pid_t <span style="color:blue"><strong>waitpid</strong></span>(<code class="language-plaintext highlighter-rouge">pid_t pid</code>, int *status, int <span style="color:magenta"><strong>options</strong></span>);</li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left"><span style="color:blue"><strong>waitpid</strong></span>의 <strong>pid</strong><br /><span style="color:red"><strong>real pid 아님!</strong></span></th>
+      <th style="text-align: left">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left"><strong>pid &lt; -1</strong></td>
+      <td style="text-align: left">프로세스 그룹 ID가 pid의 절댓값과 같은 자식 프로세스를 기다림</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>-1</strong></td>
+      <td style="text-align: left">임의의 자식 프로세스를 기다림</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>0</strong></td>
+      <td style="text-align: left">호출 프로세스의 프로세스 그룹 PID와 같은 프로세스 그룹 ID를 가진 프로세스 기다림</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>pid &gt; 0</strong></td>
+      <td style="text-align: left">프로세스 ID가 pid인 자식 프로세스 기다림 <span style="color:blue"><strong>기다릴 pid 명시</strong></span></td>
+    </tr>
+  </tbody>
+</table>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left"><span style="color:magenta"><strong>options</strong></span></th>
+      <th style="text-align: left">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left"><strong>WCONTINUED</strong></td>
+      <td style="text-align: left">중단되었다가 재개된 자식 프로세스의 상태 받음</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>WNOHANG</strong></td>
+      <td style="text-align: left">기다리는 PID가 종료되지 않아, 즉시 종료 상태를회수 할 수 없는 상황에서 <span style="color:red"><strong>호출한 프로세스는 차단되지 않고</strong></span> 반환 값으로 0을 얻음</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><strong>WUNTRACED</strong></td>
+      <td style="text-align: left">중단된 자식 프로세스의 상태를 받음</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="simple-fork-예제">simple fork 예제</h3>
+<hr />
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;sys/wait.h&gt;
+#include &lt;errno.h&gt;
+#include &lt;err.h&gt;
+#include &lt;signal.h&gt;
+</span>
+<span class="cp">#define VERSION 1
+</span>
+<span class="k">static</span> <span class="kt">void</span> <span class="nf">child_fn</span><span class="p">(</span><span class="kt">void</span><span class="p">){</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">"Hi,I'm child [PID:%d]</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="n">getpid</span><span class="p">());</span> <span class="c1">// getpid()는 진짜 real PID 보여줌</span>
+	<span class="n">exit</span><span class="p">(</span><span class="n">EXIT_SUCCESS</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(){</span>
+	<span class="kt">int</span> <span class="n">ret</span><span class="o">=</span><span class="n">EXIT_FAILURE</span><span class="p">;</span>
+	<span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ncreated</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+	<span class="kt">int</span> <span class="n">nproc</span><span class="o">=</span><span class="mi">5</span><span class="p">;</span> <span class="c1">// How many child process will you made?</span>
+
+	<span class="n">pid_t</span> <span class="o">*</span><span class="n">pids</span><span class="o">=</span><span class="p">(</span><span class="n">pid_t</span><span class="o">*</span><span class="p">)</span><span class="n">malloc</span><span class="p">(</span><span class="n">nproc</span><span class="o">*</span><span class="k">sizeof</span><span class="p">(</span><span class="n">pid_t</span><span class="p">));</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">pids</span><span class="o">==</span><span class="nb">NULL</span><span class="p">){</span>
+		<span class="n">warn</span><span class="p">(</span><span class="s">"malloc(pids) failed"</span><span class="p">);</span>
+		<span class="n">exit</span><span class="p">(</span><span class="n">ret</span><span class="p">);</span>
+	<span class="p">}</span>
+
+	<span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ncreated</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">nproc</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">,</span><span class="n">ncreated</span><span class="o">++</span><span class="p">){</span>
+		<span class="n">pids</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">=</span><span class="n">fork</span><span class="p">();</span>		<span class="c1">// fork()하면서 child pid가 pids[i]에 담김</span>
+		<span class="k">if</span><span class="p">(</span><span class="n">pids</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">){</span>
+			<span class="k">goto</span> <span class="n">wait_children</span><span class="p">;</span>
+		<span class="p">}</span> <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">pids</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span><span class="p">){</span> <span class="c1">// child의 pid_t 값은 0임</span>
+			<span class="c1">// child process</span>
+			<span class="n">child_fn</span><span class="p">();</span>
+			<span class="cm">/* shouldn't reach here */</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+
+	<span class="n">ret</span><span class="o">=</span><span class="n">EXIT_SUCCESS</span><span class="p">;</span>
+	<span class="c1">// parent</span>
+<span class="nl">wait_children:</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">ret</span><span class="o">==</span><span class="n">EXIT_FAILURE</span><span class="p">)</span>
+		<span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">ncreated</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+			<span class="k">if</span><span class="p">(</span><span class="n">kill</span><span class="p">(</span><span class="n">pids</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">SIGINT</span><span class="p">)</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">)</span>
+				<span class="n">warn</span><span class="p">(</span><span class="s">"kill(%d) failed</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="n">pids</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+
+	<span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">ncreated</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">){</span>
+		<span class="cm">/*
+		 * if(wait(NULL)&lt;0)
+		 * 	warn("wait() failed");
+		 *
+		 */</span>
+		<span class="kt">int</span> <span class="n">status</span><span class="p">;</span>
+		<span class="n">pid_t</span> <span class="n">ChildPid</span><span class="p">;</span>
+
+<span class="cp">#if VERSION == 1
+</span>		<span class="n">ChildPid</span><span class="o">=</span><span class="n">wait</span><span class="p">(</span><span class="o">&amp;</span><span class="n">status</span><span class="p">);</span>
+<span class="cp">#elif VERSION == 2
+</span>		<span class="cm">/* 에러 발생시 명시적으로 처리하고 wait */</span>
+		<span class="k">while</span><span class="p">(((</span><span class="n">ChildPid</span><span class="o">=</span><span class="n">wait</span><span class="p">(</span><span class="o">&amp;</span><span class="n">status</span><span class="p">))</span><span class="o">==-</span><span class="mi">1</span><span class="p">)</span><span class="o">&amp;&amp;</span><span class="n">errno</span><span class="o">==</span><span class="n">EINTR</span><span class="p">);</span> <span class="c1">// 인터럽트로 비정상 종료시, 무한 루프로 다시 wait 건다</span>
+		<span class="p">{</span>
+<span class="cp">#endif
+</span>		<span class="k">if</span><span class="p">(</span><span class="n">ChildPid</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">){</span>
+			<span class="n">printf</span><span class="p">(</span><span class="s">"[ERROR] %d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="n">errno</span><span class="p">);</span>
+			<span class="n">perror</span><span class="p">(</span><span class="s">"wait func error!"</span><span class="p">);</span>
+		<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+			<span class="k">if</span><span class="p">(</span><span class="n">WIFEXITED</span><span class="p">(</span><span class="n">status</span><span class="p">))</span>
+				<span class="n">printf</span><span class="p">(</span><span class="s">"wait: 자식 프로세스 정상 종료 %d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="n">WEXITSTATUS</span><span class="p">(</span><span class="n">status</span><span class="p">));</span>
+			<span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">WIFSIGNALED</span><span class="p">(</span><span class="n">status</span><span class="p">))</span>
+				<span class="n">printf</span><span class="p">(</span><span class="s">"wait: 자식 프로세스 비정상 종료 %d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="n">WTERMSIG</span><span class="p">(</span><span class="n">status</span><span class="p">));</span>
+		<span class="p">}</span>
+<span class="cp">#if VERSION == 2
+</span>		<span class="p">}</span>
+<span class="cp">#endif
+</span>	<span class="p">}</span>
+	<span class="nl">free_pids:</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">"Original Process [PID:%d]!</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="n">getpid</span><span class="p">());</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">"pids free is done!</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+		<span class="n">free</span><span class="p">(</span><span class="n">pids</span><span class="p">);</span>
+	<span class="n">exit</span><span class="p">(</span><span class="n">ret</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<ul>
+  <li><span style="color:red"><strong>getpid()</strong></span>으로 <strong>real pid</strong> 구할 수 있다.</li>
+  <li><span style="color:red"><strong>child의 real pid</strong></span><strong>=</strong><span style="color:blue"><strong>parent의 real pid</strong></span> <code class="language-plaintext highlighter-rouge">+1</code></li>
+</ul>
+
+<h2 id="copy-on-write-방식의-fork">Copy on Write 방식의 fork()</h2>
+<ul>
+  <li>할당 시, 가상 메모리 방식을 사용한다.</li>
+  <li>부모 프로세스의 메모리를 자식 프로세스에 <strong>전부 복사 X</strong>, <strong>페이지 테이블만 복사</strong>하여 속도↑</li>
+  <li><strong>PTE</strong>(페이지 테이블 엔트리) 안에는 <strong>write</strong>권한을 나타내는 필드가 있다.
+    <ul>
+      <li><span style="color:red"><strong>PTE</strong></span>는 <span style="color:red"><strong>커널 메모리 영역</strong></span>에 있음</li>
+    </ul>
+  </li>
+  <li>
+    <p>부모 자식도 전체 페이지에 <strong>write 권한 무효화</strong>한다.</p>
+  </li>
+  <li>부모 혹은 자식이 <strong><em>write 시도</em></strong> 시, 다음과 같이 공유 해제
+    <ol>
+      <li>CPU에 페이지 폴트 발생</li>
+      <li>CPU가 커널 모드로 변경되어 커널의 페이지 폴트 핸들러 동작</li>
+      <li>페이지 폴트 핸들러는 접근한 페이지를 다른 장소에 복사하고, <strong>write</strong>하려고 한 프로세스에 할당한 후 내용을 다시 작성</li>
+      <li>부모 프로세스, 자식 프로세스 각각 공유가 해제된 페이지에 대응하는 PTE 업데이트
+        <ul>
+          <li>write한 프로세스 쪽에 엔트리는 새롭게 할당된 물리 페이지를 매핑해 write 허가</li>
+          <li>다른 쪽 프로세스의 엔트리에도 write허가</li>
+        </ul>
+      </li>
+      <li>이후 <strong>공유가 해제된 페이지</strong>에는 각각 <strong>자유롭게 R/W 가능</strong></li>
+    </ol>
+  </li>
+</ul>
+
+<h3 id="copy-on-write-실험">Copy On Write 실험</h3>
+<hr />
+<ol>
+  <li>100MB 메모리를 확보하여 모든 페이지에 접근</li>
+  <li>시스템의 메모리 사용량 확인</li>
+  <li>fork() 시스템 콜 호출</li>
+  <li>부모 프로세스와 자식 프로세스가 각각 다음과 같은 동작을 한다.
+    <ul>
+      <li>부모 프로세스
+        <ul>
+          <li>자식 프로세스의 종료 기다림</li>
+        </ul>
+      </li>
+      <li>자식 프로세스
+        <ul>
+          <li><strong>시스템 메모리의 사용량</strong>과 <strong>자기 자신의 가상 메모리 사용량</strong>, <strong>물리 메모리의 사용량</strong>, <strong>Major Fault의 횟수</strong>, <strong>Minor Fault 횟수 표시</strong></li>
+          <li>위에서 획득한 영역 전부의 페이지에 접근</li>
+          <li>위 결과 횟수 표시</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="copy_on_writec">copy_on_write.c</h3>
+<hr />
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;sys/types.h&gt;
+#include &lt;sys/wait.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;sys/mman.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+#include &lt;err.h&gt;
+</span>
+<span class="cp">#define BUFFER_SIZE (100*1024*1024)
+#define PAGE_SIZE 4096
+#define COMMAND_SIZE 4096
+</span>
+<span class="k">static</span> <span class="kt">char</span> <span class="o">*</span><span class="n">p</span><span class="p">;</span>
+<span class="k">static</span> <span class="kt">char</span> <span class="n">command</span><span class="p">[</span><span class="n">COMMAND_SIZE</span><span class="p">];</span>
+
+<span class="k">static</span> <span class="kt">void</span> <span class="nf">child_fn</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">p</span><span class="p">){</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">"*** child ps info before memory access ***:</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+	<span class="n">fflush</span><span class="p">(</span><span class="n">stdout</span><span class="p">);</span>
+	<span class="n">snprintf</span><span class="p">(</span><span class="n">command</span><span class="p">,</span><span class="n">COMMAND_SIZE</span><span class="p">,</span><span class="s">"ps -o pid,comm,vsz,rss,min_flt,maj_flt | grep %d"</span><span class="p">,</span><span class="n">getpid</span><span class="p">());</span>
+	<span class="c1">// shell cmd에 명령을 내리는 문자열</span>
+	<span class="c1">// vsz: 가상 메모리양</span>
+	<span class="c1">// rss: 확보된 물리 메모리양</span>
+	<span class="n">system</span><span class="p">(</span><span class="n">command</span><span class="p">);</span>
+
+	<span class="n">printf</span><span class="p">(</span><span class="s">"*** free memory info before memory access ***:</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+	<span class="n">fflush</span><span class="p">(</span><span class="n">stdout</span><span class="p">);</span>
+	<span class="n">system</span><span class="p">(</span><span class="s">"free"</span><span class="p">);</span>
+
+	<span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+	<span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">BUFFER_SIZE</span><span class="p">;</span><span class="n">i</span><span class="o">+=</span><span class="n">PAGE_SIZE</span><span class="p">)</span>
+		<span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+
+	<span class="n">printf</span><span class="p">(</span><span class="s">"*** child ps info after memory access ***:</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+	<span class="n">fflush</span><span class="p">(</span><span class="n">stdout</span><span class="p">);</span>
+	<span class="n">system</span><span class="p">(</span><span class="n">command</span><span class="p">);</span>
+
+	<span class="n">printf</span><span class="p">(</span><span class="s">"*** free memory info after memory access ***:</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+	<span class="n">fflush</span><span class="p">(</span><span class="n">stdout</span><span class="p">);</span>
+	<span class="n">system</span><span class="p">(</span><span class="s">"free"</span><span class="p">);</span>
+
+	<span class="n">exit</span><span class="p">(</span><span class="n">EXIT_SUCCESS</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">static</span> <span class="kt">void</span> <span class="nf">parent_fn</span><span class="p">(</span><span class="kt">void</span><span class="p">){</span>
+	<span class="n">wait</span><span class="p">(</span><span class="nb">NULL</span><span class="p">);</span>
+
+	<span class="n">exit</span><span class="p">(</span><span class="n">EXIT_SUCCESS</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">){</span>
+	<span class="kt">char</span><span class="o">*</span> <span class="n">buf</span><span class="p">;</span>
+	<span class="n">p</span><span class="o">=</span><span class="n">malloc</span><span class="p">(</span><span class="n">BUFFER_SIZE</span><span class="p">);</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">p</span><span class="o">==</span><span class="nb">NULL</span><span class="p">)</span>
+		<span class="n">err</span><span class="p">(</span><span class="n">EXIT_FAILURE</span><span class="p">,</span><span class="s">"malloc() failed"</span><span class="p">);</span>
+
+	<span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+	<span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">BUFFER_SIZE</span><span class="p">;</span><span class="n">i</span><span class="o">+=</span><span class="n">PAGE_SIZE</span><span class="p">)</span>
+		<span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+
+	<span class="n">printf</span><span class="p">(</span><span class="s">"*** free memory info before fork ***:</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+	<span class="n">fflush</span><span class="p">(</span><span class="n">stdout</span><span class="p">);</span>
+	<span class="n">system</span><span class="p">(</span><span class="s">"free"</span><span class="p">);</span>
+
+	<span class="n">pid_t</span> <span class="n">ret</span><span class="p">;</span>
+	<span class="n">ret</span><span class="o">=</span><span class="n">fork</span><span class="p">();</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">ret</span><span class="o">==-</span><span class="mi">1</span><span class="p">)</span>
+		<span class="n">err</span><span class="p">(</span><span class="n">EXIT_FAILURE</span><span class="p">,</span><span class="s">"fork() failed"</span><span class="p">);</span>
+
+	<span class="k">if</span><span class="p">(</span><span class="n">ret</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span>
+		<span class="n">child_fn</span><span class="p">(</span><span class="n">p</span><span class="p">);</span>
+	<span class="k">else</span>
+		<span class="n">parent_fn</span><span class="p">();</span>
+
+	<span class="n">err</span><span class="p">(</span><span class="n">EXIT_FAILURE</span><span class="p">,</span><span class="s">"shouldn't reach here"</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;unistd.h&gt;
+</span>
+<span class="n">pid_t</span> <span class="nf">fork</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+</code></pre></div></div>
+<ul>
+  <li>기능: <strong><em>fork()</em></strong>는 프로세스 자신을 복제해서 새로운 프로세스를 만드는 시스템 콜
+    <ul>
+      <li><strong>parent process</strong>: 원래 존재하는 프로세스</li>
+      <li><strong>child process</strong>: parent process에서 복제되어 만들어진 프로세스</li>
+    </ul>
+  </li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">return</th>
+      <th style="text-align: left">value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">성공</td>
+      <td style="text-align: left"><strong>Parent process</strong> get <span style="color:blue"><strong>0</strong></span></td>
+    </tr>
+    <tr>
+      <td style="text-align: left">실패</td>
+      <td style="text-align: left"><strong>Parent process</strong> get <strong>-1</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="exec2">exec():2</h2>
+<ul>
+  <li>exec는 <strong><code class="language-plaintext highlighter-rouge">새로운 프로세스 호출</code></strong> <strong><code class="language-plaintext highlighter-rouge">덮어씌워짐</code></strong>
+    <ul>
+      <li>exec를호출하면, 그 시점에서 실행 중인 프로그램 소멸 후 새로운 프로그램 로드</li>
+    </ul>
+  </li>
+</ul>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;unistd.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">execl</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">path</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">arg</span><span class="p">,</span> <span class="p">...</span> <span class="cm">/* NULL */</span><span class="p">);</span>
+<span class="kt">int</span> <span class="nf">execlp</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">program</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">arg</span><span class="p">,</span> <span class="p">...</span> <span class="cm">/* NULL */</span><span class="p">);</span>
+<span class="kt">int</span> <span class="nf">execle</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">path</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">arg</span><span class="p">,</span> <span class="p">...,</span> <span class="cm">/* NULL, */</span> <span class="kt">char</span> <span class="o">*</span> <span class="k">const</span> <span class="n">envp</span><span class="p">[]);</span>
+<span class="kt">int</span> <span class="nf">execlv</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">path</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span> <span class="k">const</span> <span class="n">argv</span><span class="p">[]);</span>
+<span class="kt">int</span> <span class="nf">execvp</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">program</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span> <span class="k">const</span> <span class="n">argv</span><span class="p">[]);</span>
+<span class="kt">int</span> <span class="nf">execve</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">path</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span> <span class="k">const</span> <span class="n">argv</span><span class="p">[],</span> <span class="kt">char</span> <span class="o">*</span> <span class="k">const</span> <span class="n">envp</span><span class="p">[]);</span>
+</code></pre></div></div>
+<ul>
+  <li>UNIX: execve()만 시스템 콜, 나머지는 라이브러리 함수</li>
+  <li>API 이름 뒷 부분에 <code class="language-plaintext highlighter-rouge">l</code>(list)가 붙은 경우는 <strong>argument</strong>를 <strong>가변</strong> 인자로 전달, 마지막 <strong>NULL</strong></li>
+  <li>API 이름 뒷 부분에 <code class="language-plaintext highlighter-rouge">v</code>(vector)가 붙은 경우는 <strong>argument</strong>를 <strong>문자열 배열</strong>로 전달, 마지막 <strong>NULL</strong>
+    <ul>
+      <li><strong>1, 2번 째 인자</strong>에는 <strong>프로그램 이름 중복</strong></li>
+    </ul>
+  </li>
+</ul>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">execl</span><span class="p">(</span><span class="s">"/bin/cat"</span><span class="p">,</span> <span class="s">"cat"</span><span class="p">,</span> <span class="s">"hello.c"</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+
+<span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">=</span><span class="p">{</span> <span class="s">"cat"</span><span class="p">,</span> <span class="s">"hello.c"</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+<span class="n">execv</span><span class="p">(</span><span class="s">"bin/cat"</span><span class="p">,</span> <span class="n">argv</span><span class="p">);</span>
+</code></pre></div></div>
+
+<ul>
+  <li>API 이름 뒷 부분에 <code class="language-plaintext highlighter-rouge">e</code>가 붙은 경우, 환경변수인 envp가 추가된다.<br /><strong>e</strong>가 붙지 않은 경우, 현재 프로세스 환경 변수 그대로 사용</li>
+  <li>API 이름 뒷 부분에 <code class="language-plaintext highlighter-rouge">p</code>가 붙은 경우, <strong>$PATH</strong>에서 프로그램을 찾는다.<br /><strong>p</strong>가 붙지 않은 경우, 프로세스를 절대 경로 또는 상대 경로로 지정해야 한다.</li>
+  <li>exec는 성공하면 호출이 돌아오지 않기 때문에 호출이 돌아온 경우는 언제나 실패했음을 의미한다.<br />실패했을 때는 <strong>-1</strong>을 반환하고 <strong>errno</strong>에 에러 번호가 설정한다.</li>
+</ul>
+
+<h2 id="세-가지를-다-써보는-예제">세 가지를 다 써보는 예제</h2>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;sys/types.h&gt;
+#include &lt;sys/wait.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[]){</span>
+	<span class="n">pid_t</span> <span class="n">pid</span><span class="p">;</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">argc</span><span class="o">!=</span><span class="mi">3</span><span class="p">){</span>
+		<span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="s">"Usage: %s &lt;command&gt; &lt;arg&gt;</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+		<span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+	<span class="p">}</span>
+	<span class="n">pid</span><span class="o">=</span><span class="n">fork</span><span class="p">();</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">pid</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">){</span>
+		<span class="cm">/* error occured */</span>
+		<span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="s">"fork(2) failed</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+		<span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+	<span class="p">}</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">pid</span><span class="o">==</span><span class="mi">0</span><span class="p">){</span> 
+		<span class="cm">/* child process */</span>
+		<span class="n">execl</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="nb">NULL</span><span class="p">);</span>
+
+		<span class="cm">/* Shouldn't reach here */</span>
+		<span class="n">perror</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+		<span class="n">exit</span><span class="p">(</span><span class="mi">99</span><span class="p">);</span>
+	<span class="p">}</span>
+	<span class="k">else</span> <span class="p">{</span>
+		<span class="cm">/* parents process */</span>
+		<span class="kt">int</span> <span class="n">status</span><span class="p">;</span>
+
+		<span class="n">waitpid</span><span class="p">(</span><span class="n">pid</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">status</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">"child (PID=%d) finished; "</span><span class="p">,</span> <span class="n">pid</span><span class="p">);</span>
+		<span class="k">if</span><span class="p">(</span><span class="n">WIFEXITED</span><span class="p">(</span><span class="n">status</span><span class="p">))</span>
+			<span class="n">printf</span><span class="p">(</span><span class="s">"exit, status=%d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">WEXITSTATUS</span><span class="p">(</span><span class="n">status</span><span class="p">));</span>
+		<span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">WIFSIGNALED</span><span class="p">(</span><span class="n">status</span><span class="p">))</span>
+			<span class="n">printf</span><span class="p">(</span><span class="s">"signal, sig=%d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">WTERMSIG</span><span class="p">(</span><span class="n">status</span><span class="p">));</span>
+		<span class="k">else</span>
+			<span class="n">printf</span><span class="p">(</span><span class="s">"abnormal exit</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+		<span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>gcc <span class="nt">-g</span> <span class="nt">-Wall</span> spawn.c <span class="nt">-o</span> spawn
+<span class="nv">$ </span>./spawn /bin/echo OK
+OK
+child <span class="o">(</span><span class="nv">PID</span><span class="o">=</span>20092<span class="o">)</span> finished<span class="p">;</span> <span class="nb">exit</span>,status<span class="o">=</span>0
+
+<span class="c"># 만약 존재하지 않는 프로그램을 실행 한다면?</span>
+<span class="nv">$ </span>./spawn /usr/bin/notexist xxx
+/usr/bin/notexist: No Such file or directory
+child <span class="o">(</span><span class="nv">PID</span><span class="o">=</span>20339<span class="o">)</span> finished<span class="p">;</span> <span class="nb">exit</span>, <span class="nv">status</span><span class="o">=</span>99
+</code></pre></div></div>
+
+<ol>
+  <li><strong>fork()</strong>한다.</li>
+  <li>child에서 <strong>새로운 프로세스</strong> <span style="color:blue"><strong>exec</strong></span></li>
+  <li>parent는 wait</li>
+  <li><strong>execl</strong>로 실행된 프로세스가 exit하며 <strong>return 값을 wait에 반환</strong>한다.</li>
+</ol>
+
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/#process" class="page__taxonomy-item" rel="tag">process</a>
+    
+    </span>
+  </p>
+
+
+        
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2020-12-25T00:00:00+09:00">December 25, 2020</time></p>
+
+
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">Share on</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=%ED%94%84%EB%A1%9C%EC%84%B8%EC%8A%A4+API+%3C2%3E+%EC%A2%80%EB%B9%84%ED%94%84%EB%A1%9C%EC%84%B8%EC%8A%A4+%ED%94%BC%ED%95%98%EA%B8%B0%2C+exit%28%29%20https%3A%2F%2Fmarkyang920413.github.io%2F%2Fprocess%2Fsystem_programming-process-processAPI_2%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmarkyang920413.github.io%2F%2Fprocess%2Fsystem_programming-process-processAPI_2%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fmarkyang920413.github.io%2F%2Fprocess%2Fsystem_programming-process-processAPI_2%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/process/system_programming-process-processAPI_1/" class="pagination--pager" title="프로세스 API &lt;1&gt; fork(), wait(), exec(), posix_spawn()
+">Previous</a>
+    
+    
+      <a href="/process/system_programming-process-processAPI_3/" class="pagination--pager" title="프로세스 API &lt;3&gt; 프로세스 관계, pstree, getpid(), 프로세스그룹 setpgid(), 세션 setsid(), 대몬 프로세스
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/linux-filesystem/linux-linux_filesystem-LVM/" rel="permalink">LVM
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/mac/m1_rosetta2/" rel="permalink">M1 Mac 로제타2 설치, 로제타 사용 brew 설치, M1용 jekyll설치
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/algorithm/algorithm-algorithm-time_complexity/" rel="permalink">Time complexity
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          less than 1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/algorithm/algorithm-algorithm-IO_STL/" rel="permalink">시험에서 입출력, STL
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          less than 1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2021 Dong-Hyeon Yang. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "https://markyang920413.github.io//process/system_programming-process-processAPI_2/";  /* Replace PAGE_URL with your page's canonical URL variable */
+      this.page.identifier = "/process/system_programming-process-processAPI_2"; /* Replace PAGE_IDENTIFIER with your page's unique identifier variable */
+    };
+    (function() { /* DON'T EDIT BELOW THIS LINE */
+      var d = document, s = d.createElement('script');
+      s.src = 'https://MarkYang920413.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+
+
+  </body>
+</html>

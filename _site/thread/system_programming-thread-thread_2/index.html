@@ -1,0 +1,1135 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.21.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>thread &lt;2&gt; cond 조건변수, attribute, signal, cancel - 혼자 보려고 만든 블로그</title>
+<meta name="description" content="pthread_cond, pthread_attr, pthread_signal, pthread_kill, pthread_cancel">
+
+
+  <meta name="author" content="Dong-Heyon Yang">
+  
+  <meta property="article:author" content="Dong-Heyon Yang">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="혼자 보려고 만든 블로그">
+<meta property="og:title" content="thread &lt;2&gt; cond 조건변수, attribute, signal, cancel">
+<meta property="og:url" content="https://markyang920413.github.io//thread/system_programming-thread-thread_2/">
+
+
+  <meta property="og:description" content="pthread_cond, pthread_attr, pthread_signal, pthread_kill, pthread_cancel">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2021-01-21T00:00:00+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://markyang920413.github.io//thread/system_programming-thread-thread_2/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "Dong-Hyeon Yang",
+      "url": "https://markyang920413.github.io//"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="혼자 보려고 만든 블로그 Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          혼자 보려고 만든 블로그
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/categories/">Category</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/">About</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+  
+    
+      
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox" />
+  <label for="ac-toc">Toggle menu</label>
+  <ul class="nav__items">
+    
+      <li>
+        
+          <span class="nav__sub-title">LINUX</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#linux-system">LINUX System</a></li>
+          
+            <li><a href="/categories/#linux-tools">LINUX Tools</a></li>
+          
+            <li><a href="/categories/#linux-compile">LINUX Compile</a></li>
+          
+            <li><a href="/categories/#linux-filesystem">LINUX Filesystem</a></li>
+          
+            <li><a href="/categories/#http">HTTP</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">System Programming</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#file">File, Memory</a></li>
+          
+            <li><a href="/categories/#env">Env</a></li>
+          
+            <li><a href="/categories/#process">Process</a></li>
+          
+            <li><a href="/categories/#thread">Thread</a></li>
+          
+            <li><a href="/categories/#ipc">IPC</a></li>
+          
+            <li><a href="/categories/#signal">Signal</a></li>
+          
+            <li><a href="/categories/#socket-programming">Socket Programming</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">C</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#c">C</a></li>
+          
+            <li><a href="/categories/#system-programming">System Programming</a></li>
+          
+            <li><a href="/categories/#stdio">Standard I/O</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">Python</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#python-language">Python Language</a></li>
+          
+            <li><a href="/categories/#python-pandas">Python Pandas</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">Algorithm</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#algorithm">Algorithm</a></li>
+          
+            <li><a href="/categories/#problem">Problem</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">MAC</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#mac">Mac</a></li>
+          
+        </ul>
+        
+      </li>
+    
+  </ul>
+</nav>
+
+    
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="thread &lt;2&gt; cond 조건변수, attribute, signal, cancel">
+    <meta itemprop="description" content="pthread_cond, pthread_attr, pthread_signal, pthread_kill, pthread_cancel">
+    <meta itemprop="datePublished" content="2021-01-21T00:00:00+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">thread &lt;2&gt; cond 조건변수, attribute, signal, cancel
+</h1>
+          
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          4 minute read
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              <ul class="toc__menu"><li><a href="#pthread-api-iii-cond">pthread API III: cond</a><ul><li><a href="#cond">cond</a></li><li><a href="#cond-주의사항">cond 주의사항</a></li><li><a href="#pthread_cond_init">pthread_cond_init()</a></li><li><a href="#pthread_cond_signal">pthread_cond_signal()</a></li><li><a href="#pthread_cond_broadcast">pthread_cond_broadcast()</a></li><li><a href="#pthread_cond_wait">pthread_cond_wait()</a></li><li><a href="#pthread_cond_timedwait">pthread_cond_timedwait()</a></li><li><a href="#pthread_cond_destroy">pthread_cond_destroy()</a></li><li><a href="#cond-example">cond example</a></li></ul></li><li><a href="#pthread-api-iv-attribute">pthread API IV: Attribute</a><ul><li><a href="#pthread_attr_init">pthread_attr_init():</a></li><li><a href="#pthread_attr_destroy">pthread_attr_destroy():</a></li><li><a href="#pthread_attr_getscope">pthread_attr_getscope()</a></li><li><a href="#pthread_attr_setscope">pthread_attr_setscope</a></li><li><a href="#pthread_attr_getdetachstate">pthread_attr_getdetachstate</a></li><li><a href="#pthread_attr_setdetachstate">pthread_attr_setdetachstate</a></li></ul></li><li><a href="#pthread-api-v-signal">pthread API V: signal</a><ul><li><a href="#pthread_sigmask">pthread_sigmask()</a></li><li><a href="#pthread_kill">pthread_kill()</a></li><li><a href="#sigwait">sigwait()</a></li></ul></li><li><a href="#pthread-api-vi-cancel">pthread API VI: cancel</a><ul><li><a href="#pthread_cancel">pthread_cancel()</a></li><li><a href="#pthread_setcancelstate">pthread_setcancelstate()</a></li><li><a href="#pthread_setcanceltype">pthread_setcanceltype()</a></li><li><a href="#pthread_testcancel">pthread_testcancel()</a></li></ul></li></ul>
+
+            </nav>
+          </aside>
+        
+        <h2 id="pthread-api-iii-cond">pthread API III: cond</h2>
+<h3 id="cond">cond</h3>
+<hr />
+<ul>
+  <li>스레드가 3개있다고 가정한다.
+    <ol>
+      <li><strong>main 스레드</strong>
+        <ul>
+          <li>스레드 1, 2를 생성하고 join한다.</li>
+        </ul>
+      </li>
+      <li><span style="color:navy"><strong>스레드 1</strong></span>
+        <ul>
+          <li>2개의 int형 멤버를 가진 구조체에 접근해 특정한 숫자를 입력</li>
+        </ul>
+      </li>
+      <li><span style="color:orange"><strong>스레드 2</strong></span>
+        <ul>
+          <li>구조체에 접근해 멤버를 읽어와 “덧셈”하고 이를 화면에 출력한다.</li>
+        </ul>
+      </li>
+    </ol>
+  </li>
+  <li><strong>critical section</strong>
+    <ul>
+      <li>스레드들이 동시에 접근하는 영역
+        <ul>
+          <li><strong><u>구조체</u> 영역</strong>: 스레드 1과 2가 접근하는 영역 -&gt; <span style="color:red"><strong>Mutex</strong></span> 필요</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><span style="color:steelblue"><strong>cond</strong></span>
+    <ul>
+      <li><span style="color:orange"><strong>스레드 2</strong></span>는 <span style="color:navy"><strong>스레드 1</strong></span>에 의해 구조체의 값이 변경되는 것을 감지해야함
+        <ul>
+          <li>변경이 <strong>감지</strong>된 후 구조체에 접근해야함</li>
+          <li>변경될 때까지 <strong>기다려야한다.</strong>
+            <ul>
+              <li>이 <strong>“기다림”</strong>이 <span style="color:steelblue"><strong>조건변수</strong></span> <span style="color:steelblue"><strong>cond</strong></span> 필요함</li>
+            </ul>
+          </li>
+          <li><span style="color:steelblue"><strong>cond</strong></span>은 마치 <span style="color:magenta"><strong>시그널</strong></span>을 주고 받는 것과 같다.
+<br /></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><strong>cond</strong> 사용의 이점
+    <ul>
+      <li><strong>cond</strong>를 사용하지 않으면, <span style="color:orange"><strong>스레드 2</strong></span>는 <strong><em>busy wait</em></strong>해야한다.</li>
+    </ul>
+  </li>
+</ul>
+
+<p><img src="thread_cond.png" width="80%" /></p>
+<ul>
+  <li><span style="color:orange"><strong>스레드 2</strong></span> 에서 <strong><em>wait</em></strong>로 <strong>BLOCK</strong>한걸 다른 스레드의 <span style="color:steelblue"><strong><em>signal</em></strong></span>이 깨워줌!</li>
+</ul>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s">"thread 1"</span>
+<span class="p">{</span>
+	<span class="n">mutex</span> <span class="n">lock</span> <span class="err">얻음</span>
+	<span class="c1">// 임계영역 시작 ===========================================</span>
+	<span class="err">구조체에</span> <span class="err">접근해서</span> <span class="err">값</span> <span class="err">변경</span>
+	<span class="n">pthread_cond_signal</span>
+	<span class="c1">// 임계영역 끝 =============================================</span>
+	<span class="n">mutex</span> <span class="n">unlock</span>
+<span class="p">}</span>
+
+<span class="s">"thread2"</span>
+<span class="p">{</span>
+	<span class="n">mutex</span> <span class="n">lock</span> <span class="err">얻음</span>
+	<span class="c1">// 임계영역 시작 ===========================================</span>
+	<span class="n">pthread_cond_wait</span>
+	<span class="k">if</span><span class="p">(</span> <span class="n">cond_signal</span> <span class="err">왔다면</span><span class="p">){</span>
+		<span class="err">구조체</span> <span class="err">값</span> <span class="err">더함</span>
+	<span class="p">}</span>
+	<span class="c1">// 임계영역 끝 =============================================</span>
+	<span class="n">mutex</span> <span class="n">unlock</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<h3 id="cond-주의사항">cond 주의사항</h3>
+<hr />
+<ul>
+  <li>과연 <strong>신호</strong>가 <strong>실시간</strong>으로 전달 될 것을 신뢰할 수 있는가?
+    <ul>
+      <li><span style="color:navy"><strong>스레드 1</strong></span>이 <span style="color:orange"><strong>스레드 2</strong></span>가 신호를 잘 받았는지 확인X 진행
+<br /></li>
+    </ul>
+  </li>
+  <li>위 예제를 while文으로 돌리면 예상치 못한 결과가 발생
+    <ul>
+      <li><span style="color:navy"><strong>스레드 1</strong></span>이 빨리 한번 더 돌아 작업을 한번 더 한 뒤, <span style="color:orange"><strong>스레드 2</strong></span>가 작업할 수도 있음<br />
+<img src="thread_cond2.png" /></li>
+    </ul>
+  </li>
+  <li>따라서 <code class="language-plaintext highlighter-rouge">양방향</code>으로 <strong>signal</strong>을 주고 받자</li>
+</ul>
+
+<h3 id="pthread_cond_init">pthread_cond_init()</h3>
+<hr />
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;pthread.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">pthread_cond_init</span><span class="p">(</span><span class="n">pthread_cont_t</span> <span class="o">*</span><span class="n">cond</span><span class="p">,</span> <span class="k">const</span> <span class="n">pthread_cond_attr</span> <span class="o">*</span><span class="n">attr</span><span class="p">);</span>
+</code></pre></div></div>
+<ul>
+  <li>기능: <strong>pthread_cond_init()</strong>은 <strong>조건 변수</strong>(condition variable)<span style="color:firebrick"><strong><em>cond</em></strong></span>를 <strong>초기화</strong>하기 위해 사용한다.
+    <ul>
+      <li><span style="color:navy"><strong><em>attr</em></strong></span> 을 이용해서 조건 변수의 특성을 변경할 수 있다.</li>
+      <li><span style="color:steelblue"><strong>NULL</strong></span>을 주면, 기본특성으로 초기화한다.</li>
+      <li><strong>조건 변수</strong>(condition variable)<span style="color:firebrick"><strong><em>cond</em></strong></span>는 상수 <span style="color:magenta"><strong>PTHREAD_COND_INITIALIZER</strong></span>를 이용해서도 초기화할 수 있다.</li>
+    </ul>
+  </li>
+</ul>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;pthread.h&gt;
+</span>
+<span class="n">pthread_cond_t</span> <span class="n">cond</span> <span class="o">=</span> <span class="n">PTHREAD_COND_INITIALIZER</span><span class="p">;</span>
+<span class="c1">// 둘 다 동일한 기능</span>
+<span class="n">pthrad_cond_init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cond</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h3 id="pthread_cond_signal">pthread_cond_signal()</h3>
+<hr />
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;pthread.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">pthread_cond_signal</span><span class="p">(</span><span class="n">pthread_cont_t</span> <span class="o">*</span><span class="n">cond</span><span class="p">);</span>
+</code></pre></div></div>
+<ul>
+  <li>기능: <strong>조건 변수</strong>(condition variable) <span style="color:firebrick"><strong><em>cond</em></strong></span> 에 <span style="color:magenta"><strong>시그널</strong></span>을 보낸다.
+    <ul>
+      <li><span style="color:magenta"><strong>시그널</strong></span>을 보낼 경우 <span style="color:firebrick"><strong><em>cond</em></strong></span> 에서 기다리는(<strong>wait</strong>) 스레드가 있다면 <strong>스레드를 깨운다</strong>.
+        <ul>
+          <li>여러 스레드가 기다리고 있다면 <strong>그 중 하나</strong>의 스레드에게만 전달되며 어떤 스레드에 신호가 전달될지 알 수 없다.</li>
+        </ul>
+      </li>
+      <li><span style="color:firebrick"><strong><em>cond</em></strong></span> 를 기다리는 <strong>스레드가 없다면</strong>, 아무 일도 일어나지 않는다.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="pthread_cond_broadcast">pthread_cond_broadcast()</h3>
+<hr />
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;pthread.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">pthread_cond_broadcast</span><span class="p">(</span><span class="n">pthread_cont_t</span> <span class="o">*</span><span class="n">cond</span><span class="p">);</span>
+</code></pre></div></div>
+<ul>
+  <li>기능: <strong>조건 변수</strong> <span style="color:firebrick"><strong><em>cond</em></strong></span> 에서 <strong>기다리는(wait) 모든 스레드</strong>에게 <span style="color:magenta"><strong>시그널</strong></span>을 보내 <strong>깨운다.</strong></li>
+</ul>
+
+<h3 id="pthread_cond_wait">pthread_cond_wait()</h3>
+<hr />
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;pthread.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">pthread_cond_wait</span><span class="p">(</span><span class="n">pthread_cont_t</span> <span class="o">*</span><span class="n">cond</span><span class="p">,</span> <span class="n">pthread_mutex_t</span> <span class="o">*</span><span class="n">mutex</span><span class="p">);</span>
+</code></pre></div></div>
+<ul>
+  <li>기능: <strong>조건 변수</strong> <span style="color:firebrick"><strong><em>cond</em></strong></span> 를 통해 신호가 전달될 때까지 <strong>블럭</strong>된다.
+    <ul>
+      <li>신호가 전달되지 않으면, 영원히 블럭된다.</li>
+      <li><strong><em>pthread_cond_wait()</em></strong>는 블럭되기 전에 <span style="color:red"><strong>mutex</strong></span>잠금을 자동으로 돌려준다.</li>
+      <li>블럭에서 깨면 <span style="color:red"><strong>mutex</strong></span> <strong>획득</strong></li>
+    </ul>
+  </li>
+</ul>
+
+<p><img src="wait.png" width="60%" /></p>
+
+<h3 id="pthread_cond_timedwait">pthread_cond_timedwait()</h3>
+<hr />
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;pthread.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">pthread_cond_timedwait</span><span class="p">(</span><span class="n">pthread_cont_t</span> <span class="o">*</span><span class="n">cond</span><span class="p">,</span> <span class="n">pthread_mutex_t</span> <span class="o">*</span><span class="n">mutex</span><span class="p">,</span> <span class="k">const</span> <span class="k">struct</span> <span class="n">timespec</span> <span class="o">*</span><span class="n">abstime</span><span class="p">);</span>
+</code></pre></div></div>
+<ul>
+  <li>기능: <strong>조건 변수</strong> <span style="color:firebrick"><strong><em>cond</em></strong></span> 를 통해 신호가 전달될 때까지 <strong>블럭</strong>되고, 자동으로 <span style="color:red"><strong>Mutex</strong></span>를 돌려준다는 점에서 <strong>pthread_cond_wait()</strong>와 동일
+    <ul>
+      <li><strong>abstime</strong>시간 동안 신호가 도착하지 않는다면 <strong>error</strong>를 발생하면서 리턴
+        <ul>
+          <li><strong>ETIMEDOUT</strong>: errno가 아닌 리턴 값으로 에러가 넘어옴!</li>
+        </ul>
+      </li>
+      <li><strong>pthread_cond_timedwait()</strong>함수는 다른 <span style="color:magenta"><strong>시그널</strong></span>에 의해 <strong>interrupted</strong>될 수 있으며(<strong>EINTR</strong>) 이 상황에 대한 처리 해야한다.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="pthread_cond_destroy">pthread_cond_destroy()</h3>
+<hr />
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;pthread.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">pthread_cond_destroy</span><span class="p">(</span><span class="n">pthread_cont_t</span> <span class="o">*</span><span class="n">cond</span><span class="p">);</span>
+</code></pre></div></div>
+<ul>
+  <li>기능: <strong>pthread_cond_init()</strong>으로 생성된 <strong>조건 변수</strong> <span style="color:firebrick"><strong><em>cond</em></strong></span> 자원 해제
+    <ul>
+      <li><strong>pthread_cond_destroy()</strong> 함수를 호출하기 전에 어떤 스레드도 <span style="color:firebrick"><strong><em>cond</em></strong></span> 에서의 시그널을 기다리지 않는 걸 확인해야 한다.</li>
+      <li><span style="color:firebrick"><strong><em>cond</em></strong></span> <span style="color:magenta"><strong><em>시그널</em></strong></span> 을 기다리는 스레드가 존재하면, 이 함수는 실패하고 <strong>EBUSY</strong>를 리턴한다.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="cond-example">cond example</h3>
+<hr />
+
+<p><img src="thread_cond_example.png" /></p>
+<ol>
+  <li><span style="color:magenta"><strong><em>pong</em></strong></span> 스레드 실행 후 바로 <strong>wait</strong></li>
+  <li><span style="color:magenta"><strong><em>ping</em></strong></span> 스레드 실행 후 <span style="color:green"><strong>"ping"</strong></span> 출력 후 <strong>signal</strong> 보내고 <strong>sleep</strong></li>
+</ol>
+
+<p><span style="color:red"><strong>주의!</strong></span> <span style="color:magenta"><strong><em>pong</em></strong></span> 이 먼저 실행되야 하기 때문에, <span style="color:steelblue"><strong>&amp;sync_cond</strong></span>로 제어</p>
+
+<h2 id="pthread-api-iv-attribute">pthread API IV: Attribute</h2>
+<h3 id="pthread_attr_init">pthread_attr_init():</h3>
+<hr />
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;pthread.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">pthread_attr_init</span><span class="p">(</span><span class="n">pthread_attr_t</span> <span class="o">*</span><span class="n">attr</span><span class="p">);</span>
+</code></pre></div></div>
+<ul>
+  <li><strong>pthread_attr_init</strong>은 <span style="color:magenta"><strong><em>attr</em></strong></span> 을 디폴트 값으로 초기화 시킨다.</li>
+  <li>성공 0, 실패 -1</li>
+</ul>
+
+<h3 id="pthread_attr_destroy">pthread_attr_destroy():</h3>
+<hr />
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;pthread.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">pthread_attr_destroy</span><span class="p">(</span><span class="n">pthread_attr_t</span> <span class="o">*</span><span class="n">attr</span><span class="p">);</span>
+</code></pre></div></div>
+<ul>
+  <li><span style="color:magenta"><strong><em>attr</em></strong></span> 객체 제거</li>
+</ul>
+
+<h3 id="pthread_attr_getscope">pthread_attr_getscope()</h3>
+<hr />
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;pthread.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">pthread_attr_getscope</span><span class="p">(</span><span class="k">const</span> <span class="n">pthread_attr_t</span> <span class="o">*</span><span class="n">attr</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">scope</span><span class="p">);</span>
+</code></pre></div></div>
+<ul>
+  <li>스레드가 <strong>어떤 영역(scope)</strong>에서 다루어지고 있는지 얻어오기 위해 사용
+    <ul>
+      <li><span style="color:magenta"><strong>PTHREAD_SCOPE_SYSTEM</strong></span>: <strong>user 모드</strong> 스레드
+        <ul>
+          <li>LINUX에서는 스레드 라이브러리를 통해 스케줄링하는 <strong>user 모드</strong> 스레드</li>
+        </ul>
+      </li>
+      <li><span style="color:magenta"><strong>PTHREAD_SCOPE_PROCESS</strong></span>: <strong>kernel 모드</strong> 스레드
+        <ul>
+          <li>Solaris에서는 <strong>커널 모드</strong> 스레드</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;stdio.h&gt;
+#include &lt;pthread.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">){</span>
+	<span class="n">pthread_attr_t</span> <span class="n">pattr</span><span class="p">;</span>
+	<span class="kt">int</span> <span class="n">scope</span><span class="p">;</span>
+
+	<span class="n">pthread_attr_init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">pattr</span><span class="p">);</span>
+	<span class="n">pthread_attr_getscope</span><span class="p">(</span><span class="o">&amp;</span><span class="n">pattr</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">scope</span><span class="p">);</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">scope</span> <span class="o">==</span> <span class="n">PTHREAD_SCOPE_SYSTEM</span><span class="p">)</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">"user mode thread</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
+	<span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">scope</span> <span class="o">==</span> <span class="n">PTHREAD_SCOPE_PROCESS</span><span class="p">)</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">"kernel mode thread</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="pthread_attr_setscope">pthread_attr_setscope</h3>
+<hr />
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;pthread.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">pthread_attr_setscope</span><span class="p">(</span><span class="n">pthread_attr_t</span> <span class="o">*</span><span class="n">attr</span><span class="p">,</span> <span class="kt">int</span> <span class="n">scope</span><span class="p">);</span>
+</code></pre></div></div>
+<ul>
+  <li>기능: 스레드가 어떤 영역(scope)에서 작동하게 할 것인지 결정
+    <ul>
+      <li>LINUX는 <strong>user mode</strong>에서만 동작한다.</li>
+      <li>Solaris는 둘다 선택 가능하다.</li>
+    </ul>
+  </li>
+</ul>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;pthread.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">){</span>
+	<span class="n">pthread_attr_t</span> <span class="n">pattr</span><span class="p">;</span>
+	<span class="kt">int</span> <span class="n">scope</span><span class="p">;</span>
+	<span class="n">pthread_attr_init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">pattr</span><span class="p">);</span>
+
+	<span class="n">pthread_attr_setscope</span><span class="p">(</span><span class="o">&amp;</span><span class="n">pattr</span><span class="p">,</span> <span class="n">PTHREAD_SCOPE_PROCESS</span><span class="p">);</span>
+	<span class="n">pthread_attr_getscope</span><span class="p">(</span><span class="o">&amp;</span><span class="n">pattr</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">scope</span><span class="p">);</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">scope</span> <span class="o">==</span> <span class="n">PTHREAD_SCOPE_SYSTEM</span><span class="p">)</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">"user mode thread</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+	<span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">scope</span> <span class="o">==</span> <span class="n">PTHREAD_SCOPE_PROCESS</span><span class="p">)</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">"kernel mode thread</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="pthread_attr_getdetachstate">pthread_attr_getdetachstate</h3>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;pthread.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">pthread_attr_getdetachstate</span><span class="p">(</span><span class="n">pthread_attr_t</span> <span class="o">*</span><span class="n">attr</span><span class="p">,</span> <span class="kt">int</span> <span class="n">detachstate</span><span class="p">);</span>
+</code></pre></div></div>
+<ul>
+  <li>기능: 스레드가 <strong>join</strong>가능 한지, <strong>detached</strong> 상태인지 알아낸다. 알아낸 값은 <strong><em>detachstate</em></strong>에 저장된다.
+    <ul>
+      <li><span style="color:navy"><strong>PTHREAD_CREATE_JOINABLE</strong></span>: <strong>(default)</strong>, 스레드가 <strong>join</strong> 가능함</li>
+      <li><span style="color:navy"><strong>PTHREAD_CREATE_DETACHED</strong></span>: 스레드가 <strong>pthread_detach</strong>를 이용해서 생성되었거나 혹은 <strong>pthread_attr_setdetachstate()</strong>함수를 이용해서 스레드를 <strong>detache 상태로 변경</strong> 시켰을 경우</li>
+    </ul>
+  </li>
+</ul>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;pthread.h&gt;
+</span>
+<span class="n">pthread_attr_t</span> <span class="n">attr</span><span class="p">;</span>
+<span class="kt">void</span> <span class="o">*</span><span class="nf">test</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">a</span><span class="p">){</span>
+	<span class="kt">int</span> <span class="n">policy</span><span class="p">;</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">"Thread create</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+	<span class="n">pthread_attr_getdetachstate</span><span class="p">(</span><span class="o">&amp;</span><span class="n">attr</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">policy</span><span class="p">);</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">policy</span> <span class="o">==</span> <span class="n">PTHREAD_CREATE_JOINABLE</span><span class="p">)</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">"joinable</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+	<span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">policy</span> <span class="o">==</span> <span class="n">PTHREAD_CREATE_DETACHED</span><span class="p">)</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">"detache</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">){</span>
+	<span class="kt">int</span> <span class="n">status</span><span class="p">;</span>
+	<span class="n">pthread_t</span> <span class="n">p_thread</span><span class="p">;</span>
+	<span class="n">pthread_attr_init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">attr</span><span class="p">);</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">pthread_create</span><span class="p">(</span><span class="o">&amp;</span><span class="n">p_thread</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="p">)</span><span class="nb">NULL</span><span class="p">)</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">){</span>
+		<span class="n">perror</span><span class="p">(</span><span class="s">"pthread_create error: "</span><span class="p">);</span>
+		<span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+	<span class="p">}</span>
+	<span class="n">pthread_join</span><span class="p">(</span><span class="n">p_thread</span><span class="p">,</span> <span class="p">(</span><span class="kt">void</span> <span class="o">**</span><span class="p">)</span><span class="o">&amp;</span><span class="n">status</span><span class="p">);</span>
+
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="pthread_attr_setdetachstate">pthread_attr_setdetachstate</h3>
+<hr />
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;pthread.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">pthread_attr_setdetachstate</span><span class="p">(</span><span class="n">pthread_attr_t</span> <span class="o">*</span><span class="n">attr</span><span class="p">,</span> <span class="kt">int</span> <span class="n">detachstate</span><span class="p">);</span>
+</code></pre></div></div>
+<ul>
+  <li>기능: 스레드의 상태를 <span style="color:navy"><strong>PTHREAD_CREATE_JOINABLE</strong></span> 혹은 <span style="color:navy"><strong>PTHREAD_CREATE_DETACHED</strong></span>로 변경</li>
+</ul>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">...</span>
+
+<span class="n">pthread_attr_t</span> <span class="n">attr</span><span class="p">;</span>
+
+<span class="s">"JOINABLE 상태로 변경"</span>
+<span class="n">pthread_attr_setdetachstate</span><span class="p">(</span><span class="o">&amp;</span><span class="n">attr</span><span class="p">,</span> <span class="n">PTHREAD_CREATE_JOINABLE</span><span class="p">);</span>
+
+<span class="s">"DETACHED 상태로 변경"</span>
+<span class="n">pthread_attr_setdetachstate</span><span class="p">(</span><span class="o">&amp;</span><span class="n">attr</span><span class="p">,</span> <span class="n">PTHREAD_CREATE_DETACHED</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h2 id="pthread-api-v-signal">pthread API V: signal</h2>
+<h3 id="pthread_sigmask">pthread_sigmask()</h3>
+<hr />
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;pthread.h&gt;
+#include &lt;signal.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">pthread_sigmask</span><span class="p">(</span><span class="kt">int</span> <span class="n">how</span><span class="p">,</span> <span class="k">const</span> <span class="n">sigset_t</span> <span class="o">*</span><span class="n">newmask</span><span class="p">,</span> <span class="n">sigset_t</span> <span class="o">*</span><span class="n">oldmask</span><span class="p">);</span>
+</code></pre></div></div>
+<ul>
+  <li>기능: <span style="color:red"><strong>스레드는 시그널 공유</strong></span> 따라서 <span style="color:steelblue"><strong>프로세스</strong></span>에서 <span style="color:red"><strong>스레드</strong></span>로 <span style="color:magenta"><strong>시그널</strong></span>을 <strong>전달</strong>하면, <strong>모든 스레드</strong>로 <span style="color:magenta"><strong>시그널</strong></span>이 전달된다.
+    <ul>
+      <li><strong>특정 스레드</strong>만 <span style="color:magenta"><strong>시그널</strong></span>을 받도록 하고 싶을 때 사용한다.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="pthread_kill">pthread_kill()</h3>
+<hr />
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;pthread.h&gt;
+#include &lt;signal.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">pthread_kill</span><span class="p">(</span><span class="n">pthread_t</span> <span class="kr">thread</span><span class="p">,</span> <span class="kt">int</span> <span class="n">signo</span><span class="p">);</span>
+</code></pre></div></div>
+<ul>
+  <li>기능: 스레드 식별 번호 <strong><em>thread</em></strong> 로 <span style="color:magenta"><strong>시그널</strong></span> <strong>signo</strong>를 전달한다.</li>
+</ul>
+
+<h3 id="sigwait">sigwait()</h3>
+<hr />
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;pthread.h&gt;
+#include &lt;signal.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">sigwait</span><span class="p">(</span><span class="k">const</span> <span class="n">sigset_t</span> <span class="o">*</span><span class="n">set</span><span class="p">,</span> <span class="kt">int</span><span class="o">*</span> <span class="n">signo</span><span class="p">);</span>
+</code></pre></div></div>
+<ul>
+  <li>기능: <span style="color:navy"><strong>set</strong></span>, signo</li>
+</ul>
+
+<h2 id="pthread-api-vi-cancel">pthread API VI: cancel</h2>
+<h3 id="pthread_cancel">pthread_cancel()</h3>
+<hr />
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;pthread.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">pthread_cancel</span><span class="p">(</span><span class="n">pthread_t</span> <span class="kr">thread</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h3 id="pthread_setcancelstate">pthread_setcancelstate()</h3>
+<hr />
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;pthread.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">pthread_setcancelstate</span><span class="p">(</span><span class="kt">int</span> <span class="n">state</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">oldstate</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h3 id="pthread_setcanceltype">pthread_setcanceltype()</h3>
+<hr />
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;pthread.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">pthread_setcanceltype</span><span class="p">(</span><span class="kt">int</span> <span class="n">type</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">oldtype</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h3 id="pthread_testcancel">pthread_testcancel()</h3>
+<hr />
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;pthread.h&gt;
+</span>
+<span class="kt">void</span> <span class="nf">pthread_testcancel</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+</code></pre></div></div>
+
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/#thread" class="page__taxonomy-item" rel="tag">thread</a>
+    
+    </span>
+  </p>
+
+
+        
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2021-01-21T00:00:00+09:00">January 21, 2021</time></p>
+
+
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">Share on</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=thread+%3C2%3E+cond+%EC%A1%B0%EA%B1%B4%EB%B3%80%EC%88%98%2C+attribute%2C+signal%2C+cancel%20https%3A%2F%2Fmarkyang920413.github.io%2F%2Fthread%2Fsystem_programming-thread-thread_2%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmarkyang920413.github.io%2F%2Fthread%2Fsystem_programming-thread-thread_2%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fmarkyang920413.github.io%2F%2Fthread%2Fsystem_programming-thread-thread_2%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/signal/system_programming-signal-signal_2/" class="pagination--pager" title="Signal &lt;2&gt; RTS
+">Previous</a>
+    
+    
+      <a href="/thread/system_programming-thread-thread_3/" class="pagination--pager" title="thread &lt;3&gt; Thread Pooling
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/linux-filesystem/linux-linux_filesystem-LVM/" rel="permalink">LVM
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/mac/m1_rosetta2/" rel="permalink">M1 Mac 로제타2 설치, 로제타 사용 brew 설치, M1용 jekyll설치
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/algorithm/algorithm-algorithm-time_complexity/" rel="permalink">Time complexity
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          less than 1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/algorithm/algorithm-algorithm-IO_STL/" rel="permalink">시험에서 입출력, STL
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          less than 1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2021 Dong-Hyeon Yang. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "https://markyang920413.github.io//thread/system_programming-thread-thread_2/";  /* Replace PAGE_URL with your page's canonical URL variable */
+      this.page.identifier = "/thread/system_programming-thread-thread_2"; /* Replace PAGE_IDENTIFIER with your page's unique identifier variable */
+    };
+    (function() { /* DON'T EDIT BELOW THIS LINE */
+      var d = document, s = d.createElement('script');
+      s.src = 'https://MarkYang920413.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+
+
+  </body>
+</html>

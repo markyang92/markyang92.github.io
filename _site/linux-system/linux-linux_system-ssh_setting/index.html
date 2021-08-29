@@ -1,0 +1,1035 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.21.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>SSH 설정, 공개키 설정, PORT 및 SSH 관리 - 혼자 보려고 만든 블로그</title>
+<meta name="description" content="ssh setting, 공개키 설정, port ssh 관리 명령어">
+
+
+  <meta name="author" content="Dong-Heyon Yang">
+  
+  <meta property="article:author" content="Dong-Heyon Yang">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="혼자 보려고 만든 블로그">
+<meta property="og:title" content="SSH 설정, 공개키 설정, PORT 및 SSH 관리">
+<meta property="og:url" content="https://markyang920413.github.io//linux-system/linux-linux_system-ssh_setting/">
+
+
+  <meta property="og:description" content="ssh setting, 공개키 설정, port ssh 관리 명령어">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2021-01-03T00:00:00+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://markyang920413.github.io//linux-system/linux-linux_system-ssh_setting/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "Dong-Hyeon Yang",
+      "url": "https://markyang920413.github.io//"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="혼자 보려고 만든 블로그 Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          혼자 보려고 만든 블로그
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/categories/">Category</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/">About</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+  
+    
+      
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox" />
+  <label for="ac-toc">Toggle menu</label>
+  <ul class="nav__items">
+    
+      <li>
+        
+          <span class="nav__sub-title">LINUX</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#linux-system">LINUX System</a></li>
+          
+            <li><a href="/categories/#linux-tools">LINUX Tools</a></li>
+          
+            <li><a href="/categories/#linux-compile">LINUX Compile</a></li>
+          
+            <li><a href="/categories/#linux-filesystem">LINUX Filesystem</a></li>
+          
+            <li><a href="/categories/#http">HTTP</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">System Programming</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#file">File, Memory</a></li>
+          
+            <li><a href="/categories/#env">Env</a></li>
+          
+            <li><a href="/categories/#process">Process</a></li>
+          
+            <li><a href="/categories/#thread">Thread</a></li>
+          
+            <li><a href="/categories/#ipc">IPC</a></li>
+          
+            <li><a href="/categories/#signal">Signal</a></li>
+          
+            <li><a href="/categories/#socket-programming">Socket Programming</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">C</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#c">C</a></li>
+          
+            <li><a href="/categories/#system-programming">System Programming</a></li>
+          
+            <li><a href="/categories/#stdio">Standard I/O</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">Python</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#python-language">Python Language</a></li>
+          
+            <li><a href="/categories/#python-pandas">Python Pandas</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">Algorithm</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#algorithm">Algorithm</a></li>
+          
+            <li><a href="/categories/#problem">Problem</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">MAC</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#mac">Mac</a></li>
+          
+        </ul>
+        
+      </li>
+    
+  </ul>
+</nav>
+
+    
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="SSH 설정, 공개키 설정, PORT 및 SSH 관리">
+    <meta itemprop="description" content="ssh setting, 공개키 설정, port ssh 관리 명령어">
+    <meta itemprop="datePublished" content="2021-01-03T00:00:00+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">SSH 설정, 공개키 설정, PORT 및 SSH 관리
+</h1>
+          
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          4 minute read
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              <ul class="toc__menu"><li><a href="#ip-셋팅">IP 셋팅</a></li><li><a href="#공개키-설정">공개키 설정</a><ul><li><a href="#공개키-어떻게-작동">공개키 어떻게 작동?</a></li><li><a href="#hosttarget-server에서-먼저-할-일-ssh-설치-ssh-대몬-ssh-restart">HOST(Target) Server에서 먼저 할 일: ssh 설치, ssh 대몬, ssh restart</a></li></ul></li><li><a href="#공개키-만들기">공개키 만들기</a><ul><li><a href="#공개키-만들기-windows">공개키 만들기 Windows</a></li><li><a href="#공개키-target에-전송-windows">공개키 Target에 전송 Windows</a></li><li><a href="#공개키-만들기-ubuntu">공개키 만들기 Ubuntu</a></li><li><a href="#공개키-target에-전송-ubuntu">공개키 Target에 전송 Ubuntu</a></li><li><a href="#target에서-공개키-셋팅">TARGET에서 공개키 셋팅</a></li></ul></li><li><a href="#공개키-오류">공개키 오류</a><ul><li><a href="#warning-remote-host-identification-has-changed">WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!</a></li><li><a href="#hostsdeny-error">hosts.deny error</a></li><li><a href="#target-ssh-key-바뀌었을-때-error">TARGET ssh key 바뀌었을 때 error</a></li></ul></li><li><a href="#ssh-관리">ssh 관리</a><ul><li><a href="#ssh-server-내부-port-바꾸기">ssh server 내부 PORT 바꾸기</a></li><li><a href="#사용중인-port-검색">사용중인 PORT 검색</a></li><li><a href="#ssh-잘-동작하는지-상태-체크">ssh 잘 동작하는지 상태 체크</a></li></ul></li><li><a href="#ssh로-원격-명령-내려보기">SSH로 원격 명령 내려보기</a></li></ul>
+
+            </nav>
+          </aside>
+        
+        <h2 id="ip-셋팅">IP 셋팅</h2>
+<ol>
+  <li><strong>고정 IP할당(GUI)</strong>
+    <ul>
+      <li>IP: 143.248.111.111</li>
+      <li>Subnet Mask: 255.255.255.0</li>
+      <li>Gateway: 143.248.11.1</li>
+      <li>DNS: 143.248.1.177, 143.248.2.177<br />
+IP는 막 지어냄</li>
+    </ul>
+  </li>
+  <li>만약 공유기 안쓰면 <strong>IP 그대로 연결하면 됨</strong><br />
+<img src="img1.png" />
+    <ul>
+      <li><strong>IP설정에 고정 IP 넣기</strong><br />
+<img src="img2.png" width="50%" height="50%" /></li>
+      <li><strong>바로 연결가능</strong></li>
+    </ul>
+  </li>
+  <li><strong>IP를 <span style="color:red">공유기</span>에 연결한 경우</strong><br />
+<img src="img3.png" width="50%" height="50%" /><br />
+    <ul>
+      <li>이 경우 <span style="color:red"><strong>당연히 바로 접속X</strong></span><br /><span style="color:steelblue"><strong>포트 포워딩</strong></span> 설정해야함</li>
+      <li>그냥 꼽고 <strong>DHCP</strong>로 설정해보자</li>
+      <li><code class="language-plaintext highlighter-rouge">ifconfig</code><br />
+<img src="img4.png" /><br />
+<strong>192.168.0.23</strong>으로 나오는데, 이것은 공유기가 준 <span style="color:blue"><strong>동적 IP</strong></span><br />
+<img src="img5.png" width="80%" height="80%" /></li>
+      <li>공유기 설정 페이지 가자 <strong>DHCP로 받은 IP에</strong> <code class="language-plaintext highlighter-rouge">끝자리 1</code>
+        <ul>
+          <li><strong>192.168.0.1</strong><br />
+<img src="img6.png" width="80%" height="80%" /><br /><strong>외부 IP 주소 확인</strong><br />
+<img src="img7.png" width="80%" height="80%" /><br /><strong>설정</strong><br />
+<br /><br />
+<strong>NAT -&gt; 포트포워딩</strong><br />
+<img src="img8.png" width="80%" height="80%" /><br /><span style="color:red"><strong>4번</strong></span><strong>외부포트 설정! <u>나중에 ssh로 접속할 포트</u> ssh <u>-p8888</u> 143.248.111.111</strong><br /><span style="color:red"><strong>5번</strong></span><strong>내부 포트는 22&lt;–ssh용 리눅스 포트</strong></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><strong>최종</strong>
+<img src="img9.png" /><br />
+결국 <strong>외부 IP</strong><code class="language-plaintext highlighter-rouge">:포트</code> 로 접속하면 됨
+내부에선 공유기가준 IP로 인식</li>
+</ol>
+
+<h2 id="공개키-설정">공개키 설정</h2>
+<h3 id="공개키-어떻게-작동">공개키 어떻게 작동?</h3>
+<hr />
+<p><img src="ex1.png" width="80%" height="80%" /></p>
+<ul>
+  <li><strong>My Com</strong>에서 <span style="color:magenta"><strong>id_rsa.pub</strong></span>가 <strong>공개키</strong>
+    <ul>
+      <li><span style="color:magenta"><strong>id_rsa.pub</strong></span>를 <strong>target</strong>에 보내 <span style="color:red"><strong>authorized_keys</strong></span>에 맨 밑줄에 넣는다.</li>
+    </ul>
+  </li>
+  <li>그 후, 접속하면 자동으로 이제 <strong>서버.pub 공개키</strong>가 내 컴퓨터의 <span style="color:blue"><strong>known_hosts</strong></span>에 넣음</li>
+  <li>이 후, 비번 없이 됨</li>
+</ul>
+
+<h3 id="hosttarget-server에서-먼저-할-일-ssh-설치-ssh-대몬-ssh-restart">HOST(Target) Server에서 먼저 할 일: ssh 설치, ssh 대몬, ssh restart</h3>
+<hr />
+<ol>
+  <li><strong>ssh 서버 설치</strong>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>apt <span class="nb">install </span>openssh-server
+<span class="nv">$ </span><span class="nb">sudo </span>apt <span class="nb">install </span>ssh
+</code></pre></div>    </div>
+  </li>
+  <li>sshd/ssh Daemon Process 실행
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>service ssh start <span class="c"># 혹은</span>
+<span class="nv">$ </span><span class="nb">sudo </span>systemctl start ssh
+</code></pre></div>    </div>
+    <ul>
+      <li><strong>ssh 서비스를 시작할 때마다 실행해야 하면 매우 빡친다.</strong></li>
+    </ul>
+    <ul>
+      <li>시스템이 ssh 연결을 받을 때마다 <strong>자동으로 sshd를 열어주고 실행하자</strong>
+        <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="nv">$ </span><span class="nb">sudo </span>systemctl <span class="nb">enable </span>ssh
+</code></pre></div>        </div>
+      </li>
+      <li><strong>ssh restart</strong>
+        <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>service ssh restart <span class="c"># 혹은</span>
+<span class="nv">$ </span><span class="nb">sudo </span>systemctl restart ssh
+</code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="공개키-만들기">공개키 만들기</h2>
+<h3 id="공개키-만들기-windows">공개키 만들기 Windows</h3>
+<hr />
+<ol>
+  <li>만약 <strong>OpenSSH</strong>가 Windows에 안깔린 경우<br />
+<strong>Powershell</strong>을 <strong>관리자 권한으로 실행</strong></li>
+</ol>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Get-WindowsCapability <span class="nt">-Online</span> | ? Name <span class="nt">-like</span> <span class="s1">'OpenSSH*'</span> <span class="c"># 입력</span>
+<span class="c"># This should return the following output:</span>
+
+Name  : OpenSSH.Client~~~~0.0.1.0
+State : NotPresent
+Name  : OpenSSH.Server~~~~0.0.1.0
+State : NotPresent
+
+<span class="c"># 그런 다음 서버 및/또는 클라이언트 기능을 설치합니다.</span>
+
+<span class="c"># Install the OpenSSH Client</span>
+Add-WindowsCapability <span class="nt">-Online</span> <span class="nt">-Name</span> OpenSSH.Client~~~~0.0.1.0
+
+<span class="c"># Install the OpenSSH Server</span>
+Add-WindowsCapability <span class="nt">-Online</span> <span class="nt">-Name</span> OpenSSH.Server~~~~0.0.1.0
+
+<span class="c"># Both of these should return the following output:</span>
+
+Path          :
+Online        : True
+RestartNeeded : False
+</code></pre></div></div>
+<ul>
+  <li><strong>cmd</strong>창 켜서 <span style="color:blue"><strong>공개키 경로로 가봄!!</strong></span>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>C:<span class="se">\U</span>sers<span class="se">\U</span>serID<span class="se">\.</span>ssh
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>위 경로에 <strong>ssh</strong>파일을 두는데 만약 아래 처럼, <strong>이미 id_rsa</strong>파일 이있다면 공개키가 있는 거임
+<img src="img10.png" width="60%" height="60%" /></p>
+  </li>
+  <li><span style="color:magenta"><strong>처음 만드는 경우</strong></span> 아래와 같이 한다.<br />
+<img src="img11.png" width="90%" height="90%" /></li>
+</ul>
+
+<h3 id="공개키-target에-전송-windows">공개키 Target에 전송 Windows</h3>
+<hr />
+<ul>
+  <li><strong>공개키를 target</strong>에 전송한다.
+    <ul>
+      <li>보낼 파일: <strong>C:\User\pllpo.ssh\id_rsa</strong><code class="language-plaintext highlighter-rouge">.pub</code>
+        <ul>
+          <li><strong>반드시 .pub파일을 보내야함</strong></li>
+        </ul>
+      </li>
+      <li><strong>scp 명령어로 보내자</strong>
+        <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nv">$ </span>scp <span class="o">[</span><span class="nt">-P</span><span class="o">[</span>PORT]] C:<span class="se">\U</span>ser<span class="se">\p</span>llpo<span class="se">\.</span>ssh<span class="se">\i</span>d_rsa.pub HOST_ID@HOST_IP:[SAVE PATH]
+</code></pre></div>        </div>
+        <p><br />
+  예) <strong>Target IP가 125.131.74.188, Target Port가 50622</strong>라면</p>
+        <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nv">$ </span>scp <span class="nt">-P50622</span> C:<span class="se">\U</span>ser<span class="se">\p</span>llpo<span class="se">\.</span>ssh<span class="se">\i</span>d_rsa.pub pllpokko@125.131.74.188:~/tmp.pub
+</code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+  <li>그다음은 <a href="https://pllpokko2.github.io/linux-system/ssh_setting/#target에서-공개키-셋팅"><strong>Target 공개키 셋팅</strong></a> 참고</li>
+</ul>
+
+<h3 id="공개키-만들기-ubuntu">공개키 만들기 Ubuntu</h3>
+<hr />
+<ol>
+  <li><strong>Ubuntu Client</strong>에서 공개키 만들기
+    <ul>
+      <li>먼저 있는지 체크<br />
+<strong>~/.ssh/id_rsa.pub</strong> 가 있으면 이미 있는거</li>
+      <li>없다면 만들자!
+        <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ssh-keygen <span class="nt">-t</span> rsa <span class="nt">-b</span> 4096
+<span class="nv">$ </span>엔터 연타
+<span class="nv">$ </span><span class="k">${</span><span class="nv">HOME</span><span class="k">}</span>/.ssh/id_rsa<span class="o">{</span>,.pub<span class="o">}</span> 로 생성됨
+</code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="공개키-target에-전송-ubuntu">공개키 Target에 전송 Ubuntu</h3>
+<hr />
+<ul>
+  <li><strong>공개키를 target</strong>에 전송한다.
+    <ul>
+      <li>보낼 파일: <strong>${HOME}/.ssh/id_rsa</strong><code class="language-plaintext highlighter-rouge">.pub</code>
+        <ul>
+          <li><strong>반드시 .pub파일을 보내야함</strong></li>
+        </ul>
+      </li>
+      <li><strong>scp 명령어로 보내자</strong>
+        <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nv">$ </span>scp <span class="o">[</span><span class="nt">-P</span><span class="o">[</span>PORT]] <span class="k">${</span><span class="nv">HOME</span><span class="k">}</span>/.ssh/id_rsa.pub HOST_ID@HOST_IP:[SAVE PATH]
+</code></pre></div>        </div>
+        <p><br />
+  예) <strong>Target IP가 125.131.74.188, Target Port가 50622</strong>라면</p>
+        <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nv">$ </span>scp <span class="nt">-P50622</span> <span class="k">${</span><span class="nv">HOME</span><span class="k">}</span>/.ssh/id_rsa.pub pllpokko@125.131.74.188:~/tmp.pub
+</code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+  <li>그다음은 <a href="https://pllpokko2.github.io/linux-system/ssh_setting/#target에서-공개키-셋팅"><strong>Target 공개키 셋팅</strong></a> 참고</li>
+</ul>
+
+<h3 id="target에서-공개키-셋팅">TARGET에서 공개키 셋팅</h3>
+<hr />
+<ul>
+  <li>Target host에 ssh 접속한다.
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ssh <span class="nt">-p</span> 50622 pllpokko@125.131.74.188
+</code></pre></div>    </div>
+  </li>
+  <li>아래와 같이 <strong><em>authorized_keys</em></strong>에 공개키를 셋팅한다.
+    <ul>
+      <li>참고로 보낸 공개키 위치와 파일명은 <strong>~/tmp.pub</strong>이다.
+        <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">mkdir</span> <span class="nt">-p</span> ~/.ssh
+<span class="nv">$ </span><span class="nb">chmod </span>700 ~/.ssh
+<span class="nv">$ </span><span class="nb">cat</span> ~/tmp.pub <span class="o">&gt;&gt;</span> ~/.ssh/authorized_keys
+<span class="nv">$ </span><span class="nb">chmod </span>600 ~/.ssh/authorized_keys
+<span class="nv">$ </span><span class="nb">rm</span> <span class="nt">-f</span> ~/tmp.pub
+</code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="공개키-오류">공개키 오류</h2>
+<h3 id="warning-remote-host-identification-has-changed">WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!</h3>
+<hr />
+<p><img src="ex4.png" /></p>
+<ul>
+  <li><strong>WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!</strong> 메시지로 ssh 접속이 안된다.</li>
+  <li>이유는 192.168.0.7이라는 IP로 기존에 접속한 적이 있는 서버와 RSA 공유키를 교환한 상태에서,<br />192.168.0.7이라는 서버가 바뀌었기 때문이다.
+    <ul>
+      <li>ex) 192.168.0.7 IP를 가진 라즈베리 파이에 꼽혀있는 LAN으로 SSH 접속을 하다가, 이 LAN을 다른 컴퓨터에 꽂아 같은 IP를 쓰게 된 상황</li>
+    </ul>
+  </li>
+  <li><strong>Man in the Middle Attack</strong>이라는 <strong>중간자 공격</strong>에 대해 경고한다.
+    <ul>
+      <li>즉, 기존에 서버가 알고 있는 정보를 찾아가 따라갔더니 전혀 다른 서버로 접속된 것이다.</li>
+    </ul>
+  </li>
+  <li>이 경우 내가 잘못 관리한 것 이기 때문에 스푸핑 현상이다. 아래와 같은 명령어를 통해 초기화 시킨다.</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># My computer</span>
+<span class="nv">$ </span>ssh-keygen <span class="nt">-R</span> <span class="o">[</span>상대 IP]
+
+혹은
+<span class="nv">$ </span><span class="k">${</span><span class="nv">HOME</span><span class="k">}</span>/.ssh/known_hosts 에서 상대IP 제거
+</code></pre></div></div>
+
+<h3 id="hostsdeny-error">hosts.deny error</h3>
+<hr />
+<ul>
+  <li><strong>target ssh</strong>에 접속이 <strong>hosts.deny error</strong>를 뱉으면서  안될 때, Target 컴퓨터를 직접 킨다.</li>
+  <li>다음 파일을 편집
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>vim /etc/hosts.deny
+</code></pre></div>    </div>
+    <p><img src="ex2.png" /></p>
+  </li>
+  <li><strong>ssh restart</strong> 해야 적용 됨
+    <ul>
+      <li><a href="https://pllpokko2.github.io/linux-system/ssh_setting/#hosttarget-server에서-먼저-할-일-ssh-설치-ssh-대몬-ssh-restart"><strong>ssh restart방법</strong></a> 여기 참고</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="target-ssh-key-바뀌었을-때-error">TARGET ssh key 바뀌었을 때 error</h3>
+<hr />
+<ul>
+  <li><strong>내 컴퓨터</strong>에 <span style="color:magenta"><strong><em>.ssh/known_hosts</em></strong></span>에서 알고 있는 <strong>타겟</strong>의 <strong>isa가 바뀌어 isa.pub</strong>가 바뀜</li>
+  <li>아래 키워드 입력</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># My Computer</span>
+<span class="nv">$ </span>ssh-keygen <span class="nt">-f</span> <span class="k">${</span><span class="nv">HOME</span><span class="k">}</span>/.ssh/known_hosts <span class="nt">-R</span> <span class="o">[</span>상대 IP]
+
+ex<span class="o">)</span>
+<span class="nv">$ </span>ssh-keygen <span class="nt">-f</span> <span class="k">${</span><span class="nv">HOME</span><span class="k">}</span>/.ssh/known_hosts <span class="nt">-R</span> 143.248.147.13
+</code></pre></div></div>
+
+<h2 id="ssh-관리">ssh 관리</h2>
+<h3 id="ssh-server-내부-port-바꾸기">ssh server 내부 PORT 바꾸기</h3>
+<hr />
+<ul>
+  <li><strong>ssh용 내부 Port는 22</strong></li>
+  <li><code class="language-plaintext highlighter-rouge">/etc/ssh/sshd_config</code>에서 ssh <strong>서버 포트</strong>를 <strong>바꿀 수 있다</strong>.
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>line 13: Port 22
+</code></pre></div>    </div>
+  </li>
+  <li>여기서 원하는 포트 번호를 바꾸고 저장하고 나가기
+    <ul>
+      <li>ssh용 내부 port번호는 22, 1024~65535 추천</li>
+    </ul>
+  </li>
+  <li>sshd 대몬을 restart해야 적용된다.
+    <ul>
+      <li><a href="https://pllpokko2.github.io/linux-system/ssh_setting/#hosttarget-server에서-먼저-할-일-ssh-설치-ssh-대몬-ssh-restart"><strong>ssh restart방법</strong></a> 여기 참고</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="사용중인-port-검색">사용중인 PORT 검색</h3>
+<hr />
+<ul>
+  <li><strong>프로세스 이름</strong>으로 검색</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat</span> /etc/services | <span class="nb">grep</span> <span class="o">[</span>PROCESS NAME]
+
+ex<span class="o">)</span>
+<span class="nv">$ </span><span class="nb">cat</span> /etc/services | <span class="nb">grep </span>ssh
+ssh		22/tcp			<span class="c"># ssh Remote Login Protocol</span>
+</code></pre></div></div>
+<ul>
+  <li><strong>특정 PORT 사용중?</strong> 인지 검색</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ss <span class="nt">-tulpn</span> | <span class="nb">grep </span>2222
+<span class="nv">$ </span>netstat <span class="nt">-tulpn</span> | <span class="nb">grep </span>2222
+</code></pre></div></div>
+<ul>
+  <li><strong>LISTEN</strong> 중인 port 전부 찾기</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>lsof <span class="nt">-i</span> <span class="nt">-P</span> <span class="nt">-n</span> | <span class="nb">grep</span> <span class="nt">-i</span> listen
+</code></pre></div></div>
+
+<h3 id="ssh-잘-동작하는지-상태-체크">ssh 잘 동작하는지 상태 체크</h3>
+<hr />
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>systemctl status sshd
+</code></pre></div></div>
+<p><img src="ex3.png" width="70%" height="70%" /></p>
+<ul>
+  <li>잘 동작함</li>
+</ul>
+
+<h2 id="ssh로-원격-명령-내려보기">SSH로 원격 명령 내려보기</h2>
+<ul>
+  <li><strong>target</strong>에 <strong>root 로그인 허용</strong><br /><strong><em>Target에 들어가서 아래와 같이 실행</em></strong>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>vi /etc/ssh/sshd_config
+</code></pre></div>    </div>
+    <p><img src="ex5.png" width="50%" height="50%" /></p>
+    <ul>
+      <li>저 곳을 <strong>주석 해제</strong> 한 후 <a href="https://pllpokko2.github.io/linux-system/ssh_setting/#hosttarget-server에서-먼저-할-일-ssh-설치-ssh-대몬-ssh-restart"><strong>ssh restart</strong></a></li>
+      <li>타겟에서 원격으로 실행 시키고 싶은 커맨드를 <strong>client</strong>에서 <span style="color:green"><strong>배시 셸 스크립트</strong></span>로 만든다.
+        <ul>
+          <li><span style="color:green"><strong>command.sh</strong></span>를 만들고 아래와 같이 <strong>remote 실행 커맨드를 작성해보자</strong></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/bin bash</span>
+
+<span class="nv">LD_PRELOAD</span><span class="o">=</span><span class="s2">"/home/root/libHybridCL.so"</span> <span class="se">\</span>
+/home/root/clExample 16 16 1024 1024
+</code></pre></div></div>
+<p><span style="color:red"><strong>주의!</strong></span> <strong>절대 경로</strong>를 줘야하며, <strong>server</strong>내의 <span style="color:green"><strong>쉘 파일</strong></span>을 열어 <strong>그안의  커맨드를 실행하는 것은 안됨</strong></p>
+<ul>
+  <li>아래와 같은 커맨드로 <strong>Remote command</strong>를 실행한다.<br /><strong>client</strong>에서 아래 커맨드 실행
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ssh <span class="o">[</span><span class="nt">-p</span> PORT] <span class="o">[</span>TARGET ID]@[TARGET IP] <span class="s1">'bash -s'</span> &lt; <span class="o">[</span>REMOTE COMMAND SCRIPT FILE]
+</code></pre></div>    </div>
+  </li>
+  <li>우리가 만든 <span style="color:green"><strong>command.sh</strong></span>을 서버에 리모트 명령 실행 해보자.
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ssh <span class="nt">-p8022</span> root@143.248.147.22 <span class="s1">'bash -s'</span> &lt; command.sh
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/#linux-system" class="page__taxonomy-item" rel="tag">linux-system</a>
+    
+    </span>
+  </p>
+
+
+        
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2021-01-03T00:00:00+09:00">January 3, 2021</time></p>
+
+
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">Share on</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=SSH+%EC%84%A4%EC%A0%95%2C+%EA%B3%B5%EA%B0%9C%ED%82%A4+%EC%84%A4%EC%A0%95%2C+PORT+%EB%B0%8F+SSH+%EA%B4%80%EB%A6%AC%20https%3A%2F%2Fmarkyang920413.github.io%2F%2Flinux-system%2Flinux-linux_system-ssh_setting%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmarkyang920413.github.io%2F%2Flinux-system%2Flinux-linux_system-ssh_setting%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fmarkyang920413.github.io%2F%2Flinux-system%2Flinux-linux_system-ssh_setting%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/file/system_programming-file-process_env_3/" class="pagination--pager" title="자격 증명, 사용자와 그룹 API, EUID RUID EGID RGID
+">Previous</a>
+    
+    
+      <a href="/file/system_programming-file-process_env_4/" class="pagination--pager" title="프로세스가 사용하는 리소스, 날짜, 시간, 로그인 기록 명령 및  API
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/linux-system/linux-linux_system-disk_manage/" rel="permalink">Samba 셋팅
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          less than 1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/linux-filesystem/linux-linux_filesystem-LVM/" rel="permalink">LVM
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          5 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/mac/m1_rosetta2/" rel="permalink">M1 Mac 로제타2 설치, 로제타 사용 brew 설치, M1용 jekyll설치
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/algorithm/algorithm-algorithm-time_complexity/" rel="permalink">Time complexity
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          less than 1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2021 Dong-Hyeon Yang. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "https://markyang920413.github.io//linux-system/linux-linux_system-ssh_setting/";  /* Replace PAGE_URL with your page's canonical URL variable */
+      this.page.identifier = "/linux-system/linux-linux_system-ssh_setting"; /* Replace PAGE_IDENTIFIER with your page's unique identifier variable */
+    };
+    (function() { /* DON'T EDIT BELOW THIS LINE */
+      var d = document, s = d.createElement('script');
+      s.src = 'https://MarkYang920413.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+
+
+  </body>
+</html>

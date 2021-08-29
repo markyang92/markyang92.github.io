@@ -1,0 +1,1238 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.21.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>컴파일 &lt;2&gt; Makefile - 혼자 보려고 만든 블로그</title>
+<meta name="description" content="Makefile">
+
+
+  <meta name="author" content="Dong-Heyon Yang">
+  
+  <meta property="article:author" content="Dong-Heyon Yang">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="혼자 보려고 만든 블로그">
+<meta property="og:title" content="컴파일 &lt;2&gt; Makefile">
+<meta property="og:url" content="https://markyang920413.github.io//linux-compile/compile_2_makefile/">
+
+
+  <meta property="og:description" content="Makefile">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2020-12-17T00:00:00+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://markyang920413.github.io//linux-compile/compile_2_makefile/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "Dong-Hyeon Yang",
+      "url": "https://markyang920413.github.io//"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="혼자 보려고 만든 블로그 Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          혼자 보려고 만든 블로그
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/categories/">Category</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/">About</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+  
+    
+      
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox" />
+  <label for="ac-toc">Toggle menu</label>
+  <ul class="nav__items">
+    
+      <li>
+        
+          <span class="nav__sub-title">LINUX</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#linux-system">LINUX System</a></li>
+          
+            <li><a href="/categories/#linux-tools">LINUX Tools</a></li>
+          
+            <li><a href="/categories/#linux-compile">LINUX Compile</a></li>
+          
+            <li><a href="/categories/#linux-filesystem">LINUX Filesystem</a></li>
+          
+            <li><a href="/categories/#http">HTTP</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">System Programming</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#file">File, Memory</a></li>
+          
+            <li><a href="/categories/#env">Env</a></li>
+          
+            <li><a href="/categories/#process">Process</a></li>
+          
+            <li><a href="/categories/#thread">Thread</a></li>
+          
+            <li><a href="/categories/#ipc">IPC</a></li>
+          
+            <li><a href="/categories/#signal">Signal</a></li>
+          
+            <li><a href="/categories/#socket-programming">Socket Programming</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">C</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#c">C</a></li>
+          
+            <li><a href="/categories/#system-programming">System Programming</a></li>
+          
+            <li><a href="/categories/#stdio">Standard I/O</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">Python</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#python-language">Python Language</a></li>
+          
+            <li><a href="/categories/#python-pandas">Python Pandas</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">Algorithm</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#algorithm">Algorithm</a></li>
+          
+            <li><a href="/categories/#problem">Problem</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">MAC</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#mac">Mac</a></li>
+          
+        </ul>
+        
+      </li>
+    
+  </ul>
+</nav>
+
+    
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="컴파일 &lt;2&gt; Makefile">
+    <meta itemprop="description" content="Makefile">
+    <meta itemprop="datePublished" content="2020-12-17T00:00:00+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">컴파일 &lt;2&gt; Makefile
+</h1>
+          
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          6 minute read
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              <ul class="toc__menu"><li><a href="#makefile-작성법">Makefile 작성법</a></li><li><a href="#c-컴파일">C 컴파일</a></li><li><a href="#makefile-작성">Makefile 작성</a><ul><li><a href="#쌩기초-makefile">쌩기초 Makefile</a></li><li><a href="#기본-문법">기본 문법</a></li><li><a href="#ifeq-endif">ifeq endif</a></li><li><a href="#미리-지정되어-있는-매크로들">미리 지정되어 있는 매크로들</a></li><li><a href="#내부-매크로----">내부 매크로 $? $^ $@ …</a></li><li><a href="#o-c">%.o: %.c</a></li><li><a href="#phony">.PHONY</a></li><li><a href="#wildcard">wildcard</a></li><li><a href="#patsubst">patsubst</a></li><li><a href="#filter">filter</a></li><li><a href="#addprefix">addprefix</a></li><li><a href="#shell">shell</a></li></ul></li><li><a href="#명령-사용-규칙">명령 사용 규칙</a><ul><li><a href="#기본-규칙">기본 규칙</a></li><li><a href="#명령어-한-줄은-새로운-셸이다">명령어 한 줄은 새로운 셸이다.</a></li><li><a href="#오류가-나도-계속-실행-시키고-싶다">오류가 나도 계속 실행 시키고 싶다</a></li><li><a href="#재귀적-makefile-사용">재귀적 Makefile 사용</a></li><li><a href="#서브-makefile에-대한-매크로-전달">서브 makefile에 대한 매크로 전달</a></li></ul></li><li><a href="#makefile-example1-단일-디렉터리-컴파일">Makefile example1: 단일 디렉터리 컴파일</a></li><li><a href="#makefile-example2">Makefile example2</a></li><li><a href="#재귀-makefile-example3">재귀 Makefile example3</a></li></ul>
+
+            </nav>
+          </aside>
+        
+        <h2 id="makefile-작성법">Makefile 작성법</h2>
+<h2 id="c-컴파일">C 컴파일</h2>
+<ul>
+  <li>3개의 c 소스코드와, 1개의 h 파일이 있다고 가정한다.</li>
+</ul>
+
+<p><img src="img1.png" width="40%" height="40%" /></p>
+
+<ul>
+  <li>노가다로 하나씩 컴파일 한다면?</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>gcc <span class="nt">-c</span> calendar.c diary.h
+<span class="nv">$ </span>gcc <span class="nt">-c</span> main.c diary.h
+<span class="nv">$ </span>gcc <span class="nt">-c</span> memo.c diary.h
+
+calendar.o main.o memo.o <span class="c"># object파일 생성</span>
+
+<span class="nv">$ </span>gcc main.o memo.o calendar.o <span class="nt">-o</span> diary
+
+diary <span class="c"># diary binary file 생성</span>
+</code></pre></div></div>
+<ul>
+  <li><strong>.o</strong>파일을 일일히 만드는 이유는?
+    <ul>
+      <li>Make는 파일의 타임스탬프를 만든다.</li>
+      <li>소스 파일이 수정됬다면 해당 파일의 타임스탬프가 갱신된다.</li>
+      <li>오브젝트 파일이 더는 최신이 아니며, 갱신할 필요가 있다고 판단해 재컴파일한다.</li>
+      <li>소스 파일이 수정되지 않았다면 <strong>오브젝트 파일을 또 만들지 않는다</strong>. <span style="color:red"><strong>중복 피함</strong></span></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="makefile-작성">Makefile 작성</h2>
+<h3 id="쌩기초-makefile">쌩기초 Makefile</h3>
+<hr />
+<ul>
+  <li>파일명은 <code class="language-plaintext highlighter-rouge">Makefile</code> 할 것</li>
+</ul>
+
+<p><img src="img2.png" width="70%" height="70%" /></p>
+<ul>
+  <li><strong>타겟 커맨드</strong>: <strong>소스1</strong> <strong>소스2</strong><br /><code class="language-plaintext highlighter-rouge">\t</code>명령어 1<br /><code class="language-plaintext highlighter-rouge">\t</code>명령어 2</li>
+</ul>
+
+<h3 id="기본-문법">기본 문법</h3>
+<hr />
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">=</code>: 대입, <strong>사용하기 직전까지</strong> 대입문내 <strong>매크로 갱신</strong>  <br />
+<img src="ex1.png" />
+    <ul>
+      <li>사용직전까지 <span style="color:magenta"><strong>매크로를 갱신</strong></span> 시켜줌</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">:=</code>: 대입, <strong>딱 여기 라인까지</strong>만! <strong>아래는 신경안씀</strong><br />
+<img src="ex2.png" width="50%" height="50%" />
+    <ul>
+      <li>사용 <strong>이후</strong> <span style="color:red"><strong>매크로를 갱신 X</strong></span></li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">?=</code> : 이 매크로가 정의되지 않았을 경우에만 반영<br />
+Makefile<br />
+1: CXX	= hello1<br />
+2: <del>CXX	?= hello2</del> # &lt;- 이미 위에 CXX가 정의되어 있으므로, 무시된다.<br />
+3: CC	?= hello3
+    <ul>
+      <li>CXX: hello1, CC: hello3</li>
+    </ul>
+  </li>
+  <li>
+    <p>make -p : make파일 내부에 미리 정의되어 있는 매크로 출력</p>
+  </li>
+  <li>NAME=<code class="language-plaintext highlighter-rouge">"</code>string<code class="language-plaintext highlighter-rouge">"</code> <strong>따옴표</strong>로 묶으면, <strong>문자열로 인식</strong>
+    <ul>
+      <li>" " 신경 잘 써야함</li>
+      <li>"&lt;- 자체도 문자로 넣고 싶다면 <code class="language-plaintext highlighter-rouge">\"</code> 사용</li>
+    </ul>
+  </li>
+  <li>매크로 변수 사용
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">$(</code>매크로변수<code class="language-plaintext highlighter-rouge">)</code></li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="ifeq-endif">ifeq endif</h3>
+<hr />
+<p><span style="color:red"><strong>ifeq</strong></span> <strong>($(매크로1), 비교 값)</strong><br />
+	- 매크로1이 비교 값과 같다면 실행<br />
+<span style="color:red"><strong>else</strong></span><br />
+	- 아니라면 else문 실행<br />
+<span style="color:red"><strong>endif</strong></span></p>
+
+<p><span style="color:red"><strong>ifneq</strong></span> <strong>($(매크로1), 비교 값)</strong><br />
+	- 매크로1이 비교 값과 다르면!! 실행<br />
+<span style="color:red"><strong>else</strong></span><br />
+	- else문 실행<br />
+<span style="color:red"><strong>endif</strong></span></p>
+
+<p><span style="color:red"><strong>ifeq</strong></span> <strong>($(매크로), 비교 값)</strong><br />
+	- 매크로가 비교 값과 같다면 실행<br />
+<span style="color:red"><strong>else</strong></span> <span style="color:blue"><strong>ifeq</strong></span> <strong>($(매크로), 비교 값)</strong><br />
+	- 매크로가 비교 값과 같다면 실행<br />
+<span style="color:red"><strong>endif</strong></span></p>
+
+<p><img src="img3.png" /></p>
+
+<h3 id="미리-지정되어-있는-매크로들">미리 지정되어 있는 매크로들</h3>
+<hr />
+
+<p><img src="img4.png" /></p>
+
+<p>C 컴파일러를 gcc가 아닌 clang을 사용하고 싶다면<br />
+Makefile내에서 CC를 재정의 할 것</p>
+<div class="language-makefile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">CC</span> <span class="o">=</span> clang
+</code></pre></div></div>
+<h3 id="내부-매크로----">내부 매크로 $? $^ $@ …</h3>
+<hr />
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">macro</th>
+      <th style="text-align: left">description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">$?</td>
+      <td style="text-align: left">현재의 타겟보다 최근에 변경된 종속 항목 리스트 (확장자 규칙에서 사용 불가)</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><strong>$^</strong></td>
+      <td style="text-align: left"><strong>현재 타겟의 종속 항목 리스트, 한 마디로 재료! (확장자 규칙에서 사용 불가)</strong></td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><strong>$@</strong></td>
+      <td style="text-align: left"><strong>현재 타겟 이름</strong></td>
+    </tr>
+    <tr>
+      <td style="text-align: center">$&lt;</td>
+      <td style="text-align: left">현재의 타겟보다 최근에 변경된 종속 항목 리스트 (확장자 규칙에서만 사용 가능)</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">$*</td>
+      <td style="text-align: left">현재의 타겟보다 최근에 변경된 현재 종속 항목의 이름(확장자 제외) (확장자 규칙에서만 사용 가능)</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">$%</td>
+      <td style="text-align: left">현재의 타깃이 라이브러리 모듈일 때, .o 파일에 대응되는 이름<br /><strong>%.o: %.c &lt;– .o 확장자를 제외한 파일명이 .c에 대응하는 것을 만났을 때</strong></td>
+    </tr>
+    <tr>
+      <td style="text-align: center">-M</td>
+      <td style="text-align: left">소스코드 파일에 상응하는 오브젝트 파일을 생성하는데 필요한 규칙을 얻는다.</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">-MM</td>
+      <td style="text-align: left">소스코드 파일에 상응하는 <strong>오브젝트 파일</strong>을 <strong>생성</strong>하는데 <strong>필요한 규칙</strong>을 얻되, 시스템 헤더 파일을 생략한다.<br /><strong>gcc -MM calc.c</strong><br /><strong>calc.o: calc.c numbers.h</strong> 결과를 얻는다.<br /><br />단 gcc 커맨드에 의해서!</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>다음과 같이 엄청 자주 쓰인다.</p>
+
+<h3 id="o-c">%.o: %.c</h3>
+<hr />
+
+<div class="language-makefile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">%.o</span><span class="o">:</span> <span class="nf">%.c</span>
+	<span class="nb">command</span>
+</code></pre></div></div>
+
+<div class="language-makefile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">a.o b.o</span><span class="o">:</span> <span class="nf">%.o: %.c</span>
+	<span class="nb">command </span><span class="k">for </span>a.o b.o
+
+<span class="nl">c.o d.o</span><span class="o">:</span> <span class="nf">%.o: %.c</span>
+	<span class="nb">command </span><span class="k">for </span>c.o d.o
+</code></pre></div></div>
+
+<div class="language-makefile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">SRCS</span>	<span class="o">=</span> memo.c main.c calendar.c
+<span class="nv">OBJS</span>	<span class="o">=</span> <span class="nv">$(SRCS:.c=.o)</span>
+</code></pre></div></div>
+<ul>
+  <li><strong>SRCS</strong>내 <code class="language-plaintext highlighter-rouge">.c</code> 파일 =&gt; <code class="language-plaintext highlighter-rouge">.o</code>로 <strong>OBJS</strong>에 대입</li>
+</ul>
+
+<h3 id="phony">.PHONY</h3>
+<hr />
+<ul>
+  <li>
+    <p>Makefile 커맨드에서 <span style="color:red"><strong>어떠한 선행 파일 X</strong></span> 경우, <span style="color:blue"><strong>허위 타겟</strong></span>을 만들어야한다.</p>
+  </li>
+  <li>
+    <p><span style="color:magenta"><strong>.PHONY</strong></span> 역할</p>
+    <ul>
+      <li><strong>허위 타겟</strong>역할을 한다.
+        <ul>
+          <li><strong>make help</strong>를 입력하면 help라는 파일이 존재치 않아 셸은 그 파일을 만들려고 하지 않는다.</li>
+          <li>이때 <strong>PHONY</strong>는 <strong>허위 타겟 역할</strong>을 한다.</li>
+          <li>허위 타겟 명령은 <strong>타임스탬프 정보가 없다</strong>.
+            <ul>
+              <li>따라서 <strong>help 명령이 호출될 때 마다 실행</strong></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p><img src="ex1.png" /></p>
+
+<h3 id="wildcard">wildcard</h3>
+<hr />
+
+<div class="language-makefile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">SRCS</span>	<span class="o">=</span> memo.c main.c calendar.c &lt;- 이거도 귀찮다
+
+<span class="nv">SRCS</span>	<span class="o">=</span> <span class="nf">$(</span><span class="nb">wildcard</span> <span class="k">*</span>.c<span class="nf">)</span>
+<span class="nv">OBJS</span>	<span class="o">=</span> <span class="nv">$(SRCS:.c=.o)</span>
+</code></pre></div></div>
+
+<ul>
+  <li>wildcard는 *, ? 등 shell의 wildcard를 사용할 수 있는 makefile 함수</li>
+  <li>SRCS = *.c 로 하면 진짜 *.c 파일을 검색함</li>
+</ul>
+
+<p>만약 src 폴더 내의 .c 로 검색한 파일을 다 가져 오고 싶다면?</p>
+
+<div class="language-makefile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">SRCS</span>	<span class="o">=</span> <span class="nf">$(</span><span class="nb">wildcard</span> src/<span class="k">*</span>.c<span class="nf">)</span>
+<span class="nv">OBJS</span>	<span class="o">=</span> <span class="nv">$(SRCS:%.c=%.o)</span>
+</code></pre></div></div>
+
+<h3 id="patsubst">patsubst</h3>
+<hr />
+
+<div class="language-makefile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">dst</span> <span class="o">=</span> <span class="nf">$(</span><span class="nb">patsubst</span> 패턴, 변경 문자열, 소스 문자열<span class="nf">)</span>
+
+<span class="nv">dst</span> <span class="o">=</span> <span class="nf">$(</span><span class="nb">patsubst</span> %.c, %.o, <span class="nf">$(</span><span class="nb">wildcard</span> <span class="k">*</span>.c<span class="nf">))</span>
+</code></pre></div></div>
+
+<ul>
+  <li>
+    <p>wildcard로 *.c 파일을 검색해 %.c에 매칭이되는 것은 %.o로 치환</p>
+  </li>
+  <li>
+    <p>sub directory에 있는 경우</p>
+  </li>
+</ul>
+
+<div class="language-makefile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">SRCS</span>	<span class="o">=</span> <span class="nf">$(</span><span class="nb">patsubst</span> %.c, <span class="nv">$(SRCDIR)</span>/%.c, <span class="nf">$(</span><span class="nb">wildcard</span> <span class="nv">$(SRCDIR)</span>/<span class="se">\*</span>.c<span class="nf">))</span>
+<span class="nv">OBJS</span>	<span class="o">=</span> <span class="nv">$(SRCS:%.c=%.o)</span>
+</code></pre></div></div>
+
+<h3 id="filter">filter</h3>
+<hr />
+<ul>
+  <li><span style="color:red"><strong>리스트</strong></span>에서 <strong>특정 패턴</strong>만족 단어 반환</li>
+</ul>
+
+<div class="language-makefile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">SRCS</span>	<span class="o">=</span> calc.c main.c math.h lib.c
+<span class="nv">C_SRCS</span>	<span class="o">=</span> <span class="nf">$(</span><span class="nb">filter</span> %.c, <span class="nv">$(SRCS)</span><span class="nf">)</span>
+
+<span class="c"># C_SRCS = calc.c main.c lib.c
+</span></code></pre></div></div>
+
+<h3 id="addprefix">addprefix</h3>
+<hr />
+<ul>
+  <li><span style="color:red"><strong>리스트</strong></span>에서 <span style="color:blue"><strong>서두</strong></span>에 문자열 추가
+    <ul>
+      <li>다음 예제는 $(OBJECTS) 리스트의 각 요소 서두에 <strong>objs/</strong>를 추가한다.</li>
+    </ul>
+  </li>
+</ul>
+
+<div class="language-makefile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">OBJECTS</span>		<span class="o">=</span> calc.o main.o lib.o
+<span class="nv">OBJ_LIST</span>	<span class="o">=</span> <span class="nf">$(</span><span class="nb">addprefix</span> objs/, <span class="nv">$(OBJECTS)</span><span class="nf">)</span>
+
+<span class="c"># OBJ_LIST = objs/calc.o objs/main.o objs/lib.o
+</span></code></pre></div></div>
+
+<h3 id="shell">shell</h3>
+<hr />
+<ul>
+  <li>컴파일 중 shell 명령을 사용할 때 <span style="color:red"><strong>$(shell</strong></span> <code class="language-plaintext highlighter-rouge">쉘 명령</code><span style="color:red"><strong>)</strong></span> 으로 사용
+    <div class="language-makefile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">target</span><span class="o">:</span> <span class="nf">src</span>
+  <span class="err">$(shell</span> <span class="err">echo</span> <span class="s2">"hello world!"</span><span class="err">)</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>원래 $HOME 이라고 쓸 shell 명령을 Makefile 내에선 <span style="color:red"><strong>$(shell</strong></span> <code class="language-plaintext highlighter-rouge">$${쉘변수}</code><span style="color:red"><strong>)</strong></span>사용한다.</p>
+  </li>
+  <li>따라서, <strong>$(shell <span style="color:red">$${HOME}</span>)</strong> 같이 사용하면된다.
+    <div class="language-makefile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">target</span><span class="o">:</span> <span class="nf">src</span>
+  <span class="err">$(shell</span> <span class="err">echo</span> <span class="err">$${HOME})</span>
+</code></pre></div>    </div>
+    <ul>
+      <li>예를 들어, 환경변수에 $SYSROOT=/opt/cross-compile 로 되있다면,
+        <div class="language-makefile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">CFLAGS</span>	<span class="o">=</span> <span class="nt">--sysroot</span><span class="o">=</span><span class="nf">$(</span><span class="nb">shell</span> <span class="nb">echo</span> <span class="nv">$$</span>SYSROOT<span class="nf">)</span><span class="o">)</span>
+</code></pre></div>        </div>
+      </li>
+      <li>쉘에 echo $SYSROOT 쳐서 나온 값이 --sysroot 로 정의된다.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="명령-사용-규칙">명령 사용 규칙</h2>
+<h3 id="기본-규칙">기본 규칙</h3>
+<hr />
+
+<div class="language-makefile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">TARGET</span><span class="o">:</span> <span class="nf">hello</span>
+
+<span class="nl">all</span><span class="o">:</span>
+	<span class="nb">echo</span> <span class="nv">$(TARGET)</span>
+</code></pre></div></div>
+
+<p>위 명령 실행 시, <code class="language-plaintext highlighter-rouge">Makefile</code>은 <code class="language-plaintext highlighter-rouge">실행 전</code> <code class="language-plaintext highlighter-rouge">명령어</code>를 <code class="language-plaintext highlighter-rouge">그대로</code> 쉘에 띄움
+그래서 실행 시,</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">echo </span>hello	<span class="c"># Makefile이 실행 직전 실행할  명령어 그대로 띄움</span>
+hello		<span class="c"># echo "hello"에 의해 출력된 hello</span>
+</code></pre></div></div>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">@</code>명령은 <code class="language-plaintext highlighter-rouge">에코 기능을 끈다</code></li>
+  <li>원래 Makefile은 자기가 실행하려고 하는 명령어를 그대로 쉘에 띄운다.<br />이 기능을 금지 시킨다.</li>
+  <li>끄지 않으면, <strong>셸에 띄워진 커맨드가 실행 완료 됬다고 착각</strong> 하기 때문</li>
+</ul>
+
+<div class="language-makefile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">all</span><span class="o">:</span>
+	<span class="p">@</span><span class="nb">echo</span> <span class="nv">$(TARGET)</span>
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hello	<span class="c"># echo "hello"에 의해 출력된 hello</span>
+</code></pre></div></div>
+
+<h3 id="명령어-한-줄은-새로운-셸이다">명령어 한 줄은 새로운 셸이다.</h3>
+<hr />
+<div class="language-makefile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">clean</span><span class="o">:</span>
+	<span class="nb">cd</span> ./backup
+	<span class="nb">rm</span> <span class="nt">-rf</span> <span class="k">*</span>
+</code></pre></div></div>
+
+<ul>
+  <li>의도: ./backup 디렉터리의 모든 파일을 지운다.</li>
+  <li>실제 실행: 현재 디렉터리의 모든 파일이 지워짐</li>
+  <li>이유: 두 명령어가 서로 다른 쉘에서 실행되기 때문이다.</li>
+</ul>
+
+<p>그래서… 아래처럼 고친다.</p>
+
+<div class="language-makefile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">clean</span><span class="o">:</span>
+	<span class="nb">cd</span> ./backup <span class="o">&amp;&amp;</span> <span class="nb">rm</span> <span class="nt">-rf</span> <span class="k">*</span>
+</code></pre></div></div>
+
+<h3 id="오류가-나도-계속-실행-시키고-싶다">오류가 나도 계속 실행 시키고 싶다</h3>
+<hr />
+<ul>
+  <li>
+    <p>Makefile은 한 줄씩 실행 하면서, 하나라도 return 0가 안된 명령이 있으면<br />실행 종료한다.</p>
+  </li>
+  <li>
+    <p>딱히 중료한 명령이 아니면 <code class="language-plaintext highlighter-rouge">-</code>를 붙여서 명령이 실패해도 계속 실행하게 한다.</p>
+  </li>
+</ul>
+
+<div class="language-makefile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">cat</span><span class="o">:</span>
+	<span class="p">-</span><span class="nb">cat </span>file.txt
+	<span class="p">@</span><span class="nb">echo </span><span class="k">done</span>
+</code></pre></div></div>
+
+<ul>
+  <li>’-‘ 때문에 file.txt를 cat명령어로 못 읽어도, 계속 실행된다.</li>
+</ul>
+
+<h3 id="재귀적-makefile-사용">재귀적 Makefile 사용</h3>
+<hr />
+
+<p><img src="img5.png" /></p>
+
+<p>다음과 같이 최상위 디렉터리에 Makefile이 있고, 서브 디렉터리마다 소스코드가 있는 경우</p>
+
+<p>각 디렉터리의 Makefile은 다음과 같이 작성한다.</p>
+
+<div class="language-makefile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">TARGET</span>	<span class="o">=</span> buildt-in.o
+<span class="nv">OBJS</span>	<span class="o">=</span> <span class="nf">$(</span><span class="nb">patsubst</span> %.c, %.o, %<span class="o">(</span>wildcard <span class="k">*</span>.c<span class="nf">)</span>
+CFLAGS	<span class="o">=</span> <span class="nt">-I</span>../include
+
+all: <span class="nv">$(OBJS)</span>
+	<span class="nv">$(LD)</span> <span class="nt">-r</span> <span class="nv">$(OBJS)</span> <span class="nt">-o</span> <span class="nv">$(TARGET)</span>
+
+clean:
+	<span class="nb">rm</span> <span class="nt">-rf</span> <span class="k">*</span>.o <span class="nv">$(TARGET)</span>
+</code></pre></div></div>
+
+<p>최상위 Makefile은 아래와 같다.</p>
+
+<div class="language-makefile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">TARGET</span>	<span class="o">=</span> diary
+<span class="nv">SUBDIRS</span>	<span class="o">=</span> calendar main memo
+<span class="nv">OBJS</span>	<span class="o">=</span> carlendar/built-in.o main/buildt-in.o memo/built-in.o
+
+<span class="nl">all</span><span class="o">:</span> <span class="nf">compile $(OBJS)</span>
+	<span class="nv">$(CC)</span> <span class="nv">$(OBJS)</span> <span class="nt">-o</span> <span class="nv">$(TARGET)</span>
+
+<span class="nl">compile</span><span class="o">:</span>
+	<span class="p">@</span><span class="k">for </span><span class="nb">dir </span><span class="k">in</span> <span class="nv">$(SUBDIRS)</span><span class="p">;</span> <span class="k">do</span> <span class="se">\</span>
+	make <span class="nt">-C</span> <span class="nv">$$</span><span class="nb">dir</span> <span class="o">||</span> <span class="nb">exit</span> <span class="nv">$?</span><span class="p">;</span>
+	<span class="k">done</span>
+
+<span class="nl">clean</span><span class="o">:</span>
+	<span class="p">@</span><span class="k">for </span><span class="nb">dir </span><span class="k">in</span> <span class="nv">$(SUBDIRS)</span><span class="p">;</span> <span class="k">do</span> <span class="se">\</span>
+	make <span class="nt">-C</span> <span class="nv">$$</span><span class="nb">dir </span>clean<span class="p">;</span>
+	<span class="k">done</span>
+	<span class="nb">rm</span> <span class="nt">-rf</span> <span class="k">*</span>.o <span class="k">*</span>.i <span class="k">*</span>.s <span class="nv">$(TARGET)</span>
+</code></pre></div></div>
+
+<p>문장이 이해가 안가면, 쉘 스크립트 공부하자</p>
+
+<p>VPATH를 이용하면, 좀 더 간결하게 할 수 있다.</p>
+
+<div class="language-makefile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">VPATH</span>	<span class="o">=</span> calendar main memo
+<span class="nv">OBJS</span>	<span class="o">=</span> calendar.o main.o memo.o
+<span class="nv">CFLAGS</span>	<span class="o">=</span> <span class="nt">-I</span>./include
+
+<span class="nl">all</span><span class="o">:</span> <span class="nf">clean diary</span>
+
+<span class="nl">diary</span><span class="o">:</span> <span class="nf">$(OBJS)</span>
+	<span class="nv">$(CC)</span> <span class="nt">-o</span> <span class="nv">$@</span> <span class="nv">$^</span>
+
+<span class="nl">clean</span><span class="o">:</span>
+	<span class="nb">rm</span> <span class="nt">-rf</span> <span class="k">*</span>.o calendar/<span class="k">*</span>.o main/<span class="k">*</span>.o memo/<span class="k">*</span>.o diary
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">VPATH</code> 지정 시, make가 소스 파일들을 찾을 때 <code class="language-plaintext highlighter-rouge">VPATH</code>도 보고 찾아감</p>
+
+<h3 id="서브-makefile에-대한-매크로-전달">서브 makefile에 대한 매크로 전달</h3>
+<p>최상위 Makefile에서 $(CC)를 다른 걸로 바꿔도 서브 디렉터리의 Makefile에는 영향을 끼치지 않는다.
+서브 디렉터리에게 영향을 끼치고 싶으면 export로 환경변수를 줘야함</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">export </span><span class="nv">CC</span><span class="o">=</span>clang
+</code></pre></div></div>
+
+<h2 id="makefile-example1-단일-디렉터리-컴파일">Makefile example1: 단일 디렉터리 컴파일</h2>
+
+<div class="language-makefile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">SRCS</span>	<span class="o">=</span> add.c calc.c mult.c sub.c
+<span class="nv">PROG</span>	<span class="o">=</span> calculator
+<span class="nv">CC</span>		<span class="o">=</span> clang
+<span class="nv">CFLAGS</span>	<span class="o">=</span> <span class="nt">-W</span> <span class="nt">-Wall</span>
+<span class="nv">OBJS</span>	<span class="o">=</span> <span class="nv">$(SRCS:.c=.o)</span>
+
+<span class="nl">all</span><span class="o">:</span> <span class="nf">clean $(PROG)</span>
+
+<span class="nl">$(PROG)</span><span class="o">:</span> <span class="nf">$(OBJS)</span>
+	<span class="nv">$(CC)</span> <span class="nv">$(CFLAGS)</span> <span class="nv">$^</span> <span class="nt">-o</span> <span class="nv">$@</span>
+
+<span class="nl">$(OBJS)</span><span class="o">:</span> <span class="nf">number.h</span>
+
+<span class="nl">clean</span><span class="o">:</span>
+	<span class="p">@</span><span class="nb">rm</span> <span class="nt">-rf</span> <span class="k">*</span>.o
+</code></pre></div></div>
+
+<h2 id="makefile-example2">Makefile example2</h2>
+
+<div class="language-makefile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">SRCS</span>	<span class="o">=</span> add.c calc.c mult.c sub.c
+<span class="nv">PROG</span>	<span class="o">=</span> calculator
+<span class="nv">CC</span>		<span class="o">=</span> gcc
+<span class="nv">CFLAGS</span>	<span class="o">=</span> <span class="nt">-W</span> <span class="nt">-Wall</span>
+<span class="nv">OBJS</span>	<span class="o">=</span> <span class="nv">$(SRCS:.c=.o)</span>
+
+<span class="nl">all</span><span class="o">:</span> <span class="nf">clean $(PROG)</span>
+
+<span class="nl">$(PROG)</span><span class="o">:</span> <span class="nf">$(OBJS)</span>
+	<span class="nv">$(CC)</span> <span class="nv">$(CFLAGS)</span> <span class="nv">$^</span> <span class="nt">-o</span> <span class="nv">$@</span>
+
+<span class="k">-include</span><span class="sx"> $(SRCS:.c=.d)</span>
+
+<span class="nl">%.d</span><span class="o">:</span> <span class="nf">%.c</span>
+	<span class="p">@</span><span class="nv">$(CC)</span> <span class="nt">-MM</span> <span class="nv">$(CPPFLAGS)</span> <span class="nv">$&lt;</span> | <span class="nb">sed</span> <span class="s1">'s#\(.\*\)\.o: #\1.o\1\.d: #g'</span> <span class="o">&gt;</span> <span class="nv">$@</span>
+
+<span class="nl">clean</span><span class="o">:</span>
+	<span class="p">@</span><span class="nb">rm</span> <span class="nt">-rf</span> <span class="k">*</span>.o
+</code></pre></div></div>
+
+<h2 id="재귀-makefile-example3">재귀 Makefile example3</h2>
+
+<p><img src="tree2.png" width="20%" height="20%" /></p>
+<ul>
+  <li>4개의 <strong>Makefile</strong>
+    <ul>
+      <li>1개의 <strong>상위 Makefile</strong>, 나머지 libmath, libprint, calc <strong>하위 Makefile</strong></li>
+      <li><span style="color:red"><strong>각 Makefile 현 디렉터리</strong></span>에 있는 파일만 기술하면 된다.</li>
+    </ul>
+  </li>
+</ul>
+
+<p><br /></p>
+
+<p><strong>libmath</strong>/Makefile</p>
+<div class="language-makefile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">SRCS</span>	<span class="o">=</span> clock.c letter.c number.c
+<span class="nv">LIB</span>	<span class="o">=</span> libmath.a
+<span class="nv">CC</span>	<span class="o">=</span> gcc
+<span class="nv">CFLAGS</span>	<span class="o">=</span> <span class="nt">-g</span>
+<span class="nv">OBJS</span>	<span class="o">=</span> <span class="nv">$(SRCS:.c=.o)</span>
+
+<span class="nl">$(LIB)</span><span class="o">:</span> <span class="nf">$(OBJS)</span>
+	<span class="nv">$(AR)</span> cr <span class="nv">$(LIB)</span> <span class="nv">$(OBJS)</span>
+
+<span class="nl">$(OBJS)</span><span class="o">:</span> <span class="nf">math.h</span>
+
+<span class="nl">.PHONY</span><span class="o">:</span> <span class="nf">clean</span>
+<span class="nl">clean</span><span class="o">:</span>
+	<span class="nb">rm</span> <span class="nt">-f</span> <span class="nv">$(OBJS)</span> <span class="nv">$(LIB)</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<p><strong>libprint</strong>/Makefile</p>
+
+<div class="language-makefile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">SRCS</span>	<span class="o">=</span> banner.c center.c normal.c
+<span class="nv">LIB</span>	<span class="o">=</span> libprint.a
+<span class="k">include</span><span class="sx"> lib.mk</span>
+<span class="nv">$(OBJS)</span>	<span class="o">=</span> printers.h
+
+<span class="nl">.PHONY</span><span class="o">:</span> <span class="nf">clean</span>
+<span class="nl">clean</span><span class="o">:</span>
+	<span class="nb">rm</span> <span class="nt">-f</span> <span class="nv">$(OBJS)</span> <span class="nv">$(LIB)</span>
+</code></pre></div></div>
+<ul>
+  <li><strong>libprint</strong>/Makefile은 <strong>libmath</strong>/Makefile과 비슷하므로 간략하게 작성한다.</li>
+</ul>
+
+<p><br /></p>
+
+<p><strong>calc</strong>/Makefile</p>
+
+<div class="language-makefile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">SRCS</span>	<span class="o">=</span> calc.c
+<span class="nv">PROG</span>	<span class="o">=</span> calculator
+<span class="nv">LIBS</span>	<span class="o">=</span> ../libmath/libmath.a ../libprint/libprint.a
+<span class="nv">CC</span>	<span class="o">=</span> gcc
+<span class="nv">CFLAGS</span>	<span class="o">=</span> <span class="nt">-g</span>
+<span class="nv">OBJS</span>	<span class="o">=</span> <span class="nv">$(SRCS:.c=.o)</span>
+
+<span class="nl">$(PROG)</span><span class="o">:</span> <span class="nf">$(OBJS) $(LIBS)</span>
+	<span class="nv">$(CC)</span> <span class="nt">-o</span> <span class="nv">$@</span> <span class="nv">$^</span>
+
+<span class="nl">.PHONY</span><span class="o">:</span> <span class="nf">clean</span>
+<span class="nl">clean</span><span class="o">:</span>
+	<span class="nb">rm</span> <span class="nt">-f</span> <span class="nv">$(OBJS)</span> <span class="nv">$(PROG)</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<p><strong>상위 Makefile</strong></p>
+
+<div class="language-makefile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">.PHONY</span><span class="o">:</span> <span class="nf">all</span>
+<span class="nl">all</span><span class="o">:</span>
+	<span class="nv">$(MAKE)</span> <span class="nt">-C</span> libmath
+	<span class="nv">$(MAKE)</span> <span class="nt">-C</span> libprint
+	<span class="nv">$(MAKE)</span> <span class="nt">-C</span> calc
+
+<span class="nl">.PHONY</span><span class="o">:</span> <span class="nf">clean</span>
+<span class="nl">clean</span><span class="o">:</span>
+	<span class="nv">$(MAKE)</span> <span class="nt">-C</span> libmath clean
+	<span class="nv">$(MAKE)</span> <span class="nt">-C</span> libprint clean
+	<span class="nv">$(MAKE)</span> <span class="nt">-C</span> calc clean
+</code></pre></div></div>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/#linux-compile" class="page__taxonomy-item" rel="tag">linux-compile</a>
+    
+    </span>
+  </p>
+
+
+        
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2020-12-17T00:00:00+09:00">December 17, 2020</time></p>
+
+
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">Share on</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=%EC%BB%B4%ED%8C%8C%EC%9D%BC+%3C2%3E+Makefile%20https%3A%2F%2Fmarkyang920413.github.io%2F%2Flinux-compile%2Fcompile_2_makefile%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmarkyang920413.github.io%2F%2Flinux-compile%2Fcompile_2_makefile%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fmarkyang920413.github.io%2F%2Flinux-compile%2Fcompile_2_makefile%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/ipc/system_programming-ipc-message_queue_posix/" class="pagination--pager" title="Message Queue - POSIX
+">Previous</a>
+    
+    
+      <a href="/c/inline_assembly/" class="pagination--pager" title="인라인 어셈블리(inline assembly)
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/linux-filesystem/linux-linux_filesystem-LVM/" rel="permalink">LVM
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/mac/m1_rosetta2/" rel="permalink">M1 Mac 로제타2 설치, 로제타 사용 brew 설치, M1용 jekyll설치
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/algorithm/algorithm-algorithm-time_complexity/" rel="permalink">Time complexity
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          less than 1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/algorithm/algorithm-algorithm-IO_STL/" rel="permalink">시험에서 입출력, STL
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          less than 1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2021 Dong-Hyeon Yang. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "https://markyang920413.github.io//linux-compile/compile_2_makefile/";  /* Replace PAGE_URL with your page's canonical URL variable */
+      this.page.identifier = "/linux-compile/compile_2_makefile"; /* Replace PAGE_IDENTIFIER with your page's unique identifier variable */
+    };
+    (function() { /* DON'T EDIT BELOW THIS LINE */
+      var d = document, s = d.createElement('script');
+      s.src = 'https://MarkYang920413.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+
+
+  </body>
+</html>

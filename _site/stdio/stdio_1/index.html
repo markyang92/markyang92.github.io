@@ -1,0 +1,892 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.21.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>stdio &lt;1&gt; stdio, fopen(), fclose() - 혼자 보려고 만든 블로그</title>
+<meta name="description" content="stdio, fopen, fclose">
+
+
+  <meta name="author" content="Dong-Heyon Yang">
+  
+  <meta property="article:author" content="Dong-Heyon Yang">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="혼자 보려고 만든 블로그">
+<meta property="og:title" content="stdio &lt;1&gt; stdio, fopen(), fclose()">
+<meta property="og:url" content="https://markyang920413.github.io//stdio/stdio_1/">
+
+
+  <meta property="og:description" content="stdio, fopen, fclose">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2020-12-26T00:00:00+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://markyang920413.github.io//stdio/stdio_1/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "Dong-Hyeon Yang",
+      "url": "https://markyang920413.github.io//"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="혼자 보려고 만든 블로그 Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          혼자 보려고 만든 블로그
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/categories/">Category</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/">About</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+  
+    
+      
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox" />
+  <label for="ac-toc">Toggle menu</label>
+  <ul class="nav__items">
+    
+      <li>
+        
+          <span class="nav__sub-title">LINUX</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#linux-system">LINUX System</a></li>
+          
+            <li><a href="/categories/#linux-tools">LINUX Tools</a></li>
+          
+            <li><a href="/categories/#linux-compile">LINUX Compile</a></li>
+          
+            <li><a href="/categories/#linux-filesystem">LINUX Filesystem</a></li>
+          
+            <li><a href="/categories/#http">HTTP</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">System Programming</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#file">File, Memory</a></li>
+          
+            <li><a href="/categories/#env">Env</a></li>
+          
+            <li><a href="/categories/#process">Process</a></li>
+          
+            <li><a href="/categories/#thread">Thread</a></li>
+          
+            <li><a href="/categories/#ipc">IPC</a></li>
+          
+            <li><a href="/categories/#signal">Signal</a></li>
+          
+            <li><a href="/categories/#socket-programming">Socket Programming</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">C</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#c">C</a></li>
+          
+            <li><a href="/categories/#system-programming">System Programming</a></li>
+          
+            <li><a href="/categories/#stdio">Standard I/O</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">Python</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#python-language">Python Language</a></li>
+          
+            <li><a href="/categories/#python-pandas">Python Pandas</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">Algorithm</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#algorithm">Algorithm</a></li>
+          
+            <li><a href="/categories/#problem">Problem</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">MAC</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#mac">Mac</a></li>
+          
+        </ul>
+        
+      </li>
+    
+  </ul>
+</nav>
+
+    
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="stdio &lt;1&gt; stdio, fopen(), fclose()">
+    <meta itemprop="description" content="stdio, fopen, fclose">
+    <meta itemprop="datePublished" content="2020-12-26T00:00:00+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">stdio &lt;1&gt; stdio, fopen(), fclose()
+</h1>
+          
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          1 minute read
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              <ul class="toc__menu"><li><a href="#stdio">stdio</a></li><li><a href="#fopen3">fopen():3</a></li><li><a href="#fclose3">fclose():3</a></li></ul>
+
+            </nav>
+          </aside>
+        
+        <h2 id="stdio">stdio</h2>
+<ul>
+  <li><strong>stdio</strong>: <strong>standard I/O</strong> <strong>표준 입출력 라이브러리</strong></li>
+  <li>시스템 콜은 <span style="color:red"><strong>바이트 단위</strong></span>로 <strong>R/W</strong>
+    <ul>
+      <li><strong>지정한 버퍼 크기 만큼 R/W</strong></li>
+    </ul>
+  </li>
+  <li>stdio 라이브러리 함수는 <span style="color:blue"><strong>문자 단위, 줄 단위</strong></span>로 <strong>R/W</strong>
+    <ul>
+      <li><strong>stdio만의 독자적인 버퍼 사용한다.</strong>
+        <ul>
+          <li>내부적으로 <strong>적절한 크기</strong>로 read()를 사용해 <strong>stdio 버퍼</strong>로 가져와, <strong>프로그램이 요구한 만큼 반환</strong></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>읽기 때, 버퍼링
+    <ol>
+      <li>적절한 크기만큼 시스템 콜 read()를 사용해 <strong>stdio 버퍼에 저장</strong></li>
+      <li>프로그램이 요청하는 만큼 반환해줌</li>
+    </ol>
+  </li>
+  <li>쓰기 때, 버퍼링
+    <ol>
+      <li>바이트 단위, 줄 단위의 데이터를 전달받아 <strong>stdio 버퍼가 꽉차면</strong> 시스템 콜 write() 내부적 호출</li>
+      <li>스트림이 <strong>단말에 연결</strong>된 경우, <strong>버퍼가 가득 찰 때까지 기다리지 않음!<br /> ‘\n’ 만나면 시스템 콜 write() 호출</strong></li>
+      <li><strong>비 버퍼링 모드</strong>로 셋된 경우, 즉시 write() 수행. <span style="color:red"><strong>setvbuf()</strong></span>로 설정 가능</li>
+    </ol>
+  </li>
+  <li>버퍼링(2단계)
+    <ul>
+      <li>사용자 변수 &lt;—————&gt; 버퍼 &lt;—————————&gt; 커널<br />
+　　　　　메모리 복사　　　　　복사　</li>
+      <li>두 단계를 거치기 때문에 메모리 대역폭 비효율적 사용</li>
+      <li>real-time 시스템과 같이 <strong>응답성</strong>, <strong>성능</strong>을 중시한다면 고수준 파일 처리를 최소한으로 사용하는 편</li>
+      <li>저수준보다 느리다는 말은 아님!</li>
+    </ul>
+  </li>
+  <li><span style="color:red"><strong>atomic 불가</strong></span></li>
+</ul>
+
+<h2 id="fopen3">fopen():3</h2>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;stdio.h&gt;
+</span>
+<span class="kt">FILE</span> <span class="o">*</span><span class="nf">fopen</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">path</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">mode</span><span class="p">);</span>
+
+<span class="kt">FILE</span> <span class="o">*</span><span class="n">fp</span><span class="p">;</span>
+<span class="k">if</span><span class="p">((</span><span class="n">fp</span><span class="o">=</span><span class="n">fopen</span><span class="p">(</span><span class="s">"streamfile.txt"</span><span class="p">,</span> <span class="s">"w"</span><span class="p">))</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">){</span>
+	<span class="cm">/* Error Handling */</span>
+<span class="p">}</span>
+<span class="p">...</span>
+<span class="n">fclose</span><span class="p">(</span><span class="n">fp</span><span class="p">);</span>
+</code></pre></div></div>
+<p>기능: <em>path</em>에 지정한 파일에 대한 스트림을 만들고, mode처럼 동작하게 만듬</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td><strong>return</strong></td>
+      <td><strong>value</strong></td>
+    </tr>
+    <tr>
+      <td><strong>성공</strong></td>
+      <td><strong>File Pointer</strong></td>
+    </tr>
+    <tr>
+      <td><strong>실패</strong></td>
+      <td><strong>NULL</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<table>
+  <tbody>
+    <tr>
+      <td><strong>parameter</strong></td>
+      <td><strong>Description</strong></td>
+    </tr>
+    <tr>
+      <td><strong><em>*path</em></strong></td>
+      <td>open할 파일</td>
+    </tr>
+    <tr>
+      <td><strong><em>*mode</em></strong></td>
+      <td><strong><em>path</em></strong>에 지정한 파일 스트림을 어떤 모드로 열 것인가?</td>
+    </tr>
+  </tbody>
+</table>
+
+<table>
+  <tbody>
+    <tr>
+      <td><strong>mode</strong></td>
+      <td><strong>읽기</strong></td>
+      <td><strong>쓰기</strong></td>
+      <td><strong>파일 포지션</strong></td>
+      <td>파일 <strong>존재</strong>시</td>
+      <td>파일 <strong>부재</strong>시</td>
+      <td><strong><em>시스템 콜 open()에서 대응되는 모드</em></strong></td>
+    </tr>
+    <tr>
+      <td><span style="color:magenta"><strong>“r”</strong></span></td>
+      <td><strong>O</strong></td>
+      <td>X</td>
+      <td>파일의 시작</td>
+      <td>성공</td>
+      <td>실패</td>
+      <td>O_RDONLY</td>
+    </tr>
+    <tr>
+      <td><span style="color:magenta"><strong>“w”</strong></span></td>
+      <td>X</td>
+      <td><strong>O</strong></td>
+      <td>파일의 시작</td>
+      <td>기존 파일 제거 후 생성</td>
+      <td>생성</td>
+      <td>O_WRONLY, O_CREAT, O_TRUNC</td>
+    </tr>
+    <tr>
+      <td><span style="color:magenta"><strong>“a”</strong></span></td>
+      <td>X</td>
+      <td><strong>O</strong></td>
+      <td>파일의 끝</td>
+      <td>성공</td>
+      <td>생성</td>
+      <td>O_WRONLY, O_CREAT, O_APPEND</td>
+    </tr>
+    <tr>
+      <td><span style="color:magenta"><strong>“r+”</strong></span></td>
+      <td><strong>O</strong></td>
+      <td><strong>O</strong></td>
+      <td>파일의 시작</td>
+      <td>성공</td>
+      <td>실패</td>
+      <td>O_RDWR</td>
+    </tr>
+    <tr>
+      <td><span style="color:magenta"><strong>“w+”</strong></span></td>
+      <td><strong>O</strong></td>
+      <td><strong>O</strong></td>
+      <td>파일의 시작</td>
+      <td>기존 파일 제거 후 생성</td>
+      <td>생성</td>
+      <td>O_RDWR, O_CREAT, O_TRUNC</td>
+    </tr>
+    <tr>
+      <td><span style="color:magenta"><strong>“a+”</strong></span></td>
+      <td><strong>O</strong></td>
+      <td><strong>O</strong></td>
+      <td>읽기-파일의 시작<br />쓰기-파일의 끝</td>
+      <td>성공</td>
+      <td>생성</td>
+      <td>O_RDWR, O_CREAT, O_APPEND</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>또한, 바이너리 파일을 나타내기 위해 <code class="language-plaintext highlighter-rouge">b</code>를 추가할 수도 있다.<br />
+하지만 리눅스에서는 바이너리 파일과 테스트 파일의 구분이 없기 때문에 지정해도 무시된다.</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;stdio.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">){</span>
+	<span class="kt">FILE</span> <span class="o">*</span><span class="n">fp</span><span class="p">;</span>
+	<span class="cm">/* Case 1 */</span>
+	<span class="n">fp</span><span class="o">=</span><span class="n">fopen</span><span class="p">(</span><span class="s">"data"</span><span class="p">,</span> <span class="s">"w"</span><span class="p">);</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">fp</span><span class="o">==</span><span class="nb">NULL</span><span class="p">){</span>
+		<span class="n">perror</span><span class="p">(</span><span class="s">"fopen error</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+		<span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="cm">/* Case 2 */</span>
+	<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">fp</span><span class="o">=</span><span class="n">fopen</span><span class="p">(</span><span class="s">"data"</span><span class="p">,</span> <span class="s">"w"</span><span class="p">))){</span>
+		<span class="n">perror</span><span class="p">(</span><span class="s">"fopen error</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+		<span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="n">fclose</span><span class="p">(</span><span class="n">fp</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="fclose3">fclose():3</h2>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;stdio.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">fclose</span><span class="p">(</span><span class="kt">FILE</span> <span class="o">*</span><span class="n">stream</span><span class="p">);</span>
+</code></pre></div></div>
+<p>기능: <strong><em>stream</em></strong>이 가리키는 스트림을 닫는다.</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td><strong>return</strong></td>
+      <td><strong>value</strong></td>
+    </tr>
+    <tr>
+      <td><strong>성공</strong></td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td><strong>실패</strong></td>
+      <td><strong>EOF(-1)</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<table>
+  <tbody>
+    <tr>
+      <td><strong><em>parameter</em></strong></td>
+      <td><strong>Description</strong></td>
+    </tr>
+    <tr>
+      <td><strong><em>*stream</em></strong></td>
+      <td>닫을 파일 스트림</td>
+    </tr>
+  </tbody>
+</table>
+
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/#stdio" class="page__taxonomy-item" rel="tag">stdio</a>
+    
+    </span>
+  </p>
+
+
+        
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2020-12-26T00:00:00+09:00">December 26, 2020</time></p>
+
+
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">Share on</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=stdio+%3C1%3E+stdio%2C+fopen%28%29%2C+fclose%28%29%20https%3A%2F%2Fmarkyang920413.github.io%2F%2Fstdio%2Fstdio_1%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmarkyang920413.github.io%2F%2Fstdio%2Fstdio_1%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fmarkyang920413.github.io%2F%2Fstdio%2Fstdio_1%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/c/error/" class="pagination--pager" title="errno변수, perror(), strerror(), feof(), ferror(), clearerr()
+">Previous</a>
+    
+    
+      <a href="/stdio/stdio_2/" class="pagination--pager" title="stdio &lt;2&gt; Byte 단위 입출력 fgetc(), getc(), getchar(),fputc(), putc(), putchar(), ungetc()
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/linux-filesystem/linux-linux_filesystem-LVM/" rel="permalink">LVM
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/mac/m1_rosetta2/" rel="permalink">M1 Mac 로제타2 설치, 로제타 사용 brew 설치, M1용 jekyll설치
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/algorithm/algorithm-algorithm-time_complexity/" rel="permalink">Time complexity
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          less than 1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/algorithm/algorithm-algorithm-IO_STL/" rel="permalink">시험에서 입출력, STL
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          less than 1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2021 Dong-Hyeon Yang. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "https://markyang920413.github.io//stdio/stdio_1/";  /* Replace PAGE_URL with your page's canonical URL variable */
+      this.page.identifier = "/stdio/stdio_1"; /* Replace PAGE_IDENTIFIER with your page's unique identifier variable */
+    };
+    (function() { /* DON'T EDIT BELOW THIS LINE */
+      var d = document, s = d.createElement('script');
+      s.src = 'https://MarkYang920413.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+
+
+  </body>
+</html>

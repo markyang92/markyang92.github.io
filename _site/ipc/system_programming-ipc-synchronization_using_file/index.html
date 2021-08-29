@@ -1,0 +1,885 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.21.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>파일을 이용한 동기화 - 혼자 보려고 만든 블로그</title>
+<meta name="description" content="synchronization">
+
+
+  <meta name="author" content="Dong-Heyon Yang">
+  
+  <meta property="article:author" content="Dong-Heyon Yang">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="혼자 보려고 만든 블로그">
+<meta property="og:title" content="파일을 이용한 동기화">
+<meta property="og:url" content="https://markyang920413.github.io//ipc/system_programming-ipc-synchronization_using_file/">
+
+
+  <meta property="og:description" content="synchronization">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2021-01-10T00:00:00+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://markyang920413.github.io//ipc/system_programming-ipc-synchronization_using_file/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "Dong-Hyeon Yang",
+      "url": "https://markyang920413.github.io//"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="혼자 보려고 만든 블로그 Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          혼자 보려고 만든 블로그
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/categories/">Category</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/">About</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+  
+    
+      
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox" />
+  <label for="ac-toc">Toggle menu</label>
+  <ul class="nav__items">
+    
+      <li>
+        
+          <span class="nav__sub-title">LINUX</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#linux-system">LINUX System</a></li>
+          
+            <li><a href="/categories/#linux-tools">LINUX Tools</a></li>
+          
+            <li><a href="/categories/#linux-compile">LINUX Compile</a></li>
+          
+            <li><a href="/categories/#linux-filesystem">LINUX Filesystem</a></li>
+          
+            <li><a href="/categories/#http">HTTP</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">System Programming</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#file">File, Memory</a></li>
+          
+            <li><a href="/categories/#env">Env</a></li>
+          
+            <li><a href="/categories/#process">Process</a></li>
+          
+            <li><a href="/categories/#thread">Thread</a></li>
+          
+            <li><a href="/categories/#ipc">IPC</a></li>
+          
+            <li><a href="/categories/#signal">Signal</a></li>
+          
+            <li><a href="/categories/#socket-programming">Socket Programming</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">C</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#c">C</a></li>
+          
+            <li><a href="/categories/#system-programming">System Programming</a></li>
+          
+            <li><a href="/categories/#stdio">Standard I/O</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">Python</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#python-language">Python Language</a></li>
+          
+            <li><a href="/categories/#python-pandas">Python Pandas</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">Algorithm</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#algorithm">Algorithm</a></li>
+          
+            <li><a href="/categories/#problem">Problem</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">MAC</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#mac">Mac</a></li>
+          
+        </ul>
+        
+      </li>
+    
+  </ul>
+</nav>
+
+    
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="파일을 이용한 동기화">
+    <meta itemprop="description" content="synchronization">
+    <meta itemprop="datePublished" content="2021-01-10T00:00:00+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">파일을 이용한 동기화
+</h1>
+          
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          2 minute read
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              <ul class="toc__menu"><li><a href="#파일을-이용한-동기화">파일을 이용한 동기화</a><ul><li><a href="#ex-1-simple_flockc">ex 1. simple_flock.c</a></li></ul></li></ul>
+
+            </nav>
+          </aside>
+        
+        <h2 id="파일을-이용한-동기화">파일을 이용한 동기화</h2>
+<ul>
+  <li><strong>Race condition(경쟁 상태)</strong>
+    <ul>
+      <li>둘 이상의 <span style="color:steelblue"><strong>프로세스</strong></span>/<span style="color:magenta"><strong>Thread</strong></span>가 동시에 어떤 작업을 수행 시, 타이밍 등에 의해 <span style="color:red"><strong>의도치 않은</strong></span> <strong>결과</strong>가 나올 수 있는 상태</li>
+    </ul>
+  </li>
+  <li><strong>Critical Section(임계 영역)</strong>
+    <ul>
+      <li>둘 이상의 <span style="color:steelblue"><strong>프로세스</strong></span>/<span style="color:magenta"><strong>Thread</strong></span>가 동시에 접근하면 안되는 <span style="color:steelblue"><strong>공유데이터</strong></span>를 접근하는 <span style="color:blue"><strong>코드 영역</strong></span></li>
+      <li>즉, <strong>Race Condition</strong>을 발생 시킬 수 있는 <span style="color:blue"><strong>코드 영역</strong></span></li>
+    </ul>
+  </li>
+</ul>
+
+<p><img src="img1.png" width="70%" /></p>
+
+<ul>
+  <li><strong>Race condition</strong>을 해결하기 위한 간단한 방법: <span style="color:navy"><strong>Lock mechanism</strong></span>
+    <ul>
+      <li><span style="color:magenta"><strong>Thread</strong></span>가 <strong>critical section code</strong>에 진입할 수 있는 <strong>열쇠</strong>를(<span style="color:red"><strong>Lock</strong></span>을 획득) <strong>얻어야</strong> <strong>Critical section code</strong>에 진입할 수 있다.
+<br /></li>
+    </ul>
+  </li>
+  <li><strong>파일</strong>을 이용한 <strong>동기화</strong>에서는 <span style="color:blue"><strong>파일 디스크립터</strong>(<strong><em>fd</em></strong>)</span>가 <span style="color:red"><strong>lock</strong></span>의 역할을 한다.</li>
+</ul>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;sys/file.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">flock</span><span class="p">(</span><span class="kt">int</span> <span class="n">fd</span><span class="p">,</span> <span class="kt">int</span> <span class="n">operation</span><span class="p">);</span>
+</code></pre></div></div>
+
+<table>
+  <tbody>
+    <tr>
+      <td><strong><em>return</em></strong></td>
+      <td><strong><em>value</em></strong></td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <td>성공</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>실패</td>
+      <td>-1</td>
+    </tr>
+  </tfoot>
+</table>
+
+<table>
+  <tbody>
+    <tr>
+      <td><strong><em>parameter</em></strong></td>
+      <td><strong><em>Description</em></strong></td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <td><em>fd</em></td>
+      <td>파일 디스크립터</td>
+    </tr>
+    <tr>
+      <td><em>operation</em></td>
+      <td><strong>LOCK_SH</strong>: <span style="color:steelblue"><strong>shared lock</strong></span> 걸기 - 여러개의 프로세스(스레드)가 lock을 획득 할 수 있다.<br /><strong>LOCK_EX</strong>: <span style="color:firebrick"><strong>exclusive lock</strong></span> 걸기 -어느 프로세스(스레드)가 lock을 소유한다면 다른 프로세스(스레드)는 lock을 획득 할 수 없다.<br /><strong>LOCK_UN</strong>: lock <span style="color:steelblue"><strong>풀기</strong></span> <em>shared, exclusive</em> <strong>둘다 풂</strong><br /><strong>LOCK_NB</strong>: non-block(획득에 실패한 P/T는 대기아닌 바로 <span style="color:firebrick"><strong><em>Error Return</em></strong></span>-errno 필요). 다른 값과 ORing(<strong>|</strong>)하여 사용</td>
+    </tr>
+  </tfoot>
+</table>
+
+<p><br /></p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>　</td>
+      <td><span style="color:steelblue"><strong><em>shared</em></strong></span> lock 획득 시도</td>
+      <td><span style="color:firebrick"><strong><em>exclusive</em></strong></span> lock 획득 시도</td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <td>lock 없음</td>
+      <td>즉시 성공</td>
+      <td>즉시 성공</td>
+    </tr>
+    <tr>
+      <td>어떤 프로세스/스레드에 의해<br /><span style="color:steelblue"><strong><em>shared locked</em></strong></span> 상태</td>
+      <td>즉시 성공</td>
+      <td><strong>모든</strong> <span style="color:steelblue"><strong>shared lock</strong></span>이 풀릴 때까지 대기</td>
+    </tr>
+    <tr>
+      <td>어떤 프로세스/스레드에 의해<br /><span style="color:firebrick"><strong><em>exclusive lock</em></strong></span> 상태</td>
+      <td><span style="color:firebrick"><strong><em>exclusive lock</em></strong></span>이 풀릴 때까지 대기</td>
+      <td><span style="color:firebrick"><strong><em>exclusive lock</em></strong></span>이 풀릴 때까지 대기</td>
+    </tr>
+  </tfoot>
+</table>
+
+<h3 id="ex-1-simple_flockc">ex 1. simple_flock.c</h3>
+<hr />
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;stdio.h&gt;
+#include &lt;sys/file.h&gt;
+#include &lt;string.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;errno.h&gt;
+</span>
+<span class="cp">#define NON_BLOCK 1
+</span>
+<span class="k">static</span> <span class="kt">void</span> <span class="nf">print_usage</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">progname</span><span class="p">){</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">"usage: %s {ex | sh}</span><span class="se">\n</span><span class="s">ex: exclussive lock</span><span class="se">\n</span><span class="s">sh: shared lock</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">progname</span><span class="p">);</span>
+	<span class="n">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[]){</span>
+	<span class="kt">int</span> <span class="n">fd</span><span class="p">;</span>
+	<span class="kt">int</span> <span class="n">ops</span><span class="p">;</span>
+
+	<span class="k">if</span><span class="p">(</span><span class="n">argc</span><span class="o">&lt;</span><span class="mi">2</span><span class="p">){</span>
+		<span class="n">print_usage</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+	<span class="p">}</span>
+
+	<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">strcmp</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s">"sh"</span><span class="p">)){</span>
+		<span class="n">ops</span> <span class="o">=</span> <span class="n">LOCK_SH</span><span class="p">;</span>
+	<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">strcmp</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s">"ex"</span><span class="p">)){</span>
+		<span class="n">ops</span> <span class="o">=</span> <span class="n">LOCK_EX</span><span class="p">;</span>
+	<span class="p">}</span> <span class="k">else</span><span class="p">{</span>
+		<span class="n">print_usage</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+	<span class="p">}</span>
+
+	<span class="n">fd</span><span class="o">=</span><span class="n">open</span><span class="p">(</span><span class="s">"lockfile"</span><span class="p">,</span> <span class="n">O_RDWR</span> <span class="o">|</span> <span class="n">O_CREAT</span><span class="p">,</span> <span class="mo">0600</span><span class="p">);</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">fd</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">){</span>
+		<span class="n">perror</span><span class="p">(</span><span class="s">"open fail</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+		<span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="n">printf</span><span class="p">(</span><span class="s">"trying to grab the lock</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+<span class="cp">#if NON_BLOCK == 0
+</span>	<span class="k">if</span><span class="p">(</span><span class="n">flock</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span> <span class="n">ops</span><span class="p">){</span> <span class="c1">// Lock</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">"flock(ops %d)</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">ops</span><span class="p">);</span>
+		<span class="k">goto</span> <span class="n">out</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="cp">#elif NON_BLOCK == 1
+</span>	<span class="k">if</span><span class="p">(</span><span class="n">flock</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span> <span class="n">ops</span> <span class="o">|</span> <span class="n">LOCK_NB</span><span class="p">)</span><span class="o">!=</span><span class="mi">0</span><span class="p">){</span> <span class="c1">// Lock</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">"flock(ops %d), errno=%d(%s)</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">ops</span><span class="p">,</span> <span class="n">errno</span><span class="p">,</span> <span class="n">strerror</span><span class="p">(</span><span class="n">errno</span><span class="p">));</span>
+		<span class="k">goto</span> <span class="n">out</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="cp">#endif
+</span>	<span class="n">printf</span><span class="p">(</span><span class="s">"got the lock!</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+	<span class="kt">int</span> <span class="n">ch</span><span class="o">=</span><span class="n">getc</span><span class="p">(</span><span class="n">stdin</span><span class="p">);</span> <span class="c1">// Wait for inserting key from User.</span>
+
+	<span class="k">if</span><span class="p">(</span><span class="n">flock</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span> <span class="n">LOCK_UN</span><span class="p">)</span><span class="o">!=</span><span class="mi">0</span><span class="p">){</span> <span class="c1">// Unlock</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">"flock(unlock)</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+		<span class="k">goto</span> <span class="n">out</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">"unlock!</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="nl">out:</span>
+	<span class="n">close</span><span class="p">(</span><span class="n">fd</span><span class="p">);</span>
+	<span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+
+
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+<p><img src="img2.png" /></p>
+<ul>
+  <li>두 <strong>Process</strong> 모두 <span style="color:steelblue"><strong>Shared Lock</strong></span> <strong>grab 시도</strong>
+    <ul>
+      <li>두 <strong>Process</strong> 모두 <strong>lock 소유 가능</strong></li>
+      <li>두 <strong>Process</strong> 모두 <strong>critical section</strong>에 들어와있다.</li>
+    </ul>
+  </li>
+</ul>
+
+<p><img src="img3.png" /></p>
+<ul>
+  <li><strong>P1</strong> <span style="color:steelblue"><strong>Shared Lock</strong></span> <strong>먼저 lock획득</strong>, <strong>P2</strong> <span style="color:firebrick"><strong>Exclusive Lock</strong></span> <strong>grab 시도</strong>
+    <ul>
+      <li><strong>P1</strong>이 먼저 lock 획득 시, <strong>P2</strong>는 나중에 lock 획득 시도 -&gt; 대기 상태된다.</li>
+      <li><strong>P1</strong>이 Unlock 해야 <strong>P2</strong>는 Lock 획득</li>
+    </ul>
+  </li>
+</ul>
+
+<p><img src="img4.png" /></p>
+<ul>
+  <li><strong>P2</strong> <span style="color:firebrick"><strong>Exclusive Lock</strong></span> <strong>먼저 lock획득</strong>, <strong>P1</strong>은 <span style="color:steelblue"><strong>Shared Lock</strong></span>
+    <ul>
+      <li><strong>P2</strong>가 먼저 Ex-lock 획득, <strong>P1</strong>은 나중에 lock 획득 시도 하지만 대기 상태된다.</li>
+      <li><strong>P2</strong>이 Unlock 해야 <strong>P1</strong>는 Lock 획득</li>
+    </ul>
+  </li>
+</ul>
+
+<p><img src="img5.png" /></p>
+<ul>
+  <li><strong>P1, P2</strong> <span style="color:firebrick"><strong>Exclusive Lock</strong></span>
+    <ul>
+      <li>뒤늦게 lock 획득 시도 시, 대기 상태</li>
+    </ul>
+  </li>
+</ul>
+
+<p><img src="img6.png" /></p>
+<ul>
+  <li><span style="color:red"><strong>LOCK_NB</strong> set!</span> 시!, 뒤늦게 lock 획득 시도하는 프로세스는 <span style="color:red"><strong>error!</strong></span></li>
+</ul>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/#ipc" class="page__taxonomy-item" rel="tag">ipc</a>
+    
+    </span>
+  </p>
+
+
+        
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2021-01-10T00:00:00+09:00">January 10, 2021</time></p>
+
+
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">Share on</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=%ED%8C%8C%EC%9D%BC%EC%9D%84+%EC%9D%B4%EC%9A%A9%ED%95%9C+%EB%8F%99%EA%B8%B0%ED%99%94%20https%3A%2F%2Fmarkyang920413.github.io%2F%2Fipc%2Fsystem_programming-ipc-synchronization_using_file%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmarkyang920413.github.io%2F%2Fipc%2Fsystem_programming-ipc-synchronization_using_file%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fmarkyang920413.github.io%2F%2Fipc%2Fsystem_programming-ipc-synchronization_using_file%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/file/system_programming-file-mmap/" class="pagination--pager" title="mmap()
+">Previous</a>
+    
+    
+      <a href="/linux-tools/tmux/" class="pagination--pager" title="tmux
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/linux-filesystem/linux-linux_filesystem-LVM/" rel="permalink">LVM
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/mac/m1_rosetta2/" rel="permalink">M1 Mac 로제타2 설치, 로제타 사용 brew 설치, M1용 jekyll설치
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/algorithm/algorithm-algorithm-time_complexity/" rel="permalink">Time complexity
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          less than 1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/algorithm/algorithm-algorithm-IO_STL/" rel="permalink">시험에서 입출력, STL
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          less than 1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2021 Dong-Hyeon Yang. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "https://markyang920413.github.io//ipc/system_programming-ipc-synchronization_using_file/";  /* Replace PAGE_URL with your page's canonical URL variable */
+      this.page.identifier = "/ipc/system_programming-ipc-synchronization_using_file"; /* Replace PAGE_IDENTIFIER with your page's unique identifier variable */
+    };
+    (function() { /* DON'T EDIT BELOW THIS LINE */
+      var d = document, s = d.createElement('script');
+      s.src = 'https://MarkYang920413.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+
+
+  </body>
+</html>

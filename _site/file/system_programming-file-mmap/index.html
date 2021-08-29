@@ -1,0 +1,903 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.21.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>mmap() - 혼자 보려고 만든 블로그</title>
+<meta name="description" content="mmap">
+
+
+  <meta name="author" content="Dong-Heyon Yang">
+  
+  <meta property="article:author" content="Dong-Heyon Yang">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="혼자 보려고 만든 블로그">
+<meta property="og:title" content="mmap()">
+<meta property="og:url" content="https://markyang920413.github.io//file/system_programming-file-mmap/">
+
+
+  <meta property="og:description" content="mmap">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2021-01-10T00:00:00+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://markyang920413.github.io//file/system_programming-file-mmap/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "Dong-Hyeon Yang",
+      "url": "https://markyang920413.github.io//"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="혼자 보려고 만든 블로그 Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          혼자 보려고 만든 블로그
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/categories/">Category</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/">About</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+  
+    
+      
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox" />
+  <label for="ac-toc">Toggle menu</label>
+  <ul class="nav__items">
+    
+      <li>
+        
+          <span class="nav__sub-title">LINUX</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#linux-system">LINUX System</a></li>
+          
+            <li><a href="/categories/#linux-tools">LINUX Tools</a></li>
+          
+            <li><a href="/categories/#linux-compile">LINUX Compile</a></li>
+          
+            <li><a href="/categories/#linux-filesystem">LINUX Filesystem</a></li>
+          
+            <li><a href="/categories/#http">HTTP</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">System Programming</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#file">File, Memory</a></li>
+          
+            <li><a href="/categories/#env">Env</a></li>
+          
+            <li><a href="/categories/#process">Process</a></li>
+          
+            <li><a href="/categories/#thread">Thread</a></li>
+          
+            <li><a href="/categories/#ipc">IPC</a></li>
+          
+            <li><a href="/categories/#signal">Signal</a></li>
+          
+            <li><a href="/categories/#socket-programming">Socket Programming</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">C</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#c">C</a></li>
+          
+            <li><a href="/categories/#system-programming">System Programming</a></li>
+          
+            <li><a href="/categories/#stdio">Standard I/O</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">Python</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#python-language">Python Language</a></li>
+          
+            <li><a href="/categories/#python-pandas">Python Pandas</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">Algorithm</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#algorithm">Algorithm</a></li>
+          
+            <li><a href="/categories/#problem">Problem</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">MAC</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#mac">Mac</a></li>
+          
+        </ul>
+        
+      </li>
+    
+  </ul>
+</nav>
+
+    
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="mmap()">
+    <meta itemprop="description" content="mmap">
+    <meta itemprop="datePublished" content="2021-01-10T00:00:00+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">mmap()
+</h1>
+          
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          2 minute read
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              <ul class="toc__menu"><li><a href="#map-a-file-on-memory">Map a file on memory</a></li><li><a href="#mmap2">mmap():2</a></li><li><a href="#munmap2">munmap():2</a><ul><li><a href="#example-1-mmap_basicc">Example 1. mmap_basic.c</a></li></ul></li></ul>
+
+            </nav>
+          </aside>
+        
+        <h2 id="map-a-file-on-memory">Map a file on memory</h2>
+<p><img src="img1.png" /></p>
+<ul>
+  <li><span style="color:magenta"><strong>Process address space</strong></span>: <u>프로세스 주소 공간</u><br />프로세스는 자신만의 가상 주소 공간(Virtual Address Space)를 가지고 있다고 생각하고 동작</li>
+  <li><strong><em>mmap()</em></strong>은 <strong>특정 파일 내용 일부</strong>를 프로세스 주소 공간에 <span style="color:firebrick"><strong>매핑</strong></span>함!
+    <ul>
+      <li>Originally, <span style="color:steelblue"><strong>file I/O</strong></span>는 <span style="color:steelblue"><strong>FILE* API</strong></span> 혹은 <strong>저수준 I/O systemcall</strong> 사용</li>
+      <li>당연히 메모리상에 <span style="color:firebrick"><strong>매핑</strong></span> 시키면, <span style="color:magenta"><strong>pointer</strong></span>로 왔다갔다 접근하면 되어서 빠름</li>
+      <li><strong><em>dev file</em></strong>을 <span style="color:firebrick"><strong>매핑</strong></span> 시키면, <strong>Memory Mapped I/O</strong></li>
+      <li><strong>파일을 메모리에</strong>을 <span style="color:firebrick"><strong>매핑</strong></span> 시키면, <span style="color:orange"><strong>자원 공유 가능!</strong></span></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="mmap2">mmap():2</h2>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;sys/mman.h&gt;
+</span>
+<span class="kt">void</span> <span class="o">*</span><span class="nf">mmap</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">addr</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">length</span><span class="p">,</span> <span class="kt">int</span> <span class="n">prot</span><span class="p">,</span> <span class="kt">int</span> <span class="n">flags</span><span class="p">,</span> <span class="kt">int</span> <span class="n">fd</span><span class="p">,</span> <span class="kt">off_t</span> <span class="n">offset</span><span class="p">);</span>
+</code></pre></div></div>
+<ul>
+  <li>기능: <span style="color:magenta"><strong>fd</strong></span>의 파일을 <span style="color:firebrick"><strong>매핑</strong></span> 시킴</li>
+</ul>
+
+<table>
+  <tbody>
+    <tr>
+      <td><strong><em>return</em></strong></td>
+      <td><strong><em>value</em></strong></td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <td>성공</td>
+      <td>Mapping된 주소</td>
+    </tr>
+    <tr>
+      <td>실패</td>
+      <td><span style="color:red"><strong>MAP_FAILED</strong></span></td>
+    </tr>
+  </tfoot>
+</table>
+
+<table>
+  <tbody>
+    <tr>
+      <td><strong><em>parameter</em></strong></td>
+      <td><strong><em>Description</em></strong></td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <td><em>*addr</em></td>
+      <td>매핑이 될 주소(시작 주소), 보통 강제성 없이 <strong>hint</strong>로 줌</td>
+    </tr>
+    <tr>
+      <td><em>length</em></td>
+      <td>매핑할 길이</td>
+    </tr>
+    <tr>
+      <td><em>prot</em></td>
+      <td><strong>PROT_EXEC</strong>: 페이지 실행 用<br /><strong>PROT_READ</strong>: 페이지 읽기 用<br /><strong>PROT_WRITE</strong>: 페이지 쓰기 用<br /><strong>PROT_NONE</strong>: 페이지는 액세스 되지 않는다.</td>
+    </tr>
+    <tr>
+      <td><em>flags</em></td>
+      <td><strong>MAP_SHARED</strong>: <strong>P1</strong>과 <strong>P2</strong>가 동시에 매핑한다고 할 때, Update를 서로가 알 수 있으며 파일에도 적용 됨(<span style="color:magenta">msync()</span>의 사용이 요구됨)<br /><strong>MAP_SHARED_VALIDATE</strong>: MAP_SHARED에서 <em>flags</em> 의 알려지지 않은 flags를 무시하는 것만 제외하고는 MAP_SHARED와 동일<br /><strong>MAP_PRIVATE</strong>: <strong>P1</strong>과 <strong>P2</strong>가 동시에 매핑한다고 할 때, Update를 <span style="color:red"><strong>서로가 알 수 없으며</strong></span> 파일에 전달되지 않는다. <br /><strong>MAP_FIXED</strong>:<em>addr</em>을 힌트로써 interpret하지 마라. 그 주소로 <strong>정확하게 매핑</strong>해라. <br /><strong>MAP_ANONYMOUS</strong>: 매핑이 <strong>어떠한 파일에 의해</strong> <strong>지원되지 않는다.</strong> Zero로 초기화된다. <strong>fd</strong>는 무시된다.<br />더 많은 내용은 man page참고</td>
+    </tr>
+    <tr>
+      <td><em>fd</em></td>
+      <td>매핑 시킬 <strong>파일의 fd</strong></td>
+    </tr>
+    <tr>
+      <td><em>offset</em></td>
+      <td><span style="color:blue"><strong>Page</strong></span>의 <strong>배수</strong></td>
+    </tr>
+  </tfoot>
+</table>
+
+<h2 id="munmap2">munmap():2</h2>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;sys/mman.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">munmap</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">addr</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">length</span><span class="p">);</span>
+</code></pre></div></div>
+<ul>
+  <li>기능: <strong>mmap()</strong>을 통해 매핑된 어드레스 해제, 맵 언맵</li>
+</ul>
+
+<table>
+  <tbody>
+    <tr>
+      <td><strong><em>return</em></strong></td>
+      <td><strong><em>value</em></strong></td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <td>성공</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>실패</td>
+      <td>-1</td>
+    </tr>
+  </tfoot>
+</table>
+
+<table>
+  <tbody>
+    <tr>
+      <td><strong><em>parameter</em></strong></td>
+      <td><strong><em>Description</em></strong></td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <td><em>addr</em></td>
+      <td>mapped address</td>
+    </tr>
+    <tr>
+      <td><em>length</em></td>
+      <td>해제할 length</td>
+    </tr>
+  </tfoot>
+</table>
+
+<h3 id="example-1-mmap_basicc">Example 1. mmap_basic.c</h3>
+<hr />
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+#include &lt;sys/mman.h&gt;
+#include &lt;sys/types.h&gt;
+#include &lt;sys/stat.h&gt;
+#include &lt;fcntl.h&gt;
+#include &lt;unistd.h&gt;
+</span>
+<span class="k">typedef</span> <span class="k">struct</span><span class="p">{</span>
+	<span class="kt">char</span> <span class="n">name</span><span class="p">[</span><span class="mi">16</span><span class="p">];</span>
+	<span class="kt">int</span> <span class="n">age</span><span class="p">;</span>
+<span class="p">}</span><span class="n">PERSON</span><span class="p">;</span>
+
+<span class="k">static</span> <span class="kt">int</span> <span class="nf">write_info</span><span class="p">(</span><span class="n">PERSON</span> <span class="o">*</span><span class="n">p</span><span class="p">){</span>
+	<span class="kt">int</span> <span class="n">fd</span><span class="p">;</span>
+	<span class="kt">ssize_t</span> <span class="n">ret</span><span class="p">;</span>
+
+	<span class="n">fd</span><span class="o">=</span><span class="n">open</span><span class="p">(</span><span class="s">"person_info"</span><span class="p">,</span> <span class="n">O_CREAT</span> <span class="o">|</span> <span class="n">O_WRONLY</span> <span class="o">|</span> <span class="n">O_APPEND</span><span class="p">,</span> <span class="mo">0644</span><span class="p">);</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">fd</span><span class="o">==-</span><span class="mi">1</span><span class="p">){</span>
+		<span class="n">perror</span><span class="p">(</span><span class="s">"open() fail</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+		<span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="n">ret</span><span class="o">=</span><span class="n">write</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">PERSON</span><span class="p">));</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">ret</span><span class="o">==-</span><span class="mi">1</span><span class="p">){</span>
+		<span class="n">perror</span><span class="p">(</span><span class="s">"write() fail</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+		<span class="n">close</span><span class="p">(</span><span class="n">fd</span><span class="p">);</span>
+		<span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+	<span class="p">}</span> <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">ret</span> <span class="o">!=</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">PERSON</span><span class="p">)){</span>
+		<span class="n">perror</span><span class="p">(</span><span class="s">"write() was written partially</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+		<span class="n">close</span><span class="p">(</span><span class="n">fd</span><span class="p">);</span>
+		<span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="n">close</span><span class="p">(</span><span class="n">fd</span><span class="p">);</span>
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+
+<span class="p">}</span>
+
+<span class="k">static</span> <span class="kt">int</span> <span class="nf">dump_info</span><span class="p">(</span><span class="kt">void</span><span class="p">){</span>
+	<span class="c1">// 1. Open file as FD</span>
+	<span class="kt">int</span> <span class="n">fd</span><span class="p">;</span>
+	<span class="k">struct</span> <span class="n">stat</span> <span class="n">sb</span><span class="p">;</span>
+	<span class="n">PERSON</span> <span class="o">*</span><span class="n">p</span><span class="p">;</span>
+	<span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+
+	<span class="n">fd</span><span class="o">=</span><span class="n">open</span><span class="p">(</span><span class="s">"person_info"</span><span class="p">,</span> <span class="n">O_RDONLY</span><span class="p">);</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">fd</span><span class="o">==-</span><span class="mi">1</span><span class="p">){</span>
+		<span class="n">perror</span><span class="p">(</span><span class="s">"open() fail</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+		<span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="c1">// 2. mmap을 통해 얼마나 매핑할 것 인지 알아야하는데, 이를 위해 파일의 크기를 얻는다.</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">fstat</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span><span class="o">&amp;</span><span class="n">sb</span><span class="p">)</span><span class="o">==-</span><span class="mi">1</span><span class="p">){</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">"stat() fail</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+		<span class="n">close</span><span class="p">(</span><span class="n">fd</span><span class="p">);</span>
+		<span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="cm">/* 
+	 * 3. struct stat의 st_size 멤버는 파일의 사이즈
+	 * 4. st_size만큼 length를 요구한다
+	 * 5. offset은 파일의 처음부터 읽어올 것 이기 때문에 0
+	 */</span>
+	<span class="n">p</span><span class="o">=</span><span class="n">mmap</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span> <span class="n">sb</span><span class="p">.</span><span class="n">st_size</span><span class="p">,</span> <span class="n">PROT_READ</span><span class="p">,</span> <span class="n">MAP_SHARED</span><span class="p">,</span> <span class="n">fd</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">p</span><span class="o">==</span><span class="n">MAP_FAILED</span><span class="p">){</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">"mmap() fail</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+		<span class="n">close</span><span class="p">(</span><span class="n">fd</span><span class="p">);</span>
+		<span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="c1">// Now P is starting point at the file</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">"file size: %ld</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="n">sb</span><span class="p">.</span><span class="n">st_size</span><span class="p">);</span>
+
+	<span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span> <span class="n">sb</span><span class="p">.</span><span class="n">st_size</span> <span class="o">/</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">PERSON</span><span class="p">);</span> <span class="n">i</span><span class="o">++</span><span class="p">){</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">"name: %s, age: %d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">name</span><span class="p">,</span> <span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">age</span><span class="p">);</span>
+	<span class="p">}</span>
+	<span class="n">close</span><span class="p">(</span><span class="n">fd</span><span class="p">);</span>
+
+	<span class="n">munmap</span><span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="n">sb</span><span class="p">.</span><span class="n">st_size</span><span class="p">);</span>
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[]){</span>
+	<span class="n">PERSON</span> <span class="n">persons</span><span class="p">[]</span><span class="o">=</span><span class="p">{</span>
+		<span class="p">{</span><span class="s">"kim"</span><span class="p">,</span> <span class="mi">40</span><span class="p">},</span>
+		<span class="p">{</span><span class="s">"mike"</span><span class="p">,</span> <span class="mi">23</span><span class="p">}</span>
+	<span class="p">};</span>
+
+	<span class="n">write_info</span><span class="p">(</span><span class="o">&amp;</span><span class="n">persons</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+	<span class="n">write_info</span><span class="p">(</span><span class="o">&amp;</span><span class="n">persons</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+	<span class="n">dump_info</span><span class="p">();</span>
+
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><img src="img2.png" width="50%" /></p>
+
+<ul>
+  <li>mmap의 <span style="color:red"><strong>length</strong></span>는 파일의 사이즈로 가져온다.</li>
+  <li>파일의 사이즈는 <a href="https://pllpokko2.github.io/system-programming/filesystemAPI_4/#stat2-fstat2-lstat2"><span style="color:steelblue"><strong>stat()</strong></span></a>으로 가져옴</li>
+</ul>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/#file" class="page__taxonomy-item" rel="tag">file</a>
+    
+    </span>
+  </p>
+
+
+        
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2021-01-10T00:00:00+09:00">January 10, 2021</time></p>
+
+
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">Share on</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=mmap%28%29%20https%3A%2F%2Fmarkyang920413.github.io%2F%2Ffile%2Fsystem_programming-file-mmap%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmarkyang920413.github.io%2F%2Ffile%2Fsystem_programming-file-mmap%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fmarkyang920413.github.io%2F%2Ffile%2Fsystem_programming-file-mmap%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/linux-compile/compile_4_package/" class="pagination--pager" title="컴파일 &lt;4&gt; RPM 패키지
+">Previous</a>
+    
+    
+      <a href="/ipc/system_programming-ipc-synchronization_using_file/" class="pagination--pager" title="파일을 이용한 동기화
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/linux-filesystem/linux-linux_filesystem-LVM/" rel="permalink">LVM
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/mac/m1_rosetta2/" rel="permalink">M1 Mac 로제타2 설치, 로제타 사용 brew 설치, M1용 jekyll설치
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/algorithm/algorithm-algorithm-time_complexity/" rel="permalink">Time complexity
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          less than 1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/algorithm/algorithm-algorithm-IO_STL/" rel="permalink">시험에서 입출력, STL
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          less than 1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2021 Dong-Hyeon Yang. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "https://markyang920413.github.io//file/system_programming-file-mmap/";  /* Replace PAGE_URL with your page's canonical URL variable */
+      this.page.identifier = "/file/system_programming-file-mmap"; /* Replace PAGE_IDENTIFIER with your page's unique identifier variable */
+    };
+    (function() { /* DON'T EDIT BELOW THIS LINE */
+      var d = document, s = d.createElement('script');
+      s.src = 'https://MarkYang920413.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+
+
+  </body>
+</html>

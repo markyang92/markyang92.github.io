@@ -1,0 +1,1127 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.21.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>리눅스 부팅, init 스크립트 다루기 명령 - initctl, 런레벨, runlevel - 혼자 보려고 만든 블로그</title>
+<meta name="description" content="initctl, runlevel">
+
+
+  <meta name="author" content="Dong-Heyon Yang">
+  
+  <meta property="article:author" content="Dong-Heyon Yang">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="혼자 보려고 만든 블로그">
+<meta property="og:title" content="리눅스 부팅, init 스크립트 다루기 명령 - initctl, 런레벨, runlevel">
+<meta property="og:url" content="https://markyang920413.github.io//linux-system/linux-linux_system-boot/">
+
+
+  <meta property="og:description" content="initctl, runlevel">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2021-03-07T00:00:00+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://markyang920413.github.io//linux-system/linux-linux_system-boot/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "Dong-Hyeon Yang",
+      "url": "https://markyang920413.github.io//"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="혼자 보려고 만든 블로그 Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          혼자 보려고 만든 블로그
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/categories/">Category</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/">About</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+  
+    
+      
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox" />
+  <label for="ac-toc">Toggle menu</label>
+  <ul class="nav__items">
+    
+      <li>
+        
+          <span class="nav__sub-title">LINUX</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#linux-system">LINUX System</a></li>
+          
+            <li><a href="/categories/#linux-tools">LINUX Tools</a></li>
+          
+            <li><a href="/categories/#linux-compile">LINUX Compile</a></li>
+          
+            <li><a href="/categories/#linux-filesystem">LINUX Filesystem</a></li>
+          
+            <li><a href="/categories/#http">HTTP</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">System Programming</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#file">File, Memory</a></li>
+          
+            <li><a href="/categories/#env">Env</a></li>
+          
+            <li><a href="/categories/#process">Process</a></li>
+          
+            <li><a href="/categories/#thread">Thread</a></li>
+          
+            <li><a href="/categories/#ipc">IPC</a></li>
+          
+            <li><a href="/categories/#signal">Signal</a></li>
+          
+            <li><a href="/categories/#socket-programming">Socket Programming</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">C</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#c">C</a></li>
+          
+            <li><a href="/categories/#system-programming">System Programming</a></li>
+          
+            <li><a href="/categories/#stdio">Standard I/O</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">Python</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#python-language">Python Language</a></li>
+          
+            <li><a href="/categories/#python-pandas">Python Pandas</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">Algorithm</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#algorithm">Algorithm</a></li>
+          
+            <li><a href="/categories/#problem">Problem</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">MAC</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#mac">Mac</a></li>
+          
+        </ul>
+        
+      </li>
+    
+  </ul>
+</nav>
+
+    
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="리눅스 부팅, init 스크립트 다루기 명령 - initctl, 런레벨, runlevel">
+    <meta itemprop="description" content="initctl, runlevel">
+    <meta itemprop="datePublished" content="2021-03-07T00:00:00+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">리눅스 부팅, init 스크립트 다루기 명령 - initctl, 런레벨, runlevel
+</h1>
+          
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          7 minute read
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              <ul class="toc__menu"><li><a href="#리눅스-시스템의-부팅">리눅스 시스템의 부팅</a></li><li><a href="#바이오스-단계">바이오스 단계</a></li><li><a href="#부트로더-단계">부트로더 단계</a></li><li><a href="#커널-초기화-단계">커널 초기화 단계</a></li><li><a href="#init-실행-단계">init 실행 단계</a></li><li><a href="#init-프로세스와-런레벨">init 프로세스와 런레벨</a><ul><li><a href="#upstart-init-process">upstart, init process</a></li><li><a href="#upstart-init-script-시작하고-정지하기">upstart, init script 시작하고 정지하기</a><ul><li><a href="#initctl---upstart-스크립트-제어">initctl - upstart 스크립트 제어</a></li><li><a href="#service---기존-init-스크립트-제어">service - 기존 init 스크립트 제어</a></li></ul></li><li><a href="#init-프로세스와-런레벨-1">init 프로세스와 런레벨</a><ul><li><a href="#런레벨-변경하기">런레벨 변경하기</a><ul><li><a href="#기본-런레벨-지정">기본 런레벨 지정</a></li><li><a href="#현재-런레벨-확인">현재 런레벨 확인</a></li></ul></li></ul></li></ul></li></ul>
+
+            </nav>
+          </aside>
+        
+        <h2 id="리눅스-시스템의-부팅">리눅스 시스템의 부팅</h2>
+<p><img src="img1.png" /></p>
+
+<h2 id="바이오스-단계">바이오스 단계</h2>
+<ul>
+  <li>BIOS가 동작한다.
+    <ul>
+      <li>ROM에 저장되어 있다.</li>
+      <li>PC의 기본적인 HW(키보드, 디스크 등)을 체크</li>
+      <li>부팅 장치 선택 -&gt; <strong>부트 디스크의 첫 섹터의</strong> <code class="language-plaintext highlighter-rouge">512Byte 로딩</code> -&gt; <strong>메모리</strong>
+        <ul>
+          <li>이 부트 디스크의 첫 섹터의 512Byte를 <code class="language-plaintext highlighter-rouge">마스터 부트 레코드</code><strong>(MBR)</strong>: 디스크의 어느 파티션에 2차 부팅 프로그램(<code class="language-plaintext highlighter-rouge">부트로더</code>)가 있는지 <strong>정보가 저장</strong></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>메모리에 로딩된 MBR
+    <ul>
+      <li>부트로더 정보가 저장되어 있음</li>
+      <li><strong>부트로더</strong>를 <strong>메모리</strong>에 <strong>로딩</strong></li>
+    </ul>
+  </li>
+</ul>
+
+<p><img src="img2.png" width="70%" /></p>
+
+<h2 id="부트로더-단계">부트로더 단계</h2>
+<ul>
+  <li>MBR이 부트로더를 메모리에 로딩하면, 부트로더는 <strong>여러 OS 중 부팅할 OS 선택</strong>하게 메뉴 제공.
+    <ul>
+      <li>리눅스 부트로더: <strong>GRUB, LILO</strong></li>
+    </ul>
+  </li>
+  <li>부트로더: <code class="language-plaintext highlighter-rouge">리눅스 커널</code>을 <code class="language-plaintext highlighter-rouge">메모리에 로딩</code>하는 역할
+    <ul>
+      <li><span style="color:steelblue"><strong>리눅스 커널</strong></span>은 <strong><em>/boot/vmlinuz</em></strong><span style="color:red"><strong><em>-버전명</em></strong></span> 형태로 제공된다.<br />
+  <img src="img4.png" /></li>
+    </ul>
+  </li>
+</ul>
+
+<p><br /><br /></p>
+<ul>
+  <li>우분투 부트로더: <code class="language-plaintext highlighter-rouge">GRUB</code></li>
+  <li>부팅 시 GRUB 메뉴를 출력하려면 <strong>/etc/default/grub</strong>파일을 수정해야 한다.</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>vi /etc/default/grub
+</code></pre></div></div>
+
+<p><img src="img3.png" width="60%" /></p>
+<ul>
+  <li><strong>GRUB_HIDDEN_TIMEOUT=0</strong> 을 주석 처리</li>
+  <li><strong>GRUB_TIMEOUT=10</strong>은 GRUB메뉴가 출력되는 시간이다.
+    <ul>
+      <li>이 시간이 지나고 나면 부팅 과정이 자동으로 진행된다.</li>
+    </ul>
+  </li>
+  <li>위 파일을 수정했다면
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>update-grub
+</code></pre></div>    </div>
+    <p>수행하여 적용한다.</p>
+  </li>
+</ul>
+
+<h2 id="커널-초기화-단계">커널 초기화 단계</h2>
+<ul>
+  <li>부트로더에 의해 로딩된 <code class="language-plaintext highlighter-rouge">커널</code>은 먼저 시스템에 연결된 메모리, 디스크, 키보드, 마우스 등의 <code class="language-plaintext highlighter-rouge">장치 검사</code></li>
+  <li>fork를 사용하지 않고 생성되는 <code class="language-plaintext highlighter-rouge">프로세스, 스레드 생성</code>
+    <ul>
+      <li>이들은 <strong>메모리 관리</strong>와 같은 커널의 여러 가지 동작을 수행한다.</li>
+      <li><code class="language-plaintext highlighter-rouge">[</code><strong>프로세스 명</strong><code class="language-plaintext highlighter-rouge">]</code> 으로 표기되어 있다.
+        <div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">$</span> <span class="n">ps</span> <span class="o">-</span><span class="n">ef</span> <span class="o">|</span> <span class="n">more</span>
+<span class="n">UID</span>          <span class="n">PID</span>    <span class="n">PPID</span>  <span class="n">C</span> <span class="n">STIME</span> <span class="n">TTY</span>          <span class="n">TIME</span> <span class="n">CMD</span>
+<span class="n">root</span>           <span class="mi">1</span>       <span class="mi">0</span>  <span class="mi">0</span> <span class="mi">15</span><span class="o">:</span><span class="mi">26</span> <span class="o">?</span>        <span class="mo">00</span><span class="o">:</span><span class="mo">00</span><span class="o">:</span><span class="mo">00</span> <span class="o">/</span><span class="n">sbin</span><span class="o">/</span><span class="n">init</span> <span class="n">splash</span>
+<span class="n">root</span>           <span class="mi">2</span>       <span class="mi">0</span>  <span class="mi">0</span> <span class="mi">15</span><span class="o">:</span><span class="mi">26</span> <span class="o">?</span>        <span class="mo">00</span><span class="o">:</span><span class="mo">00</span><span class="o">:</span><span class="mo">00</span> <span class="p">[</span><span class="n">kthreadd</span><span class="p">]</span>
+<span class="n">root</span>           <span class="mi">3</span>       <span class="mi">2</span>  <span class="mi">0</span> <span class="mi">15</span><span class="o">:</span><span class="mi">26</span> <span class="o">?</span>        <span class="mo">00</span><span class="o">:</span><span class="mo">00</span><span class="o">:</span><span class="mo">00</span> <span class="p">[</span><span class="n">rcu_gp</span><span class="p">]</span>
+<span class="n">root</span>           <span class="mi">4</span>       <span class="mi">2</span>  <span class="mi">0</span> <span class="mi">15</span><span class="o">:</span><span class="mi">26</span> <span class="o">?</span>        <span class="mo">00</span><span class="o">:</span><span class="mo">00</span><span class="o">:</span><span class="mo">00</span> <span class="p">[</span><span class="n">rcu_par_gp</span><span class="p">]</span>
+<span class="n">root</span>           <span class="mi">6</span>       <span class="mi">2</span>  <span class="mi">0</span> <span class="mi">15</span><span class="o">:</span><span class="mi">26</span> <span class="o">?</span>        <span class="mo">00</span><span class="o">:</span><span class="mo">00</span><span class="o">:</span><span class="mo">00</span> <span class="p">[</span><span class="n">kworker</span><span class="o">/</span><span class="mi">0</span><span class="o">:</span><span class="mi">0</span><span class="n">H</span><span class="o">-</span><span class="n">kblockd</span><span class="p">]</span>
+<span class="n">root</span>           <span class="mi">8</span>       <span class="mi">2</span>  <span class="mi">0</span> <span class="mi">15</span><span class="o">:</span><span class="mi">26</span> <span class="o">?</span>        <span class="mo">00</span><span class="o">:</span><span class="mo">00</span><span class="o">:</span><span class="mo">00</span> <span class="p">[</span><span class="n">mm_percpu_wq</span><span class="p">]</span>
+<span class="n">root</span>           <span class="mi">9</span>       <span class="mi">2</span>  <span class="mi">0</span> <span class="mi">15</span><span class="o">:</span><span class="mi">26</span> <span class="o">?</span>        <span class="mo">00</span><span class="o">:</span><span class="mo">00</span><span class="o">:</span><span class="mo">00</span> <span class="p">[</span><span class="n">ksoftirqd</span><span class="o">/</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">root</span>          <span class="mi">10</span>       <span class="mi">2</span>  <span class="mi">0</span> <span class="mi">15</span><span class="o">:</span><span class="mi">26</span> <span class="o">?</span>        <span class="mo">00</span><span class="o">:</span><span class="mo">00</span><span class="o">:</span><span class="mo">00</span> <span class="p">[</span><span class="n">rcu_sched</span><span class="p">]</span>
+<span class="n">root</span>          <span class="mi">11</span>       <span class="mi">2</span>  <span class="mi">0</span> <span class="mi">15</span><span class="o">:</span><span class="mi">26</span> <span class="o">?</span>        <span class="mo">00</span><span class="o">:</span><span class="mo">00</span><span class="o">:</span><span class="mo">00</span> <span class="p">[</span><span class="n">migration</span><span class="o">/</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">root</span>          <span class="mi">12</span>       <span class="mi">2</span>  <span class="mi">0</span> <span class="mi">15</span><span class="o">:</span><span class="mi">26</span> <span class="o">?</span>        <span class="mo">00</span><span class="o">:</span><span class="mo">00</span><span class="o">:</span><span class="mo">00</span> <span class="p">[</span><span class="n">idle_inject</span><span class="o">/</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">root</span>          <span class="mi">14</span>       <span class="mi">2</span>  <span class="mi">0</span> <span class="mi">15</span><span class="o">:</span><span class="mi">26</span> <span class="o">?</span>        <span class="mo">00</span><span class="o">:</span><span class="mo">00</span><span class="o">:</span><span class="mo">00</span> <span class="p">[</span><span class="n">cpuhp</span><span class="o">/</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">root</span>          <span class="mi">15</span>       <span class="mi">2</span>  <span class="mi">0</span> <span class="mi">15</span><span class="o">:</span><span class="mi">26</span> <span class="o">?</span>        <span class="mo">00</span><span class="o">:</span><span class="mo">00</span><span class="o">:</span><span class="mo">00</span> <span class="p">[</span><span class="n">cpuhp</span><span class="o">/</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">root</span>          <span class="mi">16</span>       <span class="mi">2</span>  <span class="mi">0</span> <span class="mi">15</span><span class="o">:</span><span class="mi">26</span> <span class="o">?</span>        <span class="mo">00</span><span class="o">:</span><span class="mo">00</span><span class="o">:</span><span class="mo">00</span> <span class="p">[</span><span class="n">idle_inject</span><span class="o">/</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">root</span>          <span class="mi">17</span>       <span class="mi">2</span>  <span class="mi">0</span> <span class="mi">15</span><span class="o">:</span><span class="mi">26</span> <span class="o">?</span>        <span class="mo">00</span><span class="o">:</span><span class="mo">00</span><span class="o">:</span><span class="mo">00</span> <span class="p">[</span><span class="n">migration</span><span class="o">/</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">root</span>          <span class="mi">18</span>       <span class="mi">2</span>  <span class="mi">0</span> <span class="mi">15</span><span class="o">:</span><span class="mi">26</span> <span class="o">?</span>        <span class="mo">00</span><span class="o">:</span><span class="mo">00</span><span class="o">:</span><span class="mo">00</span> <span class="p">[</span><span class="n">ksoftirqd</span><span class="o">/</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">root</span>          <span class="mi">20</span>       <span class="mi">2</span>  <span class="mi">0</span> <span class="mi">15</span><span class="o">:</span><span class="mi">26</span> <span class="o">?</span>        <span class="mo">00</span><span class="o">:</span><span class="mo">00</span><span class="o">:</span><span class="mo">00</span> <span class="p">[</span><span class="n">kworker</span><span class="o">/</span><span class="mi">1</span><span class="o">:</span><span class="mi">0</span><span class="n">H</span><span class="o">-</span><span class="n">kblockd</span><span class="p">]</span>
+<span class="n">root</span>          <span class="mi">21</span>       <span class="mi">2</span>  <span class="mi">0</span> <span class="mi">15</span><span class="o">:</span><span class="mi">26</span> <span class="o">?</span>        <span class="mo">00</span><span class="o">:</span><span class="mo">00</span><span class="o">:</span><span class="mo">00</span> <span class="p">[</span><span class="n">kdevtmpfs</span><span class="p">]</span>
+<span class="n">root</span>          <span class="mi">22</span>       <span class="mi">2</span>  <span class="mi">0</span> <span class="mi">15</span><span class="o">:</span><span class="mi">26</span> <span class="o">?</span>        <span class="mo">00</span><span class="o">:</span><span class="mo">00</span><span class="o">:</span><span class="mo">00</span> <span class="p">[</span><span class="n">netns</span><span class="p">]</span>
+<span class="n">root</span>          <span class="mi">23</span>       <span class="mi">2</span>  <span class="mi">0</span> <span class="mi">15</span><span class="o">:</span><span class="mi">26</span> <span class="o">?</span>        <span class="mo">00</span><span class="o">:</span><span class="mo">00</span><span class="o">:</span><span class="mo">00</span> <span class="p">[</span><span class="n">rcu_tasks_kthre</span><span class="p">]</span>
+<span class="n">root</span>          <span class="mi">24</span>       <span class="mi">2</span>  <span class="mi">0</span> <span class="mi">15</span><span class="o">:</span><span class="mi">26</span> <span class="o">?</span>        <span class="mo">00</span><span class="o">:</span><span class="mo">00</span><span class="o">:</span><span class="mo">00</span> <span class="p">[</span><span class="n">rcu_tasks_rude_</span><span class="p">]</span>
+<span class="n">root</span>          <span class="mi">25</span>       <span class="mi">2</span>  <span class="mi">0</span> <span class="mi">15</span><span class="o">:</span><span class="mi">26</span> <span class="o">?</span>        <span class="mo">00</span><span class="o">:</span><span class="mo">00</span><span class="o">:</span><span class="mo">00</span> <span class="p">[</span><span class="n">rcu_tasks_trace</span><span class="p">]</span>
+<span class="n">root</span>          <span class="mi">27</span>       <span class="mi">2</span>  <span class="mi">0</span> <span class="mi">15</span><span class="o">:</span><span class="mi">26</span> <span class="o">?</span>        <span class="mo">00</span><span class="o">:</span><span class="mo">00</span><span class="o">:</span><span class="mo">00</span> <span class="p">[</span><span class="n">kauditd</span><span class="p">]</span>
+<span class="n">root</span>          <span class="mi">28</span>       <span class="mi">2</span>  <span class="mi">0</span> <span class="mi">15</span><span class="o">:</span><span class="mi">26</span> <span class="o">?</span>        <span class="mo">00</span><span class="o">:</span><span class="mo">00</span><span class="o">:</span><span class="mo">00</span> <span class="p">[</span><span class="n">khungtaskd</span><span class="p">]</span>
+<span class="n">root</span>          <span class="mi">29</span>       <span class="mi">2</span>  <span class="mi">0</span> <span class="mi">15</span><span class="o">:</span><span class="mi">26</span> <span class="o">?</span>        <span class="mo">00</span><span class="o">:</span><span class="mo">00</span><span class="o">:</span><span class="mo">00</span> <span class="p">[</span><span class="n">oom_reaper</span><span class="p">]</span>
+<span class="n">root</span>          <span class="mi">30</span>       <span class="mi">2</span>  <span class="mi">0</span> <span class="mi">15</span><span class="o">:</span><span class="mi">26</span> <span class="o">?</span>        <span class="mo">00</span><span class="o">:</span><span class="mo">00</span><span class="o">:</span><span class="mo">00</span> <span class="p">[</span><span class="n">writeback</span><span class="p">]</span>
+<span class="n">root</span>          <span class="mi">31</span>       <span class="mi">2</span>  <span class="mi">0</span> <span class="mi">15</span><span class="o">:</span><span class="mi">26</span> <span class="o">?</span>        <span class="mo">00</span><span class="o">:</span><span class="mo">00</span><span class="o">:</span><span class="mo">00</span> <span class="p">[</span><span class="n">kcompactd0</span><span class="p">]</span>
+<span class="n">root</span>          <span class="mi">32</span>       <span class="mi">2</span>  <span class="mi">0</span> <span class="mi">15</span><span class="o">:</span><span class="mi">26</span> <span class="o">?</span>        <span class="mo">00</span><span class="o">:</span><span class="mo">00</span><span class="o">:</span><span class="mo">00</span> <span class="p">[</span><span class="n">ksmd</span><span class="p">]</span>
+<span class="n">root</span>          <span class="mi">33</span>       <span class="mi">2</span>  <span class="mi">0</span> <span class="mi">15</span><span class="o">:</span><span class="mi">26</span> <span class="o">?</span>        <span class="mo">00</span><span class="o">:</span><span class="mo">00</span><span class="o">:</span><span class="mo">00</span> <span class="p">[</span><span class="n">khugepaged</span><span class="p">]</span>
+<span class="n">root</span>          <span class="mi">79</span>       <span class="mi">2</span>  <span class="mi">0</span> <span class="mi">15</span><span class="o">:</span><span class="mi">26</span> <span class="o">?</span>        <span class="mo">00</span><span class="o">:</span><span class="mo">00</span><span class="o">:</span><span class="mo">00</span> <span class="p">[</span><span class="n">kintegrityd</span><span class="p">]</span>
+<span class="n">root</span>          <span class="mi">80</span>       <span class="mi">2</span>  <span class="mi">0</span> <span class="mi">15</span><span class="o">:</span><span class="mi">26</span> <span class="o">?</span>        <span class="mo">00</span><span class="o">:</span><span class="mo">00</span><span class="o">:</span><span class="mo">00</span> <span class="p">[</span><span class="n">kblockd</span><span class="p">]</span>
+<span class="n">root</span>          <span class="mi">81</span>       <span class="mi">2</span>  <span class="mi">0</span> <span class="mi">15</span><span class="o">:</span><span class="mi">26</span> <span class="o">?</span>        <span class="mo">00</span><span class="o">:</span><span class="mo">00</span><span class="o">:</span><span class="mo">00</span> <span class="p">[</span><span class="n">blkcg_punt_bio</span><span class="p">]</span>
+<span class="n">root</span>          <span class="mi">82</span>       <span class="mi">2</span>  <span class="mi">0</span> <span class="mi">15</span><span class="o">:</span><span class="mi">26</span> <span class="o">?</span>        <span class="mo">00</span><span class="o">:</span><span class="mo">00</span><span class="o">:</span><span class="mo">00</span> <span class="p">[</span><span class="n">tpm_dev_wq</span><span class="p">]</span>
+<span class="n">root</span>          <span class="mi">83</span>       <span class="mi">2</span>  <span class="mi">0</span> <span class="mi">15</span><span class="o">:</span><span class="mi">26</span> <span class="o">?</span>        <span class="mo">00</span><span class="o">:</span><span class="mo">00</span><span class="o">:</span><span class="mo">00</span> <span class="p">[</span><span class="n">ata_sff</span><span class="p">]</span>
+<span class="o">---</span><span class="n">more</span><span class="o">---</span>
+</code></pre></div>        </div>
+      </li>
+      <li><strong>커널 프로세스</strong>가 생성되면 커널이 수행할 작업이 끝난다. 이제 <strong>init</strong>단계를 동작한다.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="init-실행-단계">init 실행 단계</h2>
+<ul>
+  <li>다양한 서비스를 동작한다.</li>
+  <li>부팅 메시지를 출력하려면<br /><strong>/etc/default/grub</strong>파일에서<br /> <strong>GRUB_CMDLINE_LINUX_DEFAULT=”quiet splash”</strong>를 찾아 <strong>quiet</strong>를 삭제하고<br /> sudo update-grub를 실행하면 된다.</li>
+  <li>부팅 메시지는 부팅 후, dmesg 명령이나 more /var/lob/boot.log 명령으로 확인할 수 있다.
+    <div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">$</span> <span class="n">dmesg</span> <span class="o">|</span> <span class="n">more</span>
+<span class="p">[</span>    <span class="mi">0</span><span class="p">.</span><span class="mo">000000</span><span class="p">]</span> <span class="n">Booting</span> <span class="n">Linux</span> <span class="n">on</span> <span class="n">physical</span> <span class="n">CPU</span> <span class="mh">0x0000000000</span> <span class="p">[</span><span class="mh">0x410f0000</span><span class="p">]</span>
+<span class="p">[</span>    <span class="mi">0</span><span class="p">.</span><span class="mo">000000</span><span class="p">]</span> <span class="n">Linux</span> <span class="n">version</span> <span class="mi">5</span><span class="p">.</span><span class="mi">8</span><span class="p">.</span><span class="mi">0</span><span class="o">-</span><span class="mi">45</span><span class="o">-</span><span class="n">generic</span> <span class="p">(</span><span class="n">buildd</span><span class="err">@</span><span class="n">bos02</span><span class="o">-</span><span class="n">arm64</span><span class="o">-</span><span class="mo">071</span><span class="p">)</span> <span class="p">(</span><span class="n">gcc</span> <span class="p">(</span><span class="n">Ubuntu</span> <span class="mi">9</span><span class="p">.</span><span class="mi">3</span><span class="p">.</span><span class="mi">0</span><span class="o">-</span><span class="mi">17u</span><span class="n">buntu1</span><span class="o">~</span><span class="mi">20</span><span class="p">.</span><span class="mo">04</span><span class="p">)</span> <span class="mi">9</span><span class="p">.</span><span class="mi">3</span><span class="p">.</span><span class="mi">0</span><span class="p">,</span> <span class="n">GNU</span> <span class="n">ld</span> <span class="p">(</span><span class="n">GNU</span> <span class="n">Binutils</span> <span class="k">for</span> <span class="n">Ubuntu</span><span class="p">)</span> <span class="mi">2</span><span class="p">.</span><span class="mi">34</span><span class="p">)</span> <span class="err">#</span><span class="mi">51</span><span class="o">~</span><span class="mi">20</span><span class="p">.</span><span class="mo">04</span><span class="p">.</span><span class="mi">1</span><span class="o">-</span><span class="n">Ubuntu</span> <span class="n">SMP</span> <span class="n">Tue</span> <span class="n">Feb</span> <span class="mi">23</span> <span class="mi">13</span><span class="o">:</span><span class="mi">48</span><span class="o">:</span><span class="mi">59</span> <span class="n">UTC</span> <span class="mi">20</span>
+<span class="mi">21</span> <span class="p">(</span><span class="n">Ubuntu</span> <span class="mi">5</span><span class="p">.</span><span class="mi">8</span><span class="p">.</span><span class="mi">0</span><span class="o">-</span><span class="mi">45</span><span class="p">.</span><span class="mi">51</span><span class="o">~</span><span class="mi">20</span><span class="p">.</span><span class="mo">04</span><span class="p">.</span><span class="mi">1</span><span class="o">-</span><span class="n">generic</span> <span class="mi">5</span><span class="p">.</span><span class="mi">8</span><span class="p">.</span><span class="mi">18</span><span class="p">)</span>
+<span class="p">[</span>    <span class="mi">0</span><span class="p">.</span><span class="mo">000000</span><span class="p">]</span> <span class="n">Machine</span> <span class="n">model</span><span class="o">:</span> <span class="n">Parallels</span> <span class="n">ARM</span> <span class="n">Virtual</span> <span class="n">Machine</span>
+<span class="p">[</span>    <span class="mi">0</span><span class="p">.</span><span class="mo">000000</span><span class="p">]</span> <span class="n">efi</span><span class="o">:</span> <span class="n">EFI</span> <span class="n">v2</span><span class="p">.</span><span class="mi">70</span> <span class="n">by</span> <span class="n">EDK</span> <span class="n">II</span>
+<span class="p">[</span>    <span class="mi">0</span><span class="p">.</span><span class="mo">000000</span><span class="p">]</span> <span class="n">efi</span><span class="o">:</span> <span class="n">ACPI</span> <span class="mi">2</span><span class="p">.</span><span class="mi">0</span><span class="o">=</span><span class="mh">0xfc1a0000</span> <span class="n">SMBIOS</span> <span class="mi">3</span><span class="p">.</span><span class="mi">0</span><span class="o">=</span><span class="mh">0xff870000</span> <span class="n">MEMATTR</span><span class="o">=</span><span class="mh">0xfe45da98</span> <span class="n">MEMRESERVE</span><span class="o">=</span><span class="mh">0xfc089d98</span>
+<span class="p">[</span>    <span class="mi">0</span><span class="p">.</span><span class="mo">000000</span><span class="p">]</span> <span class="n">secureboot</span><span class="o">:</span> <span class="n">Secure</span> <span class="n">boot</span> <span class="n">disabled</span>
+<span class="p">[</span>    <span class="mi">0</span><span class="p">.</span><span class="mo">000000</span><span class="p">]</span> <span class="n">cma</span><span class="o">:</span> <span class="n">Reserved</span> <span class="mi">32</span> <span class="n">MiB</span> <span class="n">at</span> <span class="mh">0x00000000fa000000</span>
+<span class="p">[</span>    <span class="mi">0</span><span class="p">.</span><span class="mo">000000</span><span class="p">]</span> <span class="n">NUMA</span><span class="o">:</span> <span class="n">No</span> <span class="n">NUMA</span> <span class="n">configuration</span> <span class="n">found</span>
+<span class="p">[</span>    <span class="mi">0</span><span class="p">.</span><span class="mo">000000</span><span class="p">]</span> <span class="n">NUMA</span><span class="o">:</span> <span class="n">Faking</span> <span class="n">a</span> <span class="n">node</span> <span class="n">at</span> <span class="p">[</span><span class="n">mem</span> <span class="mh">0x0000000080000000</span><span class="o">-</span><span class="mh">0x00000000fffeffff</span><span class="p">]</span>
+<span class="p">[</span>    <span class="mi">0</span><span class="p">.</span><span class="mo">000000</span><span class="p">]</span> <span class="n">NUMA</span><span class="o">:</span> <span class="n">NODE_DATA</span> <span class="p">[</span><span class="n">mem</span> <span class="mh">0xffbe70c0</span><span class="o">-</span><span class="mh">0xffbebfff</span><span class="p">]</span>
+<span class="p">[</span>    <span class="mi">0</span><span class="p">.</span><span class="mo">000000</span><span class="p">]</span> <span class="n">Zone</span> <span class="n">ranges</span><span class="o">:</span>
+<span class="p">[</span>    <span class="mi">0</span><span class="p">.</span><span class="mo">000000</span><span class="p">]</span>   <span class="n">DMA</span>      <span class="p">[</span><span class="n">mem</span> <span class="mh">0x0000000080000000</span><span class="o">-</span><span class="mh">0x00000000bfffffff</span><span class="p">]</span>
+<span class="p">[</span>    <span class="mi">0</span><span class="p">.</span><span class="mo">000000</span><span class="p">]</span>   <span class="n">DMA32</span>    <span class="p">[</span><span class="n">mem</span> <span class="mh">0x00000000c0000000</span><span class="o">-</span><span class="mh">0x00000000fffeffff</span><span class="p">]</span>
+<span class="p">[</span>    <span class="mi">0</span><span class="p">.</span><span class="mo">000000</span><span class="p">]</span>   <span class="n">Normal</span>   <span class="n">empty</span>
+<span class="p">[</span>    <span class="mi">0</span><span class="p">.</span><span class="mo">000000</span><span class="p">]</span>   <span class="n">Device</span>   <span class="n">empty</span>
+<span class="p">[</span>    <span class="mi">0</span><span class="p">.</span><span class="mo">000000</span><span class="p">]</span> <span class="n">Movable</span> <span class="n">zone</span> <span class="n">start</span> <span class="k">for</span> <span class="n">each</span> <span class="n">node</span>
+<span class="p">[</span>    <span class="mi">0</span><span class="p">.</span><span class="mo">000000</span><span class="p">]</span> <span class="n">Early</span> <span class="n">memory</span> <span class="n">node</span> <span class="n">ranges</span>
+<span class="p">[</span>    <span class="mi">0</span><span class="p">.</span><span class="mo">000000</span><span class="p">]</span>   <span class="n">node</span>   <span class="mi">0</span><span class="o">:</span> <span class="p">[</span><span class="n">mem</span> <span class="mh">0x0000000080000000</span><span class="o">-</span><span class="mh">0x00000000fc08ffff</span><span class="p">]</span>
+<span class="p">[</span>    <span class="mi">0</span><span class="p">.</span><span class="mo">000000</span><span class="p">]</span>   <span class="n">node</span>   <span class="mi">0</span><span class="o">:</span> <span class="p">[</span><span class="n">mem</span> <span class="mh">0x00000000fc090000</span><span class="o">-</span><span class="mh">0x00000000fc14ffff</span><span class="p">]</span>
+<span class="p">[</span>    <span class="mi">0</span><span class="p">.</span><span class="mo">000000</span><span class="p">]</span>   <span class="n">node</span>   <span class="mi">0</span><span class="o">:</span> <span class="p">[</span><span class="n">mem</span> <span class="mh">0x00000000fc150000</span><span class="o">-</span><span class="mh">0x00000000ff67ffff</span><span class="p">]</span>
+<span class="p">[</span>    <span class="mi">0</span><span class="p">.</span><span class="mo">000000</span><span class="p">]</span>   <span class="n">node</span>   <span class="mi">0</span><span class="o">:</span> <span class="p">[</span><span class="n">mem</span> <span class="mh">0x00000000ff680000</span><span class="o">-</span><span class="mh">0x00000000ffa5ffff</span><span class="p">]</span>
+<span class="p">[</span>    <span class="mi">0</span><span class="p">.</span><span class="mo">000000</span><span class="p">]</span>   <span class="n">node</span>   <span class="mi">0</span><span class="o">:</span> <span class="p">[</span><span class="n">mem</span> <span class="mh">0x00000000ffa60000</span><span class="o">-</span><span class="mh">0x00000000fffeffff</span><span class="p">]</span>
+<span class="p">[</span>    <span class="mi">0</span><span class="p">.</span><span class="mo">000000</span><span class="p">]</span> <span class="n">Zeroed</span> <span class="k">struct</span> <span class="n">page</span> <span class="n">in</span> <span class="n">unavailable</span> <span class="n">ranges</span><span class="o">:</span> <span class="mi">592</span> <span class="n">pages</span>
+<span class="p">[</span>    <span class="mi">0</span><span class="p">.</span><span class="mo">000000</span><span class="p">]</span> <span class="n">Initmem</span> <span class="n">setup</span> <span class="n">node</span> <span class="mi">0</span> <span class="p">[</span><span class="n">mem</span> <span class="mh">0x0000000080000000</span><span class="o">-</span><span class="mh">0x00000000fffeffff</span><span class="p">]</span>
+<span class="p">[</span>    <span class="mi">0</span><span class="p">.</span><span class="mo">000000</span><span class="p">]</span> <span class="n">On</span> <span class="n">node</span> <span class="mi">0</span> <span class="n">totalpages</span><span class="o">:</span> <span class="mi">524272</span>
+<span class="p">[</span>    <span class="mi">0</span><span class="p">.</span><span class="mo">000000</span><span class="p">]</span>   <span class="n">DMA</span> <span class="n">zone</span><span class="o">:</span> <span class="mi">4096</span> <span class="n">pages</span> <span class="n">used</span> <span class="k">for</span> <span class="n">memmap</span>
+<span class="p">[</span>    <span class="mi">0</span><span class="p">.</span><span class="mo">000000</span><span class="p">]</span>   <span class="n">DMA</span> <span class="n">zone</span><span class="o">:</span> <span class="mi">0</span> <span class="n">pages</span> <span class="n">reserved</span>
+<span class="p">[</span>    <span class="mi">0</span><span class="p">.</span><span class="mo">000000</span><span class="p">]</span>   <span class="n">DMA</span> <span class="n">zone</span><span class="o">:</span> <span class="mi">262144</span> <span class="n">pages</span><span class="p">,</span> <span class="n">LIFO</span> <span class="n">batch</span><span class="o">:</span><span class="mi">63</span>
+<span class="p">[</span>    <span class="mi">0</span><span class="p">.</span><span class="mo">000000</span><span class="p">]</span>   <span class="n">DMA32</span> <span class="n">zone</span><span class="o">:</span> <span class="mi">4096</span> <span class="n">pages</span> <span class="n">used</span> <span class="k">for</span> <span class="n">memmap</span>
+<span class="p">[</span>    <span class="mi">0</span><span class="p">.</span><span class="mo">000000</span><span class="p">]</span>   <span class="n">DMA32</span> <span class="n">zone</span><span class="o">:</span> <span class="mi">262128</span> <span class="n">pages</span><span class="p">,</span> <span class="n">LIFO</span> <span class="n">batch</span><span class="o">:</span><span class="mi">63</span>
+<span class="p">[</span>    <span class="mi">0</span><span class="p">.</span><span class="mo">000000</span><span class="p">]</span> <span class="n">psci</span><span class="o">:</span> <span class="n">probing</span> <span class="k">for</span> <span class="n">conduit</span> <span class="n">method</span> <span class="n">from</span> <span class="n">DT</span><span class="p">.</span>
+<span class="p">[</span>    <span class="mi">0</span><span class="p">.</span><span class="mo">000000</span><span class="p">]</span> <span class="n">psci</span><span class="o">:</span> <span class="n">PSCIv1</span><span class="p">.</span><span class="mi">0</span> <span class="n">detected</span> <span class="n">in</span> <span class="n">firmware</span><span class="p">.</span>
+<span class="p">[</span>    <span class="mi">0</span><span class="p">.</span><span class="mo">000000</span><span class="p">]</span> <span class="n">psci</span><span class="o">:</span> <span class="n">Using</span> <span class="n">standard</span> <span class="n">PSCI</span> <span class="n">v0</span><span class="p">.</span><span class="mi">2</span> <span class="n">function</span> <span class="n">IDs</span>
+<span class="p">(</span><span class="err">생략</span><span class="p">)</span>
+</code></pre></div>    </div>
+    <p><br /></p>
+  </li>
+  <li>UNIX에서는 init 프로세스가 서비스를 실행시켰다.
+    <ul>
+      <li>따라서 init 프로세스는 PID 1번이다.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="init-프로세스와-런레벨">init 프로세스와 런레벨</h2>
+<h3 id="upstart-init-process">upstart, init process</h3>
+<hr />
+<ul>
+  <li><strong>init</strong>프로세스는 PID가 1번인 <strong>모든 프로세스의 조상</strong>
+    <ul>
+      <li>부팅과정에서 <strong>커널에 의해 실행</strong>, 각종 서비스를 제공하는 다른 프로세스를 동작시키는 역할
+<br /><br /></li>
+    </ul>
+  </li>
+  <li><strong><em>init process</em></strong>
+    <ul>
+      <li>기존 UNIX에서 init 프로세스는 스크립트를 순차적으로 실행하여 다른 프로세스들을 동작시켰다.</li>
+      <li>최근 Ubuntu Linux에서는 이벤트 기반으로 동작하는 방식으로 init 프로세스를 대체하고 있다.
+        <ul>
+          <li>Ubuntu는 자체적으로 개발한 <code class="language-plaintext highlighter-rouge">upstart</code>를 init 대신 사용한다. 다만 기존 UNIX 호환을 위해 init을 유지하고 있다.</li>
+          <li>init의 동작 방식이 바뀜에 따라 전통적으로 init 프로세스와 관련된 설정 파일인 /etc/inittab 파일은 우분투에서 사라졌다.
+<br /><br /></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><strong><em>init process and scriptfile</em></strong>
+    <ul>
+      <li>기존 init과 새로운 upstart는 모두 <code class="language-plaintext highlighter-rouge">프로세스를 실행, 종료</code>하기 위해 <code class="language-plaintext highlighter-rouge">스크립트 파일</code>을 사용한다.
+        <ul>
+          <li>설치하는 서비스에 따라 upstart용 스크립트가 설치, init용 스크립트가 설치되기도 한다.</li>
+        </ul>
+      </li>
+      <li>만약 /etc/init 디렉터리와 /etc/init.d 디렉터리에 같은 서비스에 대한 파일이 있다면 /etc/init 디렉터리 스크립트 파일이 우선적으로 적용된다.</li>
+    </ul>
+  </li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">ls</span> /etc/init
+whoopsie.conf
+<span class="nv">$ </span><span class="nb">ls</span> /etc/init.d
+alsa-utils  avahi-daemon      cups          grub-common  keyboard-setup.sh  openvpn       procps                       samba-ad-dc        spice-vdagent  unattended-upgrades
+anacron     bluetooth         cups-browsed  hwclock.sh   kmod               plymouth      pulseaudio-enable-autospawn  saned              ssh            uuidd
+apparmor    console-setup.sh  dbus          irqbalance   network-manager    plymouth-log  rsync                        smbd               udev           whoopsie
+apport      cron              gdm3          kerneloops   nmbd               pppd-dns      rsyslog                      speech-dispatcher  ufw            x11-common
+</code></pre></div></div>
+<ul>
+  <li><span style="color:navy"><strong>upstart</strong></span>가 사용하는 작업 파일은 <strong><em>/etc/init</em></strong> 디렉터리에 <span style="color:red"><strong>작업명.conf</strong></span> 형태로 구성되어 있다.</li>
+  <li><span style="color:magenta"><strong>init</strong></span>가 사용하는 작업 파일은 <strong><em>/etc/init.d</em></strong> 디렉터리에 있다.</li>
+  <li>만약 <strong><em>init, init.d</em></strong> <u>모두에 같은 서비스와 관련된 스크립트</u>들이 있다면 <strong><em>/etc/init.d</em></strong> 디렉터리에 있는 스크립트 중 일부는 /lib/init/upstart-job에 대한 <span style="color:steelblue"><strong>심벌릭 링크</strong></span>이다.
+    <ul>
+      <li><strong>upstart-job</strong>: 해당 서비스의 upstart 스크립트를 찾아서 실행시킨다.
+        <div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="err">$</span> <span class="n">ls</span> <span class="o">-</span><span class="n">l</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">init</span><span class="p">.</span><span class="n">d</span> <span class="o">|</span> <span class="n">grep</span> <span class="n">upstart</span>
+</code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="upstart-init-script-시작하고-정지하기">upstart, init script 시작하고 정지하기</h3>
+<hr />
+<ul>
+  <li><span style="color:navy"><strong>upstart</strong></span>와 <span style="color:magenta"><strong>init</strong></span>를 <strong>시작</strong>하고 <strong>정지</strong>하는 방법은 약간 다르다.</li>
+</ul>
+
+<h4 id="initctl---upstart-스크립트-제어">initctl - upstart 스크립트 제어</h4>
+<ul>
+  <li><span style="color:navy"><strong>upstart</strong></span> 스크립트 시작하고 정지하기
+    <ul>
+      <li>upstart에서는 <u>서비스를 제공하는 프로세스</u>를 <strong><u>작업</u></strong>이라고 부르며 다음과 같은 두 가지 방법으로 작업을 시작하거나 정지한다.
+        <div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="err">$</span> <span class="n">initctl</span> <span class="p">[</span><span class="n">start</span> <span class="o">|</span> <span class="n">stop</span> <span class="o">|</span> <span class="n">restart</span> <span class="o">|</span> <span class="n">reload</span> <span class="o">|</span> <span class="n">status</span><span class="p">]</span> <span class="err">작업명</span>
+  <span class="err">$</span> <span class="p">[</span><span class="n">start</span> <span class="o">|</span> <span class="n">stop</span> <span class="o">|</span> <span class="n">restart</span> <span class="o">|</span> <span class="n">reload</span> <span class="o">|</span> <span class="n">status</span><span class="p">]</span> <span class="err">작업명</span>
+</code></pre></div>        </div>
+      </li>
+      <li>위 두 명령어 모두 <code class="language-plaintext highlighter-rouge">initctl</code> 명령을 사용하는 것이다.
+        <div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="err">$</span> <span class="n">ls</span> <span class="o">-</span><span class="n">l</span> <span class="o">/</span><span class="n">sbin</span> <span class="o">|</span> <span class="n">grep</span> <span class="n">initctl</span>
+  <span class="o">-</span><span class="n">rwxr</span><span class="o">-</span><span class="n">xr</span><span class="o">-</span><span class="n">x</span>	<span class="mi">1</span>	<span class="n">root</span>	<span class="n">root</span>	<span class="mi">179012</span>	<span class="mi">10</span><span class="err">월</span> <span class="mi">10</span> <span class="mo">00</span><span class="o">:</span><span class="mo">05</span>	<span class="n">initctl</span>
+  <span class="n">lrwxrwxrwx</span>	<span class="mi">1</span>	<span class="n">root</span>	<span class="n">root</span>	<span class="mi">7</span>	<span class="mi">2</span><span class="err">월</span> <span class="mi">20</span> <span class="mi">21</span><span class="o">:</span><span class="mi">12</span>	<span class="n">reload</span> <span class="o">-&gt;</span> <span class="n">initctl</span>
+  <span class="n">lrwxrwxrwx</span>	<span class="mi">1</span>	<span class="n">root</span>	<span class="n">root</span>	<span class="mi">7</span>	<span class="mi">2</span><span class="err">월</span> <span class="mi">20</span> <span class="mi">21</span><span class="o">:</span><span class="mi">12</span>	<span class="n">restart</span> <span class="o">-&gt;</span> <span class="n">initctl</span>
+  <span class="n">lrwxrwxrwx</span>	<span class="mi">1</span>	<span class="n">root</span>	<span class="n">root</span>	<span class="mi">7</span>	<span class="mi">2</span><span class="err">월</span> <span class="mi">20</span> <span class="mi">21</span><span class="o">:</span><span class="mi">12</span>	<span class="n">start</span> <span class="o">-&gt;</span> <span class="n">initctl</span>
+  <span class="n">lrwxrwxrwx</span>	<span class="mi">1</span>	<span class="n">root</span>	<span class="n">root</span>	<span class="mi">7</span>	<span class="mi">2</span><span class="err">월</span> <span class="mi">20</span> <span class="mi">21</span><span class="o">:</span><span class="mi">12</span>	<span class="n">status</span> <span class="o">-&gt;</span> <span class="n">initctl</span>
+  <span class="n">lrwxrwxrwx</span>	<span class="mi">1</span>	<span class="n">root</span>	<span class="n">root</span>	<span class="mi">7</span>	<span class="mi">2</span><span class="err">월</span> <span class="mi">20</span> <span class="mi">21</span><span class="o">:</span><span class="mi">12</span>	<span class="n">stop</span> <span class="o">-&gt;</span> <span class="n">initctl</span>
+  <span class="err">$</span>
+</code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">initctl</code>은 <span style="color:navy"><strong>upstart</strong></span> 스크립트를 <strong>실행하기 위한 명령</strong>!
+    <ul>
+      <li>서브 명령에 따라 서비스를 시작/ 정지</li>
+    </ul>
+  </li>
+</ul>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">$</span> <span class="n">initctl</span> <span class="p">[</span><span class="err">서브</span> <span class="err">명령</span><span class="p">]</span> <span class="err">작업명</span>
+
+<span class="err">서브</span> <span class="err">명령</span><span class="o">:</span>
+	<span class="n">start</span>		<span class="err">작업을</span> <span class="err">시작한다</span><span class="p">.</span>
+	<span class="n">stop</span>		<span class="err">작업을</span> <span class="err">정지한다</span><span class="p">.</span>
+	<span class="n">reload</span>		<span class="err">작업에</span> <span class="n">SIGHUP</span> <span class="err">시그널을</span> <span class="err">보낸다</span><span class="p">.</span>
+	<span class="n">restart</span>		<span class="err">작업을</span> <span class="err">다시</span> <span class="err">시작한다</span><span class="p">.</span>
+	<span class="n">status</span>		<span class="err">작업</span> <span class="err">상태를</span> <span class="err">출력한다</span><span class="p">.</span>
+	<span class="n">list</span>		<span class="err">알려진</span> <span class="err">작업의</span> <span class="err">목록을</span> <span class="err">현재</span> <span class="err">상태와</span> <span class="err">함께</span> <span class="err">출력한다</span><span class="p">.</span>
+
+<span class="err">사용</span> <span class="err">예</span><span class="o">:</span>
+	<span class="n">initctl</span> <span class="n">start</span> <span class="n">cups</span>
+	<span class="n">initctl</span> <span class="n">stop</span> <span class="n">cups</span>
+	<span class="n">initctl</span> <span class="n">list</span>
+</code></pre></div></div>
+
+<h4 id="service---기존-init-스크립트-제어">service - 기존 init 스크립트 제어</h4>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">service</code> 명령은 <span style="color:magenta"><strong>init</strong></span> 스크립트를 <strong>실행하기 위한 명령</strong>!
+    <ul>
+      <li>서브 명령에 따라 서비스 시작/ 정비</li>
+    </ul>
+  </li>
+</ul>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">$</span> <span class="n">service</span> <span class="err">스크립트</span> <span class="p">[</span><span class="err">서브</span> <span class="err">명령</span><span class="p">]</span>
+
+<span class="err">서브</span> <span class="err">명령</span><span class="o">:</span>
+	<span class="n">start</span>		<span class="err">스크립트에</span> <span class="err">지정한</span> <span class="n">start</span> <span class="err">부분을</span> <span class="err">실행한다</span><span class="p">.</span>
+	<span class="n">stop</span>		<span class="err">스크립트에</span> <span class="err">지정한</span> <span class="n">stop</span> <span class="err">부분을</span> <span class="err">실행한다</span><span class="p">.</span>
+	<span class="n">reload</span>		<span class="err">스크립트에</span> <span class="err">지정한</span> <span class="n">reload</span> <span class="err">부분을</span> <span class="err">실행한다</span><span class="p">.</span>
+	<span class="n">restart</span>		<span class="err">스크립트에</span> <span class="err">지정한</span> <span class="n">restart</span> <span class="err">부분을</span> <span class="err">실행한다</span><span class="p">.</span>
+	<span class="n">status</span>		<span class="err">스크립트에</span> <span class="err">지정한</span> <span class="n">status</span> <span class="err">부분을</span> <span class="err">실행한다</span><span class="p">.</span>
+
+<span class="err">사용</span> <span class="err">예</span><span class="o">:</span>
+	<span class="n">service</span> <span class="n">cups</span> <span class="n">start</span>
+	<span class="n">service</span> <span class="n">cups</span> <span class="n">stop</span>
+</code></pre></div></div>
+
+<h3 id="init-프로세스와-런레벨-1">init 프로세스와 런레벨</h3>
+<hr />
+<ul>
+  <li>기존의 <span style="color:magenta"><strong>init</strong></span>프로세스는 <span style="color:firebrick"><strong>런 레벨(Run level)</strong></span>이라는 개념을 사용했다.
+    <ul>
+      <li><strong>시스템의 단계</strong>를 <strong>일곱 개로 구분</strong>하여 정의하고 <strong>각 단계에 따라 <u>쉘 스크립트를 실행</u></strong>, <strong>이 단계</strong>들을 <span style="color:firebrick"><strong>런레벨</strong></span>이라고 한다.</li>
+    </ul>
+  </li>
+</ul>
+
+<p><span style="color:blue"><strong>Fedora 런레벨</strong></span></p>
+
+<table>
+  <tbody>
+    <tr>
+      <td><strong>런 레벨</strong></td>
+      <td><strong>의미</strong></td>
+      <td><strong>관련 스크립트 위치</strong></td>
+    </tr>
+    <tr>
+      <td>0</td>
+      <td>시스템 종료</td>
+      <td>/etc/rc0.d</td>
+    </tr>
+    <tr>
+      <td>1,S,s</td>
+      <td>단일 사용자 모드</td>
+      <td>/etc/rc1.d</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>다중 사용자 모드(NFS를 실행하지 않음)</td>
+      <td>/etc/rc2.d</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>다중 사용자 모드(NFS 포함)</td>
+      <td>/etc/rc3.d</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>사용하지 않음(예비 번호)</td>
+      <td>/etc/rc4.d</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>시스템 종료(페도라는 GUI 모드로 부팅)</td>
+      <td>/etc/rc5.d</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td>시스템 재시작</td>
+      <td>/etc/rc6.d</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><br />
+<span style="color:magenta"><strong>Ubuntu 런레벨</strong></span></p>
+
+<table>
+  <tbody>
+    <tr>
+      <td><strong>런 레벨</strong></td>
+      <td><strong>의미</strong></td>
+      <td><strong>관련 스크립트 위치</strong></td>
+    </tr>
+    <tr>
+      <td>0</td>
+      <td>시스템 종료</td>
+      <td>/etc/rc0.d</td>
+    </tr>
+    <tr>
+      <td>1,S,s</td>
+      <td>단일 사용자 모드</td>
+      <td>/etc/rc1.d, /etc/rcS.d</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>그래피컬 다중 사용자 모드+네트워킹(기본 값)</td>
+      <td>/etc/rc2.d</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>런레벨 2와 동일</td>
+      <td>/etc/rc3.d</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>런레벨 2와 동일</td>
+      <td>/etc/rc4.d</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>런레벨 2와 동일</td>
+      <td>/etc/rc5.d</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td>시스템 재시작</td>
+      <td>/etc/rc6.d</td>
+    </tr>
+  </tbody>
+</table>
+
+<ul>
+  <li>런레벨 3,4,5 번에 2번과 같다는 것을 통해 <u>rc2.d 디렉터리</u>와 <u>rc3.d, rc4.d, rc5.d 디렉터리의 내용</u>이 모두 같음을 알 수 있다.</li>
+</ul>
+
+<p><img src="img5.png" /></p>
+
+<ul>
+  <li>위 표에서 런레벨별로 실행하는 스크립트 파일은 <strong>/etc/init.d</strong> 디렉터리에 있는 파일에 대한 심벌릭 링크 이다.</li>
+</ul>
+
+<h4 id="런레벨-변경하기">런레벨 변경하기</h4>
+<hr />
+<ul>
+  <li><span style="color:red"><strong>init</strong></span>은 1번 프로세스의 이름이기도 하지만 <span style="color:red"><strong>init 프로세스의 런레벨을 바꾸는 명령</strong></span>으로 사용되기도 한다.
+    <ul>
+      <li><strong>init</strong>을 <strong>명령으로 사용</strong>하면, 실제로는 <strong>/sbin/</strong><code class="language-plaintext highlighter-rouge">telinit</code> 이 실행된다.</li>
+      <li><strong>init</strong>로 런레벨을 변경하기 위해서는 바꾸려는 런레벨을 숫자로 지정하면 된다.
+        <ul>
+          <li>예: 단일 사용자 모드로 전환하려면 <strong><em>init 1</em></strong> 이라고 하면 된다.
+            <div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="err">$</span> <span class="n">sudo</span> <span class="n">init</span> <span class="mi">1</span>
+</code></pre></div>            </div>
+          </li>
+          <li>위 명령을 실행하면 현재 그래픽 환경이었던 Console이 터미널 환경으로 바뀌면서 프롬프트가 출력되어야 한다.<br /><span style="color:red"><strong>그러나!!</strong></span> 현재 우분투는 <strong>init 1</strong>을 실행하면 아래 스플래시 화면이 출력되고 정지 상태가된다(bug)</li>
+          <li>원래 시스템에 문제가 있을 경우 시스템을 <strong>런레벨 1(런레벨 S)</strong>로 변경하여 점검해야한다. (윈도우 안전모드)<br />다중 사용자 모드에서 시스템 관리자만 사용할 수 있는 단일 사용자 모드로 전환하는 것이다.<br />따라서 이 모드로 변환하기 전에 다른 사용자들이 로그아웃하도록 해야 한다.</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h5 id="기본-런레벨-지정">기본 런레벨 지정</h5>
+<hr />
+<ul>
+  <li>우분투에서 부팅할 때 동작할 기본 런레벨은 <strong>/etc/init/rc-sysinit.conf</strong> 파일의 <strong>DEFAULT_RUNLEVEL</strong>변수에 지정되어 있다.</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat</span> /etc/init/rc-sysinit.conf
+<span class="o">(</span>생략<span class="o">)</span>
+<span class="c"># Default runlevel, this may be overriden on the kernel command-line</span>
+<span class="c"># or by faking an old /etc/inittab entry</span>
+<span class="nb">env </span><span class="nv">DEFAULT_RUNLEVEL</span><span class="o">=</span>2
+<span class="o">(</span>생략<span class="o">)</span>
+<span class="err">$</span>
+</code></pre></div></div>
+
+<h5 id="현재-런레벨-확인">현재 런레벨 확인</h5>
+<hr />
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">runlevel</code> 명령<br />
+<img src="img6.png" /></li>
+  <li><strong>N 5</strong> 라는 뜻은 부팅 때 런레벨 5로 부팅했음을 뜻한다.</li>
+</ul>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/#linux-system" class="page__taxonomy-item" rel="tag">linux-system</a>
+    
+    </span>
+  </p>
+
+
+        
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2021-03-07T00:00:00+09:00">March 7, 2021</time></p>
+
+
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">Share on</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=%EB%A6%AC%EB%88%85%EC%8A%A4+%EB%B6%80%ED%8C%85%2C+init+%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8+%EB%8B%A4%EB%A3%A8%EA%B8%B0+%EB%AA%85%EB%A0%B9+-+initctl%2C+%EB%9F%B0%EB%A0%88%EB%B2%A8%2C+runlevel%20https%3A%2F%2Fmarkyang920413.github.io%2F%2Flinux-system%2Flinux-linux_system-boot%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmarkyang920413.github.io%2F%2Flinux-system%2Flinux-linux_system-boot%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fmarkyang920413.github.io%2F%2Flinux-system%2Flinux-linux_system-boot%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/linux-filesystem/linux-linux_filesystem-LVM/" class="pagination--pager" title="LVM
+">Previous</a>
+    
+    
+      <a href="/linux-system/linux-linux_system-disk_manage/" class="pagination--pager" title="디스크 관리 명령어: df, du, fsck, e2fsck, badblocks, dump2efs
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/linux-system/linux-linux_system-disk_manage/" rel="permalink">디스크 관리 명령어: df, du, fsck, e2fsck, badblocks, dump2efs
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          3 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/linux-filesystem/linux-linux_filesystem-LVM/" rel="permalink">LVM
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          5 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/mac/m1_rosetta2/" rel="permalink">M1 Mac 로제타2 설치, 로제타 사용 brew 설치, M1용 jekyll설치
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/algorithm/algorithm-algorithm-time_complexity/" rel="permalink">Time complexity
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          less than 1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2021 Dong-Hyeon Yang. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "https://markyang920413.github.io//linux-system/linux-linux_system-boot/";  /* Replace PAGE_URL with your page's canonical URL variable */
+      this.page.identifier = "/linux-system/linux-linux_system-boot"; /* Replace PAGE_IDENTIFIER with your page's unique identifier variable */
+    };
+    (function() { /* DON'T EDIT BELOW THIS LINE */
+      var d = document, s = d.createElement('script');
+      s.src = 'https://MarkYang920413.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+
+
+  </body>
+</html>

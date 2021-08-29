@@ -1,0 +1,983 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.21.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>option parsing: getopt(), getopt_long() - 혼자 보려고 만든 블로그</title>
+<meta name="description" content="getopt(), getopt_long()">
+
+
+  <meta name="author" content="Dong-Heyon Yang">
+  
+  <meta property="article:author" content="Dong-Heyon Yang">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="혼자 보려고 만든 블로그">
+<meta property="og:title" content="option parsing: getopt(), getopt_long()">
+<meta property="og:url" content="https://markyang920413.github.io//env/system_programming-env-option_parse/">
+
+
+  <meta property="og:description" content="getopt(), getopt_long()">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2020-12-27T00:00:00+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://markyang920413.github.io//env/system_programming-env-option_parse/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "Dong-Hyeon Yang",
+      "url": "https://markyang920413.github.io//"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="혼자 보려고 만든 블로그 Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          혼자 보려고 만든 블로그
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/categories/">Category</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/">About</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+  
+    
+      
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox" />
+  <label for="ac-toc">Toggle menu</label>
+  <ul class="nav__items">
+    
+      <li>
+        
+          <span class="nav__sub-title">LINUX</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#linux-system">LINUX System</a></li>
+          
+            <li><a href="/categories/#linux-tools">LINUX Tools</a></li>
+          
+            <li><a href="/categories/#linux-compile">LINUX Compile</a></li>
+          
+            <li><a href="/categories/#linux-filesystem">LINUX Filesystem</a></li>
+          
+            <li><a href="/categories/#http">HTTP</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">System Programming</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#file">File, Memory</a></li>
+          
+            <li><a href="/categories/#env">Env</a></li>
+          
+            <li><a href="/categories/#process">Process</a></li>
+          
+            <li><a href="/categories/#thread">Thread</a></li>
+          
+            <li><a href="/categories/#ipc">IPC</a></li>
+          
+            <li><a href="/categories/#signal">Signal</a></li>
+          
+            <li><a href="/categories/#socket-programming">Socket Programming</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">C</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#c">C</a></li>
+          
+            <li><a href="/categories/#system-programming">System Programming</a></li>
+          
+            <li><a href="/categories/#stdio">Standard I/O</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">Python</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#python-language">Python Language</a></li>
+          
+            <li><a href="/categories/#python-pandas">Python Pandas</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">Algorithm</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#algorithm">Algorithm</a></li>
+          
+            <li><a href="/categories/#problem">Problem</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">MAC</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#mac">Mac</a></li>
+          
+        </ul>
+        
+      </li>
+    
+  </ul>
+</nav>
+
+    
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="option parsing: getopt(), getopt_long()">
+    <meta itemprop="description" content="getopt(), getopt_long()">
+    <meta itemprop="datePublished" content="2020-12-27T00:00:00+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">option parsing: getopt(), getopt_long()
+</h1>
+          
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          2 minute read
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              <ul class="toc__menu"><li><a href="#옵션을-정의할-때의-관습">옵션을 정의할 때의 관습</a></li><li><a href="#getopt3">getopt():3</a><ul><li><a href="#getopt-예제">getopt() 예제</a></li></ul></li><li><a href="#getopt_long3">getopt_long():3</a><ul><li><a href="#getop_long-예제">getop_long() 예제</a></li></ul></li></ul>
+
+            </nav>
+          </aside>
+        
+        <h2 id="옵션을-정의할-때의-관습">옵션을 정의할 때의 관습</h2>
+
+<p><img src="img1.png" /></p>
+<ul>
+  <li>짧은 옵션(short option)
+    <ul>
+      <li>파라미터 X: <strong><u>ls -a -l -s</u></strong>
+        <ul>
+          <li>묶을 수 있다: <strong><u>ls -als</u></strong></li>
+        </ul>
+      </li>
+      <li>파라미터 O: <strong><u>head -n 5</u></strong>
+        <ul>
+          <li>옵션과 파라미터를 붙이거나 뗄 수 있다: <strong><u>head -n 5</u></strong>, <strong><u>head -n5</u></strong></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>긴 옵션(long option)
+    <ul>
+      <li>파라미터 X: <strong><u>--version</u></strong></li>
+      <li>파라미터 O: <strong><u>tail --lines 5</u></strong>, <strong><u>tail --lines=5</u></strong>
+        <ul>
+          <li><strong>”=”</strong>를 붙이거나 뗄 수 있다: <strong><u>tail --lines 5</u></strong>, <strong><u>tail --lines<span style="color:red">=</span>5</u></strong>
+<br /><br /><br /></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><strong>ls -a -s -k</strong>와 같은 옵션
+    <ul>
+      <li>ls -a -s -k</li>
+      <li>ls -ask</li>
+      <li>ls --all --size --kibibytes</li>
+    </ul>
+  </li>
+  <li><strong>head -n 5</strong>와 같은 옵션
+    <ul>
+      <li>head -n 5</li>
+      <li>head -n5</li>
+      <li>head --line 5</li>
+      <li>head --line=5</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="getopt3">getopt():3</h2>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;unistd.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">getopt</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span> <span class="k">const</span> <span class="n">argv</span><span class="p">[],</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">optdecl</span><span class="p">);</span>
+
+<span class="k">extern</span> <span class="kt">char</span> <span class="o">*</span><span class="n">optarg</span><span class="p">;</span>
+<span class="k">extern</span> <span class="kt">int</span> <span class="n">optind</span><span class="p">,</span> <span class="n">opterr</span><span class="p">,</span> <span class="n">optopt</span><span class="p">;</span>
+</code></pre></div></div>
+<p>기능: 짧은 옵션만 인식하는 UNIX API</p>
+
+<h3 id="getopt-예제">getopt() 예제</h3>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;unistd.h&gt;
+</span>
+<span class="k">extern</span> <span class="kt">char</span> <span class="o">*</span><span class="n">optarg</span><span class="p">;</span>
+<span class="k">extern</span> <span class="kt">int</span> <span class="n">optind</span><span class="p">,</span> <span class="n">opterr</span><span class="p">,</span> <span class="n">optopt</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[]){</span>
+	<span class="kt">int</span> <span class="n">opt</span><span class="p">;</span>
+	<span class="k">while</span> <span class="p">((</span><span class="n">opt</span><span class="o">=</span><span class="n">getopt</span><span class="p">(</span><span class="n">argc</span><span class="p">,</span> <span class="n">argv</span><span class="p">,</span> <span class="s">"af:tx"</span><span class="p">))</span><span class="o">!=-</span><span class="mi">1</span><span class="p">){</span>
+		<span class="k">switch</span> <span class="p">(</span><span class="n">opt</span><span class="p">){</span>
+		<span class="k">case</span> <span class="sc">'a'</span><span class="p">:</span>
+			<span class="cm">/* code which process option '-a' */</span>
+			<span class="k">break</span><span class="p">;</span>
+
+		<span class="k">case</span> <span class="sc">'?'</span><span class="p">:</span>
+			<span class="cm">/* when wrong option is passed */</span>
+			<span class="k">break</span><span class="p">;</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<ul>
+  <li><strong>getopt()</strong>는 항상 <strong>루프</strong> 사용
+    <ul>
+      <li><em>getopt()</em>는 호출될 때마다 인자로 넘겨진 다음 <strong>옵션 문자를 반환</strong></li>
+      <li>잘못된 옵션의 경우 <strong>?</strong> 반환</li>
+      <li><strong>모든 옵션 반환 시, -1 반환</strong>
+        <ul>
+          <li>따라서 <em>while</em>문으로 -1 조건</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><strong>세 번째 인자</strong>에 <strong>파라미터 및 옵션</strong>을 지정한다.
+    <ul>
+      <li>파라미터 X 옵션: <span style="color:green"><strong>-a, -t, -x</strong></span> =&gt; <span style="color:green"><strong>“atx”</strong></span> (순서 상관 X)</li>
+      <li>파라미터 O 옵션: 옵션뒤에 <strong>콜론(:)</strong> <span style="color:green"><strong>-f 5</strong></span> =&gt; <span style="color:green"><strong>“f:”</strong></span>
+        <ul>
+          <li><span style="color:green"><strong>“af:tx”</strong></span> (순서 상관 X)</li>
+          <li>전역 변수 <strong><em>‘char *optarg’</em></strong>를 통해 <strong>파라미터 값</strong> 얻음</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><strong>getopt() 관련 전역 변수</strong></li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">형태</th>
+      <th style="text-align: left">명칭</th>
+      <th style="text-align: left">의미</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left"><em>char*</em></td>
+      <td style="text-align: left"><strong>optarg</strong></td>
+      <td style="text-align: left">현재 처리 중인 옵션의 파라미터</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><em>int</em></td>
+      <td style="text-align: left"><strong>optind</strong></td>
+      <td style="text-align: left">현재 처리 중인 옵션 index(<span style="color:red"><strong>argc + 1 값</strong></span>임을 주의!)</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><em>int</em></td>
+      <td style="text-align: left"><strong>optopt</strong></td>
+      <td style="text-align: left">현재 처리 중인 옵션 문자</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><em>int</em></td>
+      <td style="text-align: left"><strong>opterr</strong></td>
+      <td style="text-align: left">이 값이 ‘참’이면 getopt()가 에러 메시지를 표시</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><img src="img2.png" width="60%" height="60%" /><br />
+파라미터가 없는 옵션의 경우 <strong><em>optarg</em></strong>는 <span style="color:blue"><strong>NULL</strong></span>
+<br />
+<br />
+<br />
+<img src="img3.png" width="60%" height="60%" /><br />
+파라미터가 있는 경우 <strong><em>optarg</em></strong>는 parameter가 잘 먹힘
+<br />
+<br />
+<br />
+<img src="img4.png" width="60%" height="60%" />
+<br />
+<br />
+<br /></p>
+
+<p><span style="color:red"><strong>주의!</strong></span><br /><strong>--</strong>를 만나면 <strong>-1</strong>을 반환하여 while文 탈출<br /><strong>-</strong> 옵션은 다음 옵션으로 넘어간다.</p>
+
+<h2 id="getopt_long3">getopt_long():3</h2>
+<p>'--'의 긴 옵션을 위한 함수 <strong><em>getopt_long()</em></strong><br />
+<span style="color:red"><strong>주의!</strong></span> <strong><em>getopt_long()</em></strong>은 리눅스가 아닌 <em>OS</em>에서는 사용할 수 없다고 보면 된다.</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;stdio.h&gt;
+</span>
+<span class="cp">#define _GNU_SOURCE
+#include &lt;getopt.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">getopt_long</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span> <span class="k">const</span> <span class="n">argv</span><span class="p">[],</span>
+		<span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">optdecl</span><span class="p">,</span> <span class="k">const</span> <span class="k">struct</span> <span class="n">option</span> <span class="o">*</span><span class="n">longoptdecl</span><span class="p">,</span>
+		<span class="kt">int</span> <span class="o">*</span><span class="n">longindex</span><span class="p">);</span>
+
+<span class="k">struct</span> <span class="n">option</span><span class="p">{</span>
+	<span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">name</span><span class="p">;</span>
+	<span class="kt">int</span> <span class="n">has_arg</span><span class="p">;</span>
+	<span class="kt">int</span> <span class="o">*</span><span class="n">flags</span><span class="p">;</span>
+	<span class="kt">int</span> <span class="n">val</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">extern</span> <span class="kt">char</span> <span class="o">*</span><span class="n">optarg</span><span class="p">;</span>
+<span class="k">extern</span> <span class="kt">int</span> <span class="n">optind</span><span class="p">,</span> <span class="n">opterr</span><span class="p">,</span> <span class="n">optopt</span><span class="p">;</span>
+</code></pre></div></div>
+
+<ul>
+  <li>3번째 인자까지는 <strong><em>getopt()</em></strong>와 같음</li>
+  <li><strong>네 번째 인자</strong> <span style="color:magenta"><strong>struct option 구조체 배열</strong></span>을 사용해 <strong>롱 옵션 지정</strong><br /><strong>이 배열 마지막에는 모든 멤버 0</strong></li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left"><strong>멤버 이름</strong></th>
+      <th style="text-align: left"><strong>형태</strong></th>
+      <th style="text-align: left"><strong>값과 의미</strong></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left"><em>name</em></td>
+      <td style="text-align: left"><em>char*</em></td>
+      <td style="text-align: left">롱 옵션의 이름. lines, help 등</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><em>has_arg</em></td>
+      <td style="text-align: left"><em>int</em></td>
+      <td style="text-align: left"><strong>no_argument(또는 0)</strong>: 파라미터 취하지 않음<br /><strong>required_argument(또는 1)</strong>: 반드시 파라미터를 취함<br /><strong>optional_argument(또는 2)</strong>: 파라미터를 취할 수도 있음</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><em>flags</em></td>
+      <td style="text-align: left"><em>int*</em></td>
+      <td style="text-align: left"><strong>NULL</strong>: getopt_long()은 val의 값을 반환<br /><strong>NULL 이외</strong>: getopt_long()은 0을 반환하고 <em>*flags</em>에 <strong>val</strong>의 값을 대입</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><em>val</em></td>
+      <td style="text-align: left"><em>int</em></td>
+      <td style="text-align: left"><em>flag</em>의 값에 따라 지정한 곳에 반환할 값</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>이중 <strong><em>flags</em></strong>와 <strong><em>val</em></strong>은 함께 사용해야 하는데, 아래를 참고하자</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">의도</th>
+      <th style="text-align: left"><strong><em>name</em></strong>값</th>
+      <th style="text-align: left"><strong><em>has_arg</em></strong>값</th>
+      <th style="text-align: left"><strong><em>flags</em></strong> 값</th>
+      <th style="text-align: left"><strong><em>val</em></strong> 값</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">--help 옵션을 발견했을 때 getopt_long()가 ‘h’를 반환하게 하고 싶다.<br />즉, 긴 옵션 --help를 -h에 대응 시키려함</td>
+      <td style="text-align: left">"--help"</td>
+      <td style="text-align: left">no_argument</td>
+      <td style="text-align: left">NULL</td>
+      <td style="text-align: left">‘h’</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">--lines는 -n에 대응 시킴</td>
+      <td style="text-align: left">"--lines"</td>
+      <td style="text-align: left">required_argument</td>
+      <td style="text-align: left">NULL</td>
+      <td style="text-align: left">‘n’</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">--all 옵션이 나타나면, 변수 opt_all의 값이 1이된다.</td>
+      <td style="text-align: left">"--all"</td>
+      <td style="text-align: left">no_argument</td>
+      <td style="text-align: left">&amp;opt_all</td>
+      <td style="text-align: left">1</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong><em>getopt_long()</em></strong>의 다섯 번째 인자가 NULL이 아닌 경우에는 발견한 롱 옵션의 인덱스를 적재한다.<br />이 인덱스를 통해 현재 처리 중인 옵션에 해당하는 struct option을 얻는다.</p>
+
+<h3 id="getop_long-예제">getop_long() 예제</h3>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+</span>
+<span class="cp">#define _GNU_SOURCE
+#include &lt;getopt.h&gt;
+</span>
+<span class="k">static</span> <span class="kt">void</span> <span class="nf">do_head</span><span class="p">(</span><span class="kt">FILE</span> <span class="o">*</span><span class="n">f</span><span class="p">,</span> <span class="kt">long</span> <span class="n">nlines</span><span class="p">);</span>
+
+<span class="cp">#define DEFAULT_N_LINES 10
+</span>
+<span class="k">static</span> <span class="k">struct</span> <span class="n">option</span> <span class="n">longopts</span><span class="p">[]</span><span class="o">=</span><span class="p">{</span>
+	<span class="p">{</span><span class="s">"lines"</span><span class="p">,</span> <span class="n">required_argument</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="sc">'n'</span><span class="p">},</span>
+	<span class="p">{</span><span class="s">"help"</span><span class="p">,</span><span class="n">no_argument</span><span class="p">,</span><span class="nb">NULL</span><span class="p">,</span><span class="sc">'h'</span><span class="p">},</span>
+	<span class="p">{</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">}</span>
+<span class="p">};</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span><span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[]){</span>
+	<span class="kt">int</span> <span class="n">opt</span><span class="p">;</span>
+	<span class="kt">long</span> <span class="n">nlines</span><span class="o">=</span><span class="n">DEFAULT_N_LINES</span><span class="p">;</span>
+
+	<span class="k">while</span><span class="p">((</span><span class="n">opt</span><span class="o">=</span><span class="n">getopt_long</span><span class="p">(</span><span class="n">argc</span><span class="p">,</span><span class="n">argv</span><span class="p">,</span><span class="s">"n:"</span><span class="p">,</span><span class="n">longopts</span><span class="p">,</span><span class="nb">NULL</span><span class="p">))</span><span class="o">!=-</span><span class="mi">1</span><span class="p">){</span>
+		<span class="k">switch</span> <span class="p">(</span><span class="n">opt</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">case</span> <span class="sc">'n'</span><span class="p">:</span>
+			<span class="n">nlines</span><span class="o">=</span><span class="n">atol</span><span class="p">(</span><span class="n">optarg</span><span class="p">);</span>
+			<span class="k">break</span><span class="p">;</span>
+		<span class="k">case</span> <span class="sc">'h'</span><span class="p">:</span>
+			<span class="n">fprintf</span><span class="p">(</span><span class="n">stdout</span><span class="p">,</span> <span class="s">"Usage: %s [-n LINES] [FILE ...]</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+			<span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+		<span class="k">case</span> <span class="sc">'?'</span><span class="p">:</span>
+			<span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="s">"Usage: %s [-n LINES] [FILE ...]</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+			<span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">optind</span><span class="o">==</span><span class="n">argc</span><span class="p">){</span>
+		<span class="n">do_head</span><span class="p">(</span><span class="n">stdin</span><span class="p">,</span><span class="n">nlines</span><span class="p">);</span>
+	<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+		<span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+
+		<span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="n">optind</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">argc</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">){</span>
+			<span class="kt">FILE</span> <span class="o">*</span><span class="n">f</span><span class="p">;</span>
+			<span class="n">f</span><span class="o">=</span><span class="n">fopen</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="s">"r"</span><span class="p">);</span>
+			<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">f</span><span class="p">){</span>
+				<span class="n">perror</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+				<span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+			<span class="p">}</span>
+			<span class="n">do_head</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">nlines</span><span class="p">);</span>
+			<span class="n">fclose</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/#env" class="page__taxonomy-item" rel="tag">env</a>
+    
+    </span>
+  </p>
+
+
+        
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2020-12-27T00:00:00+09:00">December 27, 2020</time></p>
+
+
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">Share on</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=option+parsing%3A+getopt%28%29%2C+getopt_long%28%29%20https%3A%2F%2Fmarkyang920413.github.io%2F%2Fenv%2Fsystem_programming-env-option_parse%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmarkyang920413.github.io%2F%2Fenv%2Fsystem_programming-env-option_parse%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fmarkyang920413.github.io%2F%2Fenv%2Fsystem_programming-env-option_parse%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/env/libc_regular_expressions/" class="pagination--pager" title="libc Regular Expressions API
+">Previous</a>
+    
+    
+      <a href="/file/system_programming-file-filesystemAPI_1/" class="pagination--pager" title="파일시스템 API &lt;1&gt; 디렉터리 관련 함수: opendir(), fdopendir(), readdir(), closedir(), scandir()
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/linux-filesystem/linux-linux_filesystem-LVM/" rel="permalink">LVM
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/mac/m1_rosetta2/" rel="permalink">M1 Mac 로제타2 설치, 로제타 사용 brew 설치, M1용 jekyll설치
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/algorithm/algorithm-algorithm-time_complexity/" rel="permalink">Time complexity
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          less than 1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/algorithm/algorithm-algorithm-IO_STL/" rel="permalink">시험에서 입출력, STL
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          less than 1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2021 Dong-Hyeon Yang. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "https://markyang920413.github.io//env/system_programming-env-option_parse/";  /* Replace PAGE_URL with your page's canonical URL variable */
+      this.page.identifier = "/env/system_programming-env-option_parse"; /* Replace PAGE_IDENTIFIER with your page's unique identifier variable */
+    };
+    (function() { /* DON'T EDIT BELOW THIS LINE */
+      var d = document, s = d.createElement('script');
+      s.src = 'https://MarkYang920413.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+
+
+  </body>
+</html>

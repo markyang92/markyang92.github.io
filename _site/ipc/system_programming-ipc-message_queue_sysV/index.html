@@ -1,0 +1,1127 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.21.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Message Queue - SysV - 혼자 보려고 만든 블로그</title>
+<meta name="description" content="메시지 큐 분류와 system V 메시지 큐">
+
+
+  <meta name="author" content="Dong-Heyon Yang">
+  
+  <meta property="article:author" content="Dong-Heyon Yang">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="혼자 보려고 만든 블로그">
+<meta property="og:title" content="Message Queue - SysV">
+<meta property="og:url" content="https://markyang920413.github.io//ipc/system_programming-ipc-message_queue_sysV/">
+
+
+  <meta property="og:description" content="메시지 큐 분류와 system V 메시지 큐">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2020-12-15T00:00:00+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://markyang920413.github.io//ipc/system_programming-ipc-message_queue_sysV/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "Dong-Hyeon Yang",
+      "url": "https://markyang920413.github.io//"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="혼자 보려고 만든 블로그 Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          혼자 보려고 만든 블로그
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/categories/">Category</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/">About</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+  
+    
+      
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox" />
+  <label for="ac-toc">Toggle menu</label>
+  <ul class="nav__items">
+    
+      <li>
+        
+          <span class="nav__sub-title">LINUX</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#linux-system">LINUX System</a></li>
+          
+            <li><a href="/categories/#linux-tools">LINUX Tools</a></li>
+          
+            <li><a href="/categories/#linux-compile">LINUX Compile</a></li>
+          
+            <li><a href="/categories/#linux-filesystem">LINUX Filesystem</a></li>
+          
+            <li><a href="/categories/#http">HTTP</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">System Programming</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#file">File, Memory</a></li>
+          
+            <li><a href="/categories/#env">Env</a></li>
+          
+            <li><a href="/categories/#process">Process</a></li>
+          
+            <li><a href="/categories/#thread">Thread</a></li>
+          
+            <li><a href="/categories/#ipc">IPC</a></li>
+          
+            <li><a href="/categories/#signal">Signal</a></li>
+          
+            <li><a href="/categories/#socket-programming">Socket Programming</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">C</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#c">C</a></li>
+          
+            <li><a href="/categories/#system-programming">System Programming</a></li>
+          
+            <li><a href="/categories/#stdio">Standard I/O</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">Python</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#python-language">Python Language</a></li>
+          
+            <li><a href="/categories/#python-pandas">Python Pandas</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">Algorithm</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#algorithm">Algorithm</a></li>
+          
+            <li><a href="/categories/#problem">Problem</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">MAC</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#mac">Mac</a></li>
+          
+        </ul>
+        
+      </li>
+    
+  </ul>
+</nav>
+
+    
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Message Queue - SysV">
+    <meta itemprop="description" content="메시지 큐 분류와 system V 메시지 큐">
+    <meta itemprop="datePublished" content="2020-12-15T00:00:00+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">Message Queue - SysV
+</h1>
+          
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          3 minute read
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              <ul class="toc__menu"><li><a href="#message-queue-분류">Message Queue 분류</a></li><li><a href="#sysv-message-queue">SysV Message Queue</a></li><li><a href="#sysv-mq-api">SysV MQ API</a><ul><li><a href="#msgget---메시지-큐-id-구하기">msgget() - 메시지 큐 ID 구하기</a></li><li><a href="#ftok---key값-구하기">ftok() - key값 구하기</a></li><li><a href="#msgsnd---전송">msgsnd() - 전송</a></li><li><a href="#msgrcv---수신">msgrcv() - 수신</a></li><li><a href="#msgctl---큐-제어">msgctl() - 큐 제어</a></li></ul></li><li><a href="#ex1-메세지-타입-없이-주고-받기">ex1. 메세지 타입 없이 주고 받기</a></li><li><a href="#ex2-mtype-지정한-메세지-주고-받기">ex2. mtype 지정한 메세지 주고 받기</a></li></ul>
+
+            </nav>
+          </aside>
+        
+        <h2 id="message-queue-분류">Message Queue 분류</h2>
+<p><img src="ipc종류.PNG" /></p>
+<ul>
+  <li>Message는 byte stream과 다르게 쪼갤 수 없다. 메세지 자체가 최소 전송 단위</li>
+  <li>
+    <p>POSIX, SysV API 기능이 다르다.</p>
+  </li>
+  <li>메시지 큐 특징
+    <ul>
+      <li>메시지 기반 통신
+        <ul>
+          <li>바이트 스트림이 아니다.</li>
+          <li>하나의 메시지는 하나의 덩어리</li>
+        </ul>
+      </li>
+      <li>Unrelated process 사용 가능
+<img src="img1.PNG" width="100%" height="100%" /></li>
+    </ul>
+  </li>
+</ul>
+
+<p>SysV MQ vs POSIX MQ</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">항목</th>
+      <th style="text-align: left">SysV MQ</th>
+      <th style="text-align: left">POSIX MQ</th>
+      <th style="text-align: left">비고</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">Identifer</td>
+      <td style="text-align: left">Special Key</td>
+      <td style="text-align: left">File Descriptor</td>
+      <td style="text-align: left">I/O multiplexing 가능</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Management tool</td>
+      <td style="text-align: left">ipcs,ipcrm</td>
+      <td style="text-align: left">mount on virtual file system</td>
+      <td style="text-align: left">일반 파일에서 사용하는 방법/tool로 조작 가능</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Message priority</td>
+      <td style="text-align: left">미지원</td>
+      <td style="text-align: left">지원</td>
+      <td style="text-align: left"> </td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Notification Mechanism</td>
+      <td style="text-align: left">미지원</td>
+      <td style="text-align: left">지원</td>
+      <td style="text-align: left"> </td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Multi-thread safe</td>
+      <td style="text-align: left">미지원</td>
+      <td style="text-align: left">지원</td>
+      <td style="text-align: left"> </td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Message type</td>
+      <td style="text-align: left">지원</td>
+      <td style="text-align: left">미지원</td>
+      <td style="text-align: left">1-writer/n-reader 구현이 용이</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="sysv-message-queue">SysV Message Queue</h2>
+<ul>
+  <li><span style="color:red"><strong>메시지 type 지원(SysV에서만 지원)</strong></span>
+    <ul>
+      <li>이 메시지는 1번이고, 저 메시지는 2번.. type 정하고 send</li>
+      <li>receiver는 난 1번만 받을거야! 가능함</li>
+    </ul>
+  </li>
+  <li>IPC Key 기반으로 Identify <strong><em>(fd x)</em></strong>
+    <ul>
+      <li>fd가 아니므로!
+        <ul>
+          <li><span style="color:red"><strong><em>select, epoll I/O Multiplexing IPC 키 값 사용 불가</em></strong></span></li>
+          <li><span style="color:red"><strong><em>read, write, open, close 시스템 콜 사용 불가</em></strong></span></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>Management tool(shell에서 사용 가능한 툴)
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">ipcs</code>: IPC 사용 중인 것 정보 조회</li>
+      <li><code class="language-plaintext highlighter-rouge">ipcrm</code>: IPC 오브젝트 삭제</li>
+    </ul>
+  </li>
+</ul>
+
+<p><img src="img2.PNG" /></p>
+
+<p>메시지 큐가 <span style="color:blue"><strong>key</strong></span>에 따라 구분하고, <span style="color:blue"><strong>메시지 타입</strong></span>부여 가능한 것 Focus!</p>
+
+<h2 id="sysv-mq-api">SysV MQ API</h2>
+<ol>
+  <li>데이터 송수신
+    <ul>
+      <li>msgsnd(): 메시지 전송</li>
+      <li>msgrcv(): 메시지 받음</li>
+    </ul>
+  </li>
+  <li>기타
+    <ul>
+      <li>msgctl(): 메시지 컨트롤</li>
+      <li>msgget(): 메시지 큐의 ID를 구한다.</li>
+      <li>ftok(): 키 값 생성</li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="msgget---메시지-큐-id-구하기">msgget() - 메시지 큐 ID 구하기</h3>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;sys/types.h&gt;
+#include &lt;sys/ipc.h&gt;
+#include &lt;sys/msg.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">msgget</span><span class="p">(</span><span class="n">key_t</span> <span class="n">key</span><span class="p">,</span><span class="kt">int</span> <span class="n">msgflg</span><span class="p">);</span>
+</code></pre></div></div>
+<ul>
+  <li>기능: 메시지 큐 ID를 구한다. 옵션에 따라 <span style="color:red"><strong>큐 생성</strong></span>도 가능</li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">return value</th>
+      <th style="text-align: left">description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">메시지 큐 ID</td>
+      <td style="text-align: left">성공</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">-1</td>
+      <td style="text-align: left">실패</td>
+    </tr>
+  </tbody>
+</table>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">parameter</th>
+      <th style="text-align: left">description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left"><em>key</em></td>
+      <td style="text-align: left">IPC Key || IPC_PRIVATE  - IPC_PRIVATE 지정 시, 새로운 메시지 큐 ID 생성!<br /> - 수신자는 ID 얻기 어려움</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><em>msgflg</em></td>
+      <td style="text-align: left">Permission + mask  - IPC_CREAT: key에 매치되는 MSGQ ID 없으면 생성 <br /> - IPC_EXCL: key에 매치되는 MSGQ ID가 있으면 에러 발생</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><img src="img3.PNG" /></p>
+
+<p>자세한 옵션은 ‘man msgget’</p>
+
+<h3 id="ftok---key값-구하기">ftok() - key값 구하기</h3>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;sys/types.h&gt;
+#include &lt;sys/ipc.h&gt;
+</span>
+<span class="n">key_t</span> <span class="nf">ftok</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">pathname</span><span class="p">,</span> <span class="kt">int</span> <span class="n">proj_id</span><span class="p">);</span>
+</code></pre></div></div>
+<ul>
+  <li>기능: file path와 proj_id를 조합해서 key값 구한다.  best effort. but unique 보장 안됨</li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">return value</th>
+      <th style="text-align: left">description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">IPC Key</td>
+      <td style="text-align: left">성공</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">-1</td>
+      <td style="text-align: left">실패</td>
+    </tr>
+  </tbody>
+</table>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">parameter</th>
+      <th style="text-align: left">description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left"><em>*pathname</em></td>
+      <td style="text-align: left">조합할 파일 경로  파일이 존재해야 하고, readable해야 함<br />임의의 project ID</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><em>proj_id</em></td>
+      <td style="text-align: left">임의의 project ID<br />ex) ‘a’</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><img src="img4.PNG" /></p>
+
+<p>Key값 하드 코딩하지 말고, <strong>통신해야 하는 프로세스끼리 약속</strong>을 정함</p>
+
+<h3 id="msgsnd---전송">msgsnd() - 전송</h3>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;sys/types.h&gt;
+#include &lt;sys/ipc.h&gt;
+#include &lt;sys/msg.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">msgsnd</span><span class="p">(</span><span class="kt">int</span> <span class="n">msqid</span><span class="p">,</span> <span class="k">const</span> <span class="kt">void</span> <span class="o">*</span><span class="n">msgp</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">msgsz</span><span class="p">,</span> <span class="kt">int</span> <span class="n">msgflg</span><span class="p">);</span>
+</code></pre></div></div>
+<ul>
+  <li>기능: 메세지 전송</li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">return value</th>
+      <th style="text-align: left">description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">0</td>
+      <td style="text-align: left">성공</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">-1</td>
+      <td style="text-align: left">실패</td>
+    </tr>
+  </tbody>
+</table>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">parameter</th>
+      <th style="text-align: left">description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left"><em>msgid</em></td>
+      <td style="text-align: left">메세지 큐 ID</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><em>*msgp</em></td>
+      <td style="text-align: left">전송할 메시지 버퍼</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><em>msgsz</em></td>
+      <td style="text-align: left">전송 메시지 사이즈(<strong><em>mtext의 길이</em></strong> Byte)</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><em>msgflg</em></td>
+      <td style="text-align: left">IPC_NOWAIT: non-blocking I/O<br />자세한 옵션은 man msgsnd</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">struct</span> <span class="n">msgbuf</span><span class="p">{</span>
+	<span class="kt">long</span> <span class="n">mtype</span><span class="p">;</span> <span class="cm">/* Message Type, must be &gt; 0 &amp;&amp; long type */</span>
+	<span class="kt">char</span> <span class="n">mtext</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span> <span class="cm">/* 크기는 임의 지정. imgsnd의 msgsz 파라미터엔 이 것의 길이가 들어가야함! */</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h3 id="msgrcv---수신">msgrcv() - 수신</h3>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;sys/types.h&gt;
+#include &lt;sys/ipc.h&gt;
+#include &lt;sys/msg.h&gt;
+</span>
+<span class="kt">ssize_t</span> <span class="nf">msgrcv</span><span class="p">(</span><span class="kt">int</span> <span class="n">msgqid</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="n">msgp</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">msgsz</span><span class="p">,</span> <span class="kt">long</span> <span class="n">msgtyp</span><span class="p">,</span> <span class="kt">int</span> <span class="n">msgflg</span><span class="p">);</span>
+</code></pre></div></div>
+<ul>
+  <li>기능: 메세지 수신</li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">return</th>
+      <th style="text-align: left">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">성공</td>
+      <td style="text-align: left">실제로 받은 데이터 길이(mtext의 길이, Byte)</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">실패</td>
+      <td style="text-align: left">-1</td>
+    </tr>
+  </tbody>
+</table>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">parameter</th>
+      <th style="text-align: left">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left"><em>msgid</em></td>
+      <td style="text-align: left">메세지 큐 ID</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><em>*msgp</em></td>
+      <td style="text-align: left">메시지 수신 버퍼</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><em>msgsz</em></td>
+      <td style="text-align: left">최대 수신 길이(<strong><em>mtext의 길이</em></strong> Byte)</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><em>msgtyp</em></td>
+      <td style="text-align: left">리시브할 메세지 타입. 만약 다음 파라미터인 <strong>msgflg</strong>를 0으로 하면 막 받는다는 것인데, 그럼 여기도 <strong><em>0</em></strong> 넣으면 됨</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><em>msgflg</em></td>
+      <td style="text-align: left">내가 <strong><em>수신할 메시지 타입</em></strong><br /><strong>0</strong>: 첫 번째 메시지 수신, 메시지 타입 안보고 수신!<br /><strong>양수</strong>: msgtype에 <code class="language-plaintext highlighter-rouge">매치되는 첫 번째</code> 메시지 수신(큐니까!), 메시지 <strong><em>타입 중에서!! 첫 째</em></strong><br /><br /><strong>음수</strong>: 지정된 절대 값보다 작거나 같은 msgtype에 매치되는 첫 번째 메시지 수신<br /><br /><strong>IPC_NOWAIT</strong>: non-blocking I/O<br /><br /><strong>MAG_COPY</strong>: <code class="language-plaintext highlighter-rouge">n 번째 메시지</code>를 <code class="language-plaintext highlighter-rouge">복사</code>해서 수신(msgtyp이 idx로 사용 됨)<br />반드시 IPC_NOWAIT와 같이 사용해야함<br />원래는 수신 후 메시지 큐에서 pop되어야 하지만, pop안시키고 copy를 해버림<br /><br /><strong>MSG_EXCEPT</strong>: msgtyp과 매치되지 않는 메시지를 수신<br /><br /><strong>MSG_NOERROR</strong>: 메시지 사이즈가 msgsz보다 크면 truncate 시킴</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="msgctl---큐-제어">msgctl() - 큐 제어</h3>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;sys/types.h&gt;
+#include &lt;sys/ipc.h&gt;
+#include &lt;sys/msg.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">msgctl</span><span class="p">(</span><span class="kt">int</span> <span class="n">msqid</span><span class="p">,</span> <span class="kt">int</span> <span class="n">cmd</span><span class="p">,</span> <span class="k">struct</span> <span class="n">msqid_ds</span> <span class="o">*</span><span class="n">buf</span><span class="p">);</span>
+</code></pre></div></div>
+<ul>
+  <li>기능: 메세지 큐 제어</li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">return</th>
+      <th style="text-align: left">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">성공</td>
+      <td style="text-align: left">0</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">실패</td>
+      <td style="text-align: left">-1</td>
+    </tr>
+  </tbody>
+</table>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">parameter</th>
+      <th style="text-align: left">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left"><em>msgqid</em></td>
+      <td style="text-align: left">메세지 큐 ID</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><em>cmd</em></td>
+      <td style="text-align: left"><strong>IPC_STAT</strong>: kernel의 msgid_ds 정보 획득<br /><strong>IPC_SET</strong>: kernel의 msgid_ds에 설정<br /><strong>IPC_RMID</strong>: 메세지 큐 제거</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><em>*buf</em></td>
+      <td style="text-align: left">-</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>msqid_ds 구조체</strong> - man msgctl</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">struct</span> <span class="n">msqid_ds</span> <span class="p">{</span>
+   <span class="k">struct</span> <span class="n">ipc_perm</span> <span class="n">msg_perm</span><span class="p">;</span>     <span class="cm">/* Ownership and permissions */</span>
+   <span class="kt">time_t</span>          <span class="n">msg_stime</span><span class="p">;</span>    <span class="cm">/* Time of last msgsnd(2) */</span>
+   <span class="kt">time_t</span>          <span class="n">msg_rtime</span><span class="p">;</span>    <span class="cm">/* Time of last msgrcv(2) */</span>
+   <span class="kt">time_t</span>          <span class="n">msg_ctime</span><span class="p">;</span>    <span class="cm">/* Time of last change */</span>
+   <span class="kt">unsigned</span> <span class="kt">long</span>   <span class="n">__msg_cbytes</span><span class="p">;</span> <span class="cm">/* Current number of bytes in
+					queue (nonstandard) */</span>
+   <span class="n">msgqnum_t</span>       <span class="n">msg_qnum</span><span class="p">;</span>     <span class="cm">/* Current number of messages
+					in queue */</span>
+   <span class="n">msglen_t</span>        <span class="n">msg_qbytes</span><span class="p">;</span>   <span class="cm">/* Maximum number of bytes
+					allowed in queue */</span>
+   <span class="n">pid_t</span>           <span class="n">msg_lspid</span><span class="p">;</span>    <span class="cm">/* PID of last msgsnd(2) */</span>
+   <span class="n">pid_t</span>           <span class="n">msg_lrpid</span><span class="p">;</span>    <span class="cm">/* PID of last msgrcv(2) */</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h2 id="ex1-메세지-타입-없이-주고-받기">ex1. 메세지 타입 없이 주고 받기</h2>
+<ul>
+  <li>messageQ_simple.c</li>
+</ul>
+
+<p><img src="ex1.png" width="100%" height="100%" /></p>
+
+<p><code class="language-plaintext highlighter-rouge">ipcs</code>를 쳐보면, ipc를 사용 중인 목록이 뜬다.
+<img src="img5.PNG" /><br />
+아직 남아 있다.
+<code class="language-plaintext highlighter-rouge">ipcrm</code> 커맨드를 이용해 없애자</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ipcrm <span class="nt">-h</span> <span class="c"># 옵션을 모르면, -h로 찾아보기</span>
+<span class="nv">$ </span>ipcrm <span class="nt">-q</span> 0 <span class="c"># 메세지 큐 아이디로 삭제하는 옵션 -q와 id 0</span>
+</code></pre></div></div>
+
+<ul>
+  <li>다시 확인해보면 제거되어 있음</li>
+</ul>
+
+<h2 id="ex2-mtype-지정한-메세지-주고-받기">ex2. mtype 지정한 메세지 주고 받기</h2>
+<ul>
+  <li><strong>messageQ_specific_mtype.c</strong></li>
+</ul>
+
+<p><img src="ex2.png" /></p>
+
+<p><img src="ex2-1.png" /></p>
+<ul>
+  <li>recv에 메시지 타입 3을 지정하니, send에서 1,2 등 같은 메시지 타입 아니면  받지 않는 것 확인</li>
+</ul>
+
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/#ipc" class="page__taxonomy-item" rel="tag">ipc</a>
+    
+    </span>
+  </p>
+
+
+        
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2020-12-15T00:00:00+09:00">December 15, 2020</time></p>
+
+
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">Share on</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=Message+Queue+-+SysV%20https%3A%2F%2Fmarkyang920413.github.io%2F%2Fipc%2Fsystem_programming-ipc-message_queue_sysV%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmarkyang920413.github.io%2F%2Fipc%2Fsystem_programming-ipc-message_queue_sysV%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fmarkyang920413.github.io%2F%2Fipc%2Fsystem_programming-ipc-message_queue_sysV%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/ipc/system_programming-ipc-fifo/" class="pagination--pager" title="Pipe &lt;2&gt; fifo()
+">Previous</a>
+    
+    
+      <a href="/ipc/system_programming-ipc-pipe/" class="pagination--pager" title="Pipe &lt;1&gt; pipe(), popen()
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/linux-filesystem/linux-linux_filesystem-LVM/" rel="permalink">LVM
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/mac/m1_rosetta2/" rel="permalink">M1 Mac 로제타2 설치, 로제타 사용 brew 설치, M1용 jekyll설치
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/algorithm/algorithm-algorithm-time_complexity/" rel="permalink">Time complexity
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          less than 1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/algorithm/algorithm-algorithm-IO_STL/" rel="permalink">시험에서 입출력, STL
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          less than 1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2021 Dong-Hyeon Yang. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "https://markyang920413.github.io//ipc/system_programming-ipc-message_queue_sysV/";  /* Replace PAGE_URL with your page's canonical URL variable */
+      this.page.identifier = "/ipc/system_programming-ipc-message_queue_sysV"; /* Replace PAGE_IDENTIFIER with your page's unique identifier variable */
+    };
+    (function() { /* DON'T EDIT BELOW THIS LINE */
+      var d = document, s = d.createElement('script');
+      s.src = 'https://MarkYang920413.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+
+
+  </body>
+</html>

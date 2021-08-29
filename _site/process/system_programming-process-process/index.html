@@ -1,0 +1,1114 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.21.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>프로세스 종류, ps 명령, kill, top, jobs, 작업 전환하기(bg, fg), nohup - 혼자 보려고 만든 블로그</title>
+<meta name="description" content="ps, kill, pkill, top, jobs, Ctrl+z, bg, fg, nohup">
+
+
+  <meta name="author" content="Dong-Heyon Yang">
+  
+  <meta property="article:author" content="Dong-Heyon Yang">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="혼자 보려고 만든 블로그">
+<meta property="og:title" content="프로세스 종류, ps 명령, kill, top, jobs, 작업 전환하기(bg, fg), nohup">
+<meta property="og:url" content="https://markyang920413.github.io//process/system_programming-process-process/">
+
+
+  <meta property="og:description" content="ps, kill, pkill, top, jobs, Ctrl+z, bg, fg, nohup">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2021-02-24T00:00:00+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://markyang920413.github.io//process/system_programming-process-process/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "Dong-Hyeon Yang",
+      "url": "https://markyang920413.github.io//"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="혼자 보려고 만든 블로그 Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          혼자 보려고 만든 블로그
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/categories/">Category</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/">About</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+  
+    
+      
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox" />
+  <label for="ac-toc">Toggle menu</label>
+  <ul class="nav__items">
+    
+      <li>
+        
+          <span class="nav__sub-title">LINUX</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#linux-system">LINUX System</a></li>
+          
+            <li><a href="/categories/#linux-tools">LINUX Tools</a></li>
+          
+            <li><a href="/categories/#linux-compile">LINUX Compile</a></li>
+          
+            <li><a href="/categories/#linux-filesystem">LINUX Filesystem</a></li>
+          
+            <li><a href="/categories/#http">HTTP</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">System Programming</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#file">File, Memory</a></li>
+          
+            <li><a href="/categories/#env">Env</a></li>
+          
+            <li><a href="/categories/#process">Process</a></li>
+          
+            <li><a href="/categories/#thread">Thread</a></li>
+          
+            <li><a href="/categories/#ipc">IPC</a></li>
+          
+            <li><a href="/categories/#signal">Signal</a></li>
+          
+            <li><a href="/categories/#socket-programming">Socket Programming</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">C</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#c">C</a></li>
+          
+            <li><a href="/categories/#system-programming">System Programming</a></li>
+          
+            <li><a href="/categories/#stdio">Standard I/O</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">Python</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#python-language">Python Language</a></li>
+          
+            <li><a href="/categories/#python-pandas">Python Pandas</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">Algorithm</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#algorithm">Algorithm</a></li>
+          
+            <li><a href="/categories/#problem">Problem</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">MAC</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#mac">Mac</a></li>
+          
+        </ul>
+        
+      </li>
+    
+  </ul>
+</nav>
+
+    
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="프로세스 종류, ps 명령, kill, top, jobs, 작업 전환하기(bg, fg), nohup">
+    <meta itemprop="description" content="ps, kill, pkill, top, jobs, Ctrl+z, bg, fg, nohup">
+    <meta itemprop="datePublished" content="2021-02-24T00:00:00+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">프로세스 종류, ps 명령, kill, top, jobs, 작업 전환하기(bg, fg), nohup
+</h1>
+          
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          3 minute read
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              <ul class="toc__menu"><li><a href="#프로세스의-종류">프로세스의 종류</a><ul><li><a href="#pid-0-번은-무슨-프로세스">PID 0 번은 무슨 프로세스?</a></li></ul></li><li><a href="#프로세스-관리-명령">프로세스 관리 명령</a></li><li><a href="#프로세스-종료하기">프로세스 종료하기</a><ul><li><a href="#kill-명령을-이용해-프로세스-종료">kill 명령을 이용해 프로세스 종료</a></li><li><a href="#pkill-이용해-프로세스-이름으로-종료">pkill 이용해 프로세스 이름으로 종료</a></li></ul></li><li><a href="#top">top</a></li><li><a href="#jobs">jobs</a></li><li><a href="#작업-전환하기">작업 전환하기</a></li><li><a href="#nohup-로그아웃-후에도-백그라운드-작업-계속-실행">nohup: 로그아웃 후에도 백그라운드 작업 계속 실행</a></li></ul>
+
+            </nav>
+          </aside>
+        
+        <h2 id="프로세스의-종류">프로세스의 종류</h2>
+<ol>
+  <li><strong>daemon</strong> 프로세스
+    <ul>
+      <li>특정 <span style="color:red"><strong>서비스를 제공하기 위해</strong></span> 존재</li>
+      <li><span style="color:magenta"><strong>커널</strong></span>에 의해 실행</li>
+      <li>평소 <span style="color:steelblue"><strong>대기 상태</strong></span> -&gt; <strong>서비스 요청</strong> -&gt; daemon이 <span style="color:magenta"><strong>해당 서비스 제공</strong></span>
+        <ul>
+          <li><strong>sshd</strong>: ssh 서버 대몬, 원격 접속 서비스를 제공하기 위해 동작</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><strong>고아</strong><sub>(orphan)</sub> <strong>프로세스</strong>
+    <ul>
+      <li>부모가 자식보다 먼저 종료되었을 때,
+        <ul>
+          <li><strong><del>부모 프로세스</del></strong><sub>(killed)</sub> <span style="color:firebrick"><strong>자식 프로세스</strong></span></li>
+        </ul>
+      </li>
+      <li><span style="color:firebrick"><strong>자식 프로세스</strong></span>는 <strong>고아</strong> 프로세스가 된다.</li>
+      <li><strong>1번</strong><sub>(UNIX, Ubuntu: init, Fedora 14: systemd)</sub> 대몬 프로세스가 이런 고아프로세스 <strong>자원을 회수</strong>한다.</li>
+    </ul>
+  </li>
+  <li><span style="color:magenta"><strong>Zombie</strong></span>프로세스
+    <ul>
+      <li><span style="color:firebrick"><strong>자식 프로세스</strong></span>의 <span style="color:steelblue"><strong>자원</strong></span>이 회수 되지 않고 계속 프로세스 테이블에 존재할 때
+        <ul>
+          <li><span style="color:red"><strong>자식이 종료되었는 데도 남아 있을 수 있음!!!</strong></span></li>
+        </ul>
+      </li>
+      <li><strong>defunct</strong> 프로세스라고 나온다.</li>
+      <li><span style="color:magenta"><strong>kill</strong></span> 명령으로 제거할 수 없다.</li>
+      <li><strong>해결법</strong>
+        <ol>
+          <li><span style="color:magenta"><strong><em>SIGCHLD</em></strong></span> <strong><em>-&gt; 부모 프로세스</em></strong>로 보내 <span style="color:firebrick"><strong>자식프로세스</strong></span> 정리</li>
+          <li><span style="color:red"><strong><em>부모 프로세스 종료</em></strong></span>
+            <ul>
+              <li><span style="color:firebrick"><strong>자식 프로세스</strong></span>는 <strong>고아 프로세스</strong>가 되고 1번 프로세스가 이를 처리</li>
+            </ul>
+          </li>
+        </ol>
+      </li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="pid-0-번은-무슨-프로세스">PID 0 번은 무슨 프로세스?</h3>
+<hr />
+<ul>
+  <li>
+    <p>init 대몬 프로세스의 PID가 1인데 PPID가 0이다. 0번 프로세스는 무엇인가?</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">swapper</code>: 프로세스 스케줄링 담당하는 스케줄러 <strong>(0번 프로세스)</strong></p>
+    <ul>
+      <li>CPU가 프로세스를 실행할 수 있도록 메모리에 올렸다가, 할당된 시간이 끝나면 디스크로 잠시 스왑 했다가, 다시 실행할 순서가 되면 다시 메모리에 올리는 일을 한다.</li>
+      <li>스와퍼만이 부팅 과정에서 별도로 실행되어 부모프로세스가 없다. 사실 OS 그자체!!?</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="프로세스-관리-명령">프로세스 관리 명령</h2>
+<ul>
+  <li><strong>프로세스 목록 조회:</strong> <code class="language-plaintext highlighter-rouge">ps</code></li>
+</ul>
+
+<table>
+  <tbody>
+    <tr>
+      <td><strong>option</strong></td>
+      <td><strong>description</strong></td>
+    </tr>
+    <tr>
+      <td><strong><em>-e</em></strong></td>
+      <td>시스템에서 실행 중인 <code class="language-plaintext highlighter-rouge">모든 프로세스</code>의 정보를 출력한다.</td>
+    </tr>
+    <tr>
+      <td><strong><em>-f</em></strong></td>
+      <td>프로세스의 자세한 정보를 출력한다.</td>
+    </tr>
+    <tr>
+      <td><strong><em>-u UID</em></strong></td>
+      <td><code class="language-plaintext highlighter-rouge">특정 사용자</code>에 대한 모든 프로세스의 정보를 출력한다.</td>
+    </tr>
+    <tr>
+      <td><strong><em>-p PID</em></strong></td>
+      <td>pid로 지정한 특정 프로세스의 정보를 출력한다.</td>
+    </tr>
+    <tr>
+      <td><strong><em>a</em></strong></td>
+      <td><code class="language-plaintext highlighter-rouge">터미널에서 실행한</code> 프로세스의 정보를 출력한다.</td>
+    </tr>
+    <tr>
+      <td><strong><em>u</em></strong></td>
+      <td>프로세스 소유자의 이름, CPU Usage, 메모리 사용량 등 상세 정보 출력</td>
+    </tr>
+    <tr>
+      <td><strong><em>x</em></strong></td>
+      <td>시스템에서 실행 중인 모든 프로세스 정보 출력</td>
+    </tr>
+    <tr>
+      <td><strong><em>--pid PID</em></strong></td>
+      <td>지정한 특정 PID의 정보를 출력한다.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><span style="color:red"><strong><em>UID</em></strong></span>: 프로세스를 실행한 사용자 ID
+<img src="img1.jpg" /></p>
+
+<table>
+  <tbody>
+    <tr>
+      <td><strong>항목</strong></td>
+      <td><strong>Description</strong></td>
+    </tr>
+    <tr>
+      <td><strong><em>UID</em></strong></td>
+      <td>프로세스를 실행한 사용자ID</td>
+    </tr>
+    <tr>
+      <td><strong><em>PID</em></strong></td>
+      <td>프로세스 ID</td>
+    </tr>
+    <tr>
+      <td><strong><em>PPID</em></strong></td>
+      <td>이 프로세스의 부모 PID</td>
+    </tr>
+    <tr>
+      <td><strong><em>C</em></strong></td>
+      <td>CPU 사용량(%값)</td>
+    </tr>
+    <tr>
+      <td><strong><em>STIME</em></strong></td>
+      <td>프로세스의 시작 날짜나 시간</td>
+    </tr>
+    <tr>
+      <td><strong><em>TTY</em></strong></td>
+      <td>프로세스가 실행된 터미널의 종류와 번호</td>
+    </tr>
+    <tr>
+      <td><strong><em>TIME</em></strong></td>
+      <td>프로세스 실행 시간</td>
+    </tr>
+    <tr>
+      <td><strong><em>CMD</em></strong></td>
+      <td>실행되고 있는 프로그램의 이름(명령)</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><img src="img2.jpg" /></p>
+
+<table>
+  <tbody>
+    <tr>
+      <td><strong>STAT</strong></td>
+      <td><strong>Description</strong></td>
+    </tr>
+    <tr>
+      <td><strong><em>R</em></strong></td>
+      <td><code class="language-plaintext highlighter-rouge">R</code>unning 실행 중</td>
+    </tr>
+    <tr>
+      <td><strong><em>S</em></strong></td>
+      <td><code class="language-plaintext highlighter-rouge">S</code>leep 상태 (인터럽트가 가능한 대기)</td>
+    </tr>
+    <tr>
+      <td><strong><em>s</em></strong></td>
+      <td>세션 리더 프로세스</td>
+    </tr>
+    <tr>
+      <td><strong><em>T</em></strong></td>
+      <td>s<code class="language-plaintext highlighter-rouge">t</code>opped 상태 (작업 제어에 의해 정지)</td>
+    </tr>
+    <tr>
+      <td><strong><em>Z</em></strong></td>
+      <td><code class="language-plaintext highlighter-rouge">Z</code>ombie 상태(<strong><em>defunct</em></strong>)</td>
+    </tr>
+    <tr>
+      <td><strong><em>STIME</em></strong></td>
+      <td>프로세스의 시작 날짜나 시간</td>
+    </tr>
+    <tr>
+      <td><strong><em>+</em></strong></td>
+      <td>포 그라운드 프로세스 그룹</td>
+    </tr>
+    <tr>
+      <td><strong><em>l</em></strong>(소문자 L)</td>
+      <td>멀티 스레드</td>
+    </tr>
+  </tbody>
+</table>
+
+<table>
+  <tbody>
+    <tr>
+      <td><strong>항목</strong></td>
+      <td><strong>Description</strong></td>
+    </tr>
+    <tr>
+      <td><strong><em>USER</em></strong></td>
+      <td>사용자 계정 이름</td>
+    </tr>
+    <tr>
+      <td><strong><em>%CPU</em></strong></td>
+      <td>CPU 사용량을 퍼센트로 표시</td>
+    </tr>
+    <tr>
+      <td><strong><em>%MEM</em></strong></td>
+      <td>물리적 메모리 사용량을 퍼센트로 표시</td>
+    </tr>
+    <tr>
+      <td><strong><em>VSZ</em></strong></td>
+      <td>사용하고 있는 <span style="color:magenta"><strong>가상</strong></span> 메모리의 크기(KB)</td>
+    </tr>
+    <tr>
+      <td><strong><em>RSS</em></strong></td>
+      <td>사용하고 있는 <span style="color:steelblue"><strong>물리</strong></span> 메모리 크기(KB)</td>
+    </tr>
+    <tr>
+      <td><strong><em>START</em></strong></td>
+      <td>프로세스 시작 시간</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><img src="img3.jpg" width="70%" /></p>
+
+<h2 id="프로세스-종료하기">프로세스 종료하기</h2>
+<h3 id="kill-명령을-이용해-프로세스-종료">kill 명령을 이용해 프로세스 종료</h3>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">$</span> <span class="n">kill</span> <span class="p">[</span><span class="err">시그널</span> <span class="err">번호</span><span class="p">]</span> <span class="p">[</span><span class="err">시그널</span> <span class="err">보낼</span> <span class="n">PID</span><span class="p">]</span>
+</code></pre></div></div>
+
+<table>
+  <tbody>
+    <tr>
+      <td><strong>시그널 번호</strong></td>
+      <td><strong>Description</strong></td>
+    </tr>
+    <tr>
+      <td><strong>-2</strong></td>
+      <td>인터럽트 시그널(Ctrl + C)</td>
+    </tr>
+    <tr>
+      <td><strong>-9</strong></td>
+      <td>프로세스 강제 종료 시그널</td>
+    </tr>
+    <tr>
+      <td><strong>-15</strong></td>
+      <td>프로세스가 <code class="language-plaintext highlighter-rouge">관련된 파일 정리하고</code> 프로세스 종료 시그널.<br />종료되지 않는 프로세스가 있을 수 있다.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="pkill-이용해-프로세스-이름으로-종료">pkill 이용해 프로세스 이름으로 종료</h3>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">$</span> <span class="n">pkill</span> <span class="p">[</span><span class="err">시그널</span> <span class="err">번호</span><span class="p">]</span> <span class="p">[</span><span class="err">시그널</span> <span class="err">보낼</span> <span class="err">프로세스</span> <span class="err">이름</span><span class="p">]</span>
+</code></pre></div></div>
+
+<h2 id="top">top</h2>
+
+<p><strong>top</strong>: 현재 실행 중인 프로세스 정보 주기적 출력</p>
+
+<p><strong>top의 출력정보</strong></p>
+
+<table>
+  <tbody>
+    <tr>
+      <td><strong>항목</strong></td>
+      <td><strong>의미</strong></td>
+    </tr>
+    <tr>
+      <td><strong>PID</strong></td>
+      <td>프로세스 ID</td>
+    </tr>
+    <tr>
+      <td><strong>USER</strong></td>
+      <td>사용자 계정(owner)</td>
+    </tr>
+    <tr>
+      <td><strong>PR</strong></td>
+      <td>우선 순위</td>
+    </tr>
+    <tr>
+      <td><strong>NI</strong></td>
+      <td>Nice 값</td>
+    </tr>
+    <tr>
+      <td><strong>VIRT</strong></td>
+      <td>프로세스가 사용하는 <code class="language-plaintext highlighter-rouge">가상 메모리</code> 크기</td>
+    </tr>
+    <tr>
+      <td><strong>RES</strong></td>
+      <td>프로세스가 사용하는 <code class="language-plaintext highlighter-rouge">메모리</code> 크기</td>
+    </tr>
+    <tr>
+      <td><strong>SHR</strong></td>
+      <td>프로세스가 사용하는 <code class="language-plaintext highlighter-rouge">공유 메모리</code> 크기</td>
+    </tr>
+    <tr>
+      <td><strong>%CPU</strong></td>
+      <td>CPU 사용량</td>
+    </tr>
+    <tr>
+      <td><strong>%MEM</strong></td>
+      <td>메모리 사용량(%)</td>
+    </tr>
+    <tr>
+      <td><strong>TIME+</strong></td>
+      <td>CPU 누적 이용 시간</td>
+    </tr>
+    <tr>
+      <td><strong>COMMAND</strong></td>
+      <td>명령 이름</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><img src="img4.png" /></p>
+
+<table>
+  <tbody>
+    <tr>
+      <td><strong>top의 내부 명령</strong></td>
+      <td><strong>의미</strong></td>
+    </tr>
+    <tr>
+      <td><strong><em>enter키, space bar</em></strong></td>
+      <td>갱신</td>
+    </tr>
+    <tr>
+      <td><strong><em>h, ?</em></strong></td>
+      <td>도움말 화면 출력</td>
+    </tr>
+    <tr>
+      <td><strong><em>k</em></strong></td>
+      <td>프로세스를 종료하는데, 종료할 PID 물어봄</td>
+    </tr>
+    <tr>
+      <td><strong><em>n</em></strong></td>
+      <td>출력할 프로세스 개수를 바꾼다.</td>
+    </tr>
+    <tr>
+      <td><strong><em>u</em></strong></td>
+      <td>User(사용자)로 정렬하여 출력</td>
+    </tr>
+    <tr>
+      <td><strong><em>M</em></strong></td>
+      <td>사용하는 메모리의 크기에 따라 정렬하여 출력</td>
+    </tr>
+    <tr>
+      <td><strong><em>p</em></strong></td>
+      <td>CPU 사용량에 따라 정렬하여 출력</td>
+    </tr>
+    <tr>
+      <td><strong><em>q</em></strong></td>
+      <td>top 명령 종료</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="jobs">jobs</h2>
+<ul>
+  <li>현재 실행 중인 <code class="language-plaintext highlighter-rouge">백그라운드</code> 작업을 보여준다.</li>
+</ul>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">$</span> <span class="n">jobs</span> <span class="p">[</span><span class="o">%</span><span class="err">작업번호</span><span class="p">]</span>
+
+<span class="o">%</span><span class="err">작업번호</span>
+	<span class="o">%</span><span class="err">번호</span> <span class="o">:</span> <span class="err">해당</span> <span class="err">번호의</span> <span class="err">작업</span> <span class="err">정보를</span> <span class="err">출력한다</span><span class="p">.</span>
+	<span class="o">%+</span> <span class="o">:</span> <span class="err">작업</span> <span class="err">순서가</span> <span class="o">+</span><span class="err">인</span> <span class="err">작업</span> <span class="err">정보를</span> <span class="err">출력한다</span><span class="p">.</span>
+	<span class="o">%-</span> <span class="o">:</span> <span class="err">작업</span> <span class="err">순서가</span> <span class="o">-</span><span class="err">인</span> <span class="err">작업</span> <span class="err">정보를</span> <span class="err">출력한다</span><span class="p">.</span>
+</code></pre></div></div>
+
+<ul>
+  <li>사용 예</li>
+</ul>
+
+<p><img src="img5.jpg" /></p>
+
+<table>
+  <tbody>
+    <tr>
+      <td><strong>항목</strong></td>
+      <td><strong>예</strong></td>
+      <td><strong>의미</strong></td>
+    </tr>
+    <tr>
+      <td>작업 번호</td>
+      <td>[1]</td>
+      <td>작업 번호로서 백그라운드로 실행할 때마다 순차적으로 증가한다.<br />[1], [2], [3]…</td>
+    </tr>
+    <tr>
+      <td>작업 순서</td>
+      <td>+</td>
+      <td>작업 순서를 나타낸다.<br /><strong>+</strong>: <code class="language-plaintext highlighter-rouge">가장 최근</code>에 접근한 작업<br /><strong>-</strong>: <code class="language-plaintext highlighter-rouge">+ 작업 보다 바로 전</code>에 접근한 작업<br />공백: 그 외의 작업</td>
+    </tr>
+    <tr>
+      <td>상태</td>
+      <td>실행중</td>
+      <td>작업 상태<br />Running: 현재 실행 중<br />Done: 완료 됨, 작업이 정상적으로 종료된다.<br />Terminated: 종료 됨, 작업이 비정상적으로 종료된다.<br />Stopped: 작업이 잠시 중단된다.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="작업-전환하기">작업 전환하기</h2>
+
+<table>
+  <tbody>
+    <tr>
+      <td><strong>작업 전환 명령</strong></td>
+      <td><strong>의미</strong></td>
+    </tr>
+    <tr>
+      <td><strong><em>Ctrl + z</em></strong> or <strong><em>stop [%작업번호]</em></strong></td>
+      <td>포 그라운드 작업을 중지(종료가 아니라 잠시 중단!!)</td>
+    </tr>
+    <tr>
+      <td><strong><em>bg [%작업번호]</em></strong></td>
+      <td>작업 번호가 지시하는 작업을 <code class="language-plaintext highlighter-rouge">백 그라운드로 전환</code></td>
+    </tr>
+    <tr>
+      <td><strong><em>fg [%작업번호]</em></strong></td>
+      <td>작업 번호가 지시하는 작업을 <code class="language-plaintext highlighter-rouge">포 그라운드로 전환</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="nohup-로그아웃-후에도-백그라운드-작업-계속-실행">nohup: 로그아웃 후에도 백그라운드 작업 계속 실행</h2>
+<ul>
+  <li>로그아웃한 다음에도 작업이 완료될 때까지 백그라운드 작업 실행한다.</li>
+</ul>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">$</span> <span class="n">nohup</span> <span class="err">명령</span><span class="o">&amp;</span>
+</code></pre></div></div>
+<ul>
+  <li>nohup로 실행한 명령은 <code class="language-plaintext highlighter-rouge">반드시 백그라운드로</code> 실행해야 한다.</li>
+</ul>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/#process" class="page__taxonomy-item" rel="tag">process</a>
+    
+    </span>
+  </p>
+
+
+        
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2021-02-24T00:00:00+09:00">February 24, 2021</time></p>
+
+
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">Share on</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=%ED%94%84%EB%A1%9C%EC%84%B8%EC%8A%A4+%EC%A2%85%EB%A5%98%2C+ps+%EB%AA%85%EB%A0%B9%2C+kill%2C+top%2C+jobs%2C+%EC%9E%91%EC%97%85+%EC%A0%84%ED%99%98%ED%95%98%EA%B8%B0%28bg%2C+fg%29%2C+nohup%20https%3A%2F%2Fmarkyang920413.github.io%2F%2Fprocess%2Fsystem_programming-process-process%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmarkyang920413.github.io%2F%2Fprocess%2Fsystem_programming-process-process%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fmarkyang920413.github.io%2F%2Fprocess%2Fsystem_programming-process-process%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/linux-system/linux-linux_system-samba/" class="pagination--pager" title="Samba 셋팅
+">Previous</a>
+    
+    
+      <a href="/linux-filesystem/linux-linux_filesystem-filesystem/" class="pagination--pager" title="리눅스 파일 시스템 종류, 지원하는 파일 시스템 확인,스왑 파티션 관리
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/linux-system/linux-linux_system-disk_manage/" rel="permalink">디스크 관리 명령어: df, du, fsck, e2fsck, badblocks, dump2efs
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          3 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/linux-system/linux-linux_system-boot/" rel="permalink">리눅스 부팅, init 스크립트 다루기 명령 - initctl, 런레벨, runlevel
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          8 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">initctl, runlevel
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/linux-filesystem/linux-linux_filesystem-LVM/" rel="permalink">LVM
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          5 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/mac/m1_rosetta2/" rel="permalink">M1 Mac 로제타2 설치, 로제타 사용 brew 설치, M1용 jekyll설치
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2021 Dong-Hyeon Yang. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "https://markyang920413.github.io//process/system_programming-process-process/";  /* Replace PAGE_URL with your page's canonical URL variable */
+      this.page.identifier = "/process/system_programming-process-process"; /* Replace PAGE_IDENTIFIER with your page's unique identifier variable */
+    };
+    (function() { /* DON'T EDIT BELOW THIS LINE */
+      var d = document, s = d.createElement('script');
+      s.src = 'https://MarkYang920413.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+
+
+  </body>
+</html>

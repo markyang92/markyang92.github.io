@@ -1,0 +1,929 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.21.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>파일시스템 API &lt;1&gt; 디렉터리 관련 함수: opendir(), fdopendir(), readdir(), closedir(), scandir() - 혼자 보려고 만든 블로그</title>
+<meta name="description" content="opendir(), fdopendir(), readdir(), closedir(), scandir()">
+
+
+  <meta name="author" content="Dong-Heyon Yang">
+  
+  <meta property="article:author" content="Dong-Heyon Yang">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="혼자 보려고 만든 블로그">
+<meta property="og:title" content="파일시스템 API &lt;1&gt; 디렉터리 관련 함수: opendir(), fdopendir(), readdir(), closedir(), scandir()">
+<meta property="og:url" content="https://markyang920413.github.io//file/system_programming-file-filesystemAPI_1/">
+
+
+  <meta property="og:description" content="opendir(), fdopendir(), readdir(), closedir(), scandir()">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2020-12-28T00:00:00+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://markyang920413.github.io//file/system_programming-file-filesystemAPI_1/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "Dong-Hyeon Yang",
+      "url": "https://markyang920413.github.io//"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="혼자 보려고 만든 블로그 Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          혼자 보려고 만든 블로그
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/categories/">Category</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/">About</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+  
+    
+      
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox" />
+  <label for="ac-toc">Toggle menu</label>
+  <ul class="nav__items">
+    
+      <li>
+        
+          <span class="nav__sub-title">LINUX</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#linux-system">LINUX System</a></li>
+          
+            <li><a href="/categories/#linux-tools">LINUX Tools</a></li>
+          
+            <li><a href="/categories/#linux-compile">LINUX Compile</a></li>
+          
+            <li><a href="/categories/#linux-filesystem">LINUX Filesystem</a></li>
+          
+            <li><a href="/categories/#http">HTTP</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">System Programming</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#file">File, Memory</a></li>
+          
+            <li><a href="/categories/#env">Env</a></li>
+          
+            <li><a href="/categories/#process">Process</a></li>
+          
+            <li><a href="/categories/#thread">Thread</a></li>
+          
+            <li><a href="/categories/#ipc">IPC</a></li>
+          
+            <li><a href="/categories/#signal">Signal</a></li>
+          
+            <li><a href="/categories/#socket-programming">Socket Programming</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">C</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#c">C</a></li>
+          
+            <li><a href="/categories/#system-programming">System Programming</a></li>
+          
+            <li><a href="/categories/#stdio">Standard I/O</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">Python</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#python-language">Python Language</a></li>
+          
+            <li><a href="/categories/#python-pandas">Python Pandas</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">Algorithm</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#algorithm">Algorithm</a></li>
+          
+            <li><a href="/categories/#problem">Problem</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">MAC</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#mac">Mac</a></li>
+          
+        </ul>
+        
+      </li>
+    
+  </ul>
+</nav>
+
+    
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="파일시스템 API &lt;1&gt; 디렉터리 관련 함수: opendir(), fdopendir(), readdir(), closedir(), scandir()">
+    <meta itemprop="description" content="opendir(), fdopendir(), readdir(), closedir(), scandir()">
+    <meta itemprop="datePublished" content="2020-12-28T00:00:00+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">파일시스템 API &lt;1&gt; 디렉터리 관련 함수: opendir(), fdopendir(), readdir(), closedir(), scandir()
+</h1>
+          
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          2 minute read
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              <ul class="toc__menu"><li><a href="#디렉터리-내용-읽기">디렉터리 내용 읽기</a><ul><li><a href="#디렉터리-엔트리-리스트-api">디렉터리 엔트리 리스트 API</a></li><li><a href="#opendir3">opendir():3</a></li><li><a href="#fdopendir3">fdopendir():3</a></li><li><a href="#readdir3">readdir():3</a></li><li><a href="#closedir3">closedir():3</a></li></ul></li><li><a href="#예제-1-ls-명령-구현">예제 1. ls 명령 구현</a></li><li><a href="#해당-디렉터리-재귀-검색">해당 디렉터리 재귀 검색</a></li></ul>
+
+            </nav>
+          </aside>
+        
+        <h2 id="디렉터리-내용-읽기">디렉터리 내용 읽기</h2>
+<h3 id="디렉터리-엔트리-리스트-api">디렉터리 엔트리 리스트 API</h3>
+<hr />
+<ul>
+  <li>디렉터리 또한 <strong>open()</strong>, <strong>read()</strong>, <strong>close()</strong></li>
+  <li>디렉터리 내 <strong>파일 1개</strong> 정보 = <strong>1개 구조체</strong> = <span style="color:green"><strong>디렉터리 엔트리</strong></span></li>
+</ul>
+
+<h3 id="opendir3">opendir():3</h3>
+<hr />
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;sys/types.h&gt;
+#include &lt;dirent.h&gt;
+</span>
+<span class="kt">DIR</span> <span class="o">*</span><span class="nf">opendir</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">path</span><span class="p">);</span>
+</code></pre></div></div>
+<ul>
+  <li><strong><em>opendir()</em></strong>은 <strong><em>path</em></strong>로 지정한 디렉터리를 읽기 위해 open 후, <strong><em>DIR 타입 포인터</em></strong>반환</li>
+  <li><span style="color:blue"><strong>DIR 타입</strong></span>은 디렉터리를 읽어들이기 위한 스트림 관리 구조체</li>
+</ul>
+
+<h3 id="fdopendir3">fdopendir():3</h3>
+<hr />
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;sys/types.h&gt;
+#include &lt;dirent.h&gt;
+</span>
+<span class="kt">DIR</span> <span class="o">*</span><span class="nf">fdopendir</span><span class="p">(</span><span class="kt">int</span> <span class="n">fd</span><span class="p">);</span>
+</code></pre></div></div>
+<ul>
+  <li>opendir()과 비슷하지만, open fd가 참조하는 디렉터리에 대한 디렉터리 스트림을 반환한다.</li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left"><strong>opendir(), fdopendir()</strong><br /> return</th>
+      <th style="text-align: left">value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">성공</td>
+      <td style="text-align: left"><strong>*DIR 타입 디렉터리 스트림</strong></td>
+    </tr>
+    <tr>
+      <td style="text-align: left">실패</td>
+      <td style="text-align: left">NULL<br />errno set</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="readdir3">readdir():3</h3>
+<hr />
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;sys/types.h&gt;
+#include &lt;dirent.h&gt;
+</span>
+<span class="k">struct</span> <span class="n">dirent</span> <span class="o">*</span><span class="nf">readdir</span><span class="p">(</span><span class="kt">DIR</span> <span class="o">*</span><span class="n">d</span><span class="p">);</span>
+</code></pre></div></div>
+<ul>
+  <li>기능: <strong>디렉터리 스트림 d</strong>로부터 엔트리를 하나씩 읽어 들여 <span style="color:magenta"><strong><em>struct dirent</em></strong></span> 타입으로 반환한다.</li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">return</th>
+      <th style="text-align: left">value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">성공</td>
+      <td style="text-align: left"><strong>struct dirent*</strong></td>
+    </tr>
+    <tr>
+      <td style="text-align: left">실패</td>
+      <td style="text-align: left">NULL</td>
+    </tr>
+  </tbody>
+</table>
+
+<ul>
+  <li><strong>struct dirent</strong>의 내용은 OS마다 다르다.
+    <ul>
+      <li>리눅스에서는 적어도 엔트리의 이름에 해당하는 <strong><u>char *d_name</u></strong>이 있다. <br />d_name은 '\0'을 마지막으로 담고 있는 문자열.</li>
+    </ul>
+  </li>
+  <li><strong>readdir()</strong>가 반환하는 포인터는 다시 호출했을 때 덮어 쓰이므로 주의해야한다.</li>
+</ul>
+
+<p><img src="img1.png" /></p>
+
+<ul>
+  <li><span style="color:magenta"><strong>struct dirent</strong></span>의 내용
+    <ul>
+      <li>printf(“%s”, d_name);</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="closedir3">closedir():3</h3>
+<hr />
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;sys/types.h&gt;
+#include &lt;dirent.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">closedir</span><span class="p">(</span><span class="kt">DIR</span> <span class="o">*</span><span class="n">d</span><span class="p">);</span>
+</code></pre></div></div>
+<ul>
+  <li>기능: <strong>디렉터리 스트림 d</strong>를 닫는 함수</li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">return</th>
+      <th style="text-align: left">value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">성공</td>
+      <td style="text-align: left">0</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">실패</td>
+      <td style="text-align: left">-1</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>이외에도 fseek(), ftell()에 대응하는 seekdir()과 telldir()도 있다.</p>
+
+<h2 id="예제-1-ls-명령-구현">예제 1. ls 명령 구현</h2>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;sys/types.h&gt;
+#include &lt;dirent.h&gt;
+</span>
+<span class="k">static</span> <span class="kt">void</span> <span class="nf">do_ls</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">path</span><span class="p">);</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[]){</span>
+	<span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">argc</span><span class="o">&lt;</span><span class="mi">2</span><span class="p">){</span>
+		<span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span><span class="s">"%s: no arguments</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+		<span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+	<span class="p">}</span>
+	<span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">argc</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">){</span>
+		<span class="n">do_ls</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+	<span class="p">}</span>
+	<span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">static</span> <span class="kt">void</span>
+<span class="nf">do_ls</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">path</span><span class="p">){</span>
+	<span class="kt">DIR</span> <span class="o">*</span><span class="n">d</span><span class="p">;</span>
+	<span class="k">struct</span> <span class="n">dirent</span> <span class="o">*</span><span class="n">ent</span><span class="p">;</span>
+
+	<span class="n">d</span><span class="o">=</span><span class="n">opendir</span><span class="p">(</span><span class="n">path</span><span class="p">);</span>
+	<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">d</span><span class="p">){</span>
+		<span class="n">perror</span><span class="p">(</span><span class="n">path</span><span class="p">);</span>
+		<span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+	<span class="p">}</span>
+	<span class="k">while</span><span class="p">(</span><span class="n">ent</span><span class="o">=</span><span class="n">readdir</span><span class="p">(</span><span class="n">d</span><span class="p">)){</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">"%s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="n">ent</span><span class="o">-&gt;</span><span class="n">d_name</span><span class="p">);</span>
+	<span class="p">}</span>
+	<span class="n">closedir</span><span class="p">(</span><span class="n">d</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="해당-디렉터리-재귀-검색">해당 디렉터리 재귀 검색</h2>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;sys/stat.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;dirent.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+</span>
+<span class="c1">// 파일의 크기를 저장하기 위한 변수</span>
+<span class="kt">long</span> <span class="kt">int</span> <span class="n">total_size</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+
+<span class="c1">// 디렉터리 들여쓰기를 위한 디렉터리 depth 레벌 저장용</span>
+<span class="kt">int</span> <span class="n">indent</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+
+<span class="c1">// 함수는 인자로 디렉터리 이름을 입력받는다.</span>
+<span class="kt">void</span> <span class="nf">dir_parser</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">wd</span><span class="p">){</span>
+	<span class="k">struct</span> <span class="n">dirent</span> <span class="o">**</span><span class="n">items</span><span class="p">;</span>
+	<span class="kt">int</span> <span class="n">nitems</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">;</span>
+	<span class="k">struct</span> <span class="n">stat</span> <span class="n">fstat</span><span class="p">;</span> <span class="c1">// struct stat은 파일의 메타정보 저장 구조체 </span>
+	<span class="kt">char</span> <span class="n">per</span><span class="p">;</span>
+
+	<span class="c1">// 인자로 받은 디렉터리로 이동한다.</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">chdir</span><span class="p">(</span><span class="n">wd</span><span class="p">)</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">){</span>
+		<span class="n">perror</span><span class="p">(</span><span class="s">"chdir "</span><span class="p">);</span>
+		<span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+	<span class="p">}</span>
+
+	<span class="cm">/* scandir 함수를이용해서 현재 디렉터리의 모든 파일과 디렉터리의 내용을 가져온다. */</span>
+	<span class="n">nitems</span><span class="o">=</span><span class="n">scandir</span><span class="p">(</span><span class="s">"."</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">items</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">alphasort</span><span class="p">);</span>
+
+	<span class="cm">/* 
+	 * 디렉터리(파일포함) 항목의 갯수만큼 루프를 돌리며
+	 * 만약 해당 파일이 디렉터리일 경우
+	 * dir_parser 함수를 재귀 호출 한다. 
+	 */</span>
+	<span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">nitems</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">){</span>
+		<span class="c1">// 파일 상태를 저장하기 위한 구조체</span>
+		<span class="k">struct</span> <span class="n">stat</span> <span class="n">fstat</span><span class="p">;</span>
+
+		<span class="c1">// 현재 디렉터리, 이전 디렉터리는 무시한다.</span>
+		<span class="k">if</span><span class="p">((</span><span class="o">!</span><span class="n">strcmp</span><span class="p">(</span><span class="n">items</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">d_name</span><span class="p">,</span><span class="s">"."</span><span class="p">))</span><span class="o">||</span><span class="p">(</span><span class="o">!</span><span class="n">strcmp</span><span class="p">(</span><span class="n">items</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">d_name</span><span class="p">,</span> <span class="s">".."</span><span class="p">))){</span>
+			<span class="k">continue</span><span class="p">;</span>
+		<span class="p">}</span>
+
+		<span class="cm">/* 
+		 * 파일의 상태를 얻어와서 fstat로 저장한다
+		 * lstat은 해당파일이 심볼릭링크일 경우, 그 심볼릭링크를 전달
+		 */</span>
+		<span class="n">lstat</span><span class="p">(</span><span class="n">items</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">d_name</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">fstat</span><span class="p">);</span>
+
+		<span class="cm">/* 디렉터리의 depth는 "\t"를 통해서 이루어진다. 
+		   해당 depth의 크기만큼 "\t"를 반복해서 출력한다. */</span>
+		<span class="k">for</span><span class="p">(</span><span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">indent</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span>
+			<span class="n">printf</span><span class="p">(</span><span class="s">"</span><span class="se">\t</span><span class="s">"</span><span class="p">);</span>
+		<span class="c1">// 파일이름(디렉터리) 이름과 크기를 출력하고, 총계를 내기 위해서 total_size에 더해준다.</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">"%s</span><span class="se">\t</span><span class="s">%ld</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">items</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">d_name</span><span class="p">,</span> <span class="n">fstat</span><span class="p">.</span><span class="n">st_size</span><span class="p">);</span>
+		<span class="n">total_size</span> <span class="o">+=</span> <span class="n">fstat</span><span class="p">.</span><span class="n">st_size</span><span class="p">;</span>
+
+		<span class="cm">/*
+		 * 만약 파일이 디렉터리라면, dir_parser를 재귀호출한다.
+		 * 그리고 디렉터리의 depth 레벨을 1 증가한다.
+		 */</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">S_ISDIR</span><span class="p">(</span><span class="n">fstat</span><span class="p">.</span><span class="n">st_mode</span><span class="p">)</span><span class="o">&amp;&amp;</span><span class="n">S_ISLNK</span><span class="p">(</span><span class="n">fstat</span><span class="p">.</span><span class="n">st_mode</span><span class="p">)){</span>
+			<span class="n">indent</span><span class="o">++</span><span class="p">;</span>
+			<span class="n">dir_parser</span><span class="p">(</span><span class="n">items</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">d_name</span><span class="p">);</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="cm">/* 디렉터리의 depth 레벨을 1감소시키고 하위 디렉터리로 이동한다. */</span>
+	<span class="n">indent</span><span class="o">--</span><span class="p">;</span>
+	<span class="n">chdir</span><span class="p">(</span><span class="s">".."</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[]){</span>
+	<span class="c1">//memset(direntry, 0x0, 255);</span>
+	<span class="n">dir_parser</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">"size is %ld Byte</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">total_size</span><span class="p">);</span>
+
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p><img src="img2.png" width="50%" /></p>
+
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/#file" class="page__taxonomy-item" rel="tag">file</a>
+    
+    </span>
+  </p>
+
+
+        
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2020-12-28T00:00:00+09:00">December 28, 2020</time></p>
+
+
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">Share on</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=%ED%8C%8C%EC%9D%BC%EC%8B%9C%EC%8A%A4%ED%85%9C+API+%3C1%3E+%EB%94%94%EB%A0%89%ED%84%B0%EB%A6%AC+%EA%B4%80%EB%A0%A8+%ED%95%A8%EC%88%98%3A+opendir%28%29%2C+fdopendir%28%29%2C+readdir%28%29%2C+closedir%28%29%2C+scandir%28%29%20https%3A%2F%2Fmarkyang920413.github.io%2F%2Ffile%2Fsystem_programming-file-filesystemAPI_1%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmarkyang920413.github.io%2F%2Ffile%2Fsystem_programming-file-filesystemAPI_1%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fmarkyang920413.github.io%2F%2Ffile%2Fsystem_programming-file-filesystemAPI_1%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/env/system_programming-env-option_parse/" class="pagination--pager" title="option parsing: getopt(), getopt_long()
+">Previous</a>
+    
+    
+      <a href="/file/system_programming-file-filesystemAPI_2/" class="pagination--pager" title="파일시스템 API &lt;2&gt; 디렉터리 관련 함수: mkdir(), rmdir()
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/linux-filesystem/linux-linux_filesystem-LVM/" rel="permalink">LVM
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/mac/m1_rosetta2/" rel="permalink">M1 Mac 로제타2 설치, 로제타 사용 brew 설치, M1용 jekyll설치
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/algorithm/algorithm-algorithm-time_complexity/" rel="permalink">Time complexity
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          less than 1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/algorithm/algorithm-algorithm-IO_STL/" rel="permalink">시험에서 입출력, STL
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          less than 1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2021 Dong-Hyeon Yang. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "https://markyang920413.github.io//file/system_programming-file-filesystemAPI_1/";  /* Replace PAGE_URL with your page's canonical URL variable */
+      this.page.identifier = "/file/system_programming-file-filesystemAPI_1"; /* Replace PAGE_IDENTIFIER with your page's unique identifier variable */
+    };
+    (function() { /* DON'T EDIT BELOW THIS LINE */
+      var d = document, s = d.createElement('script');
+      s.src = 'https://MarkYang920413.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+
+
+  </body>
+</html>

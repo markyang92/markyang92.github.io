@@ -1,0 +1,958 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.21.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Signal &lt;2&gt; RTS - 혼자 보려고 만든 블로그</title>
+<meta name="description" content="RTS: Realtime Signal">
+
+
+  <meta name="author" content="Dong-Heyon Yang">
+  
+  <meta property="article:author" content="Dong-Heyon Yang">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="혼자 보려고 만든 블로그">
+<meta property="og:title" content="Signal &lt;2&gt; RTS">
+<meta property="og:url" content="https://markyang920413.github.io//signal/system_programming-signal-signal_2/">
+
+
+  <meta property="og:description" content="RTS: Realtime Signal">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2021-01-18T00:00:00+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://markyang920413.github.io//signal/system_programming-signal-signal_2/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "Dong-Hyeon Yang",
+      "url": "https://markyang920413.github.io//"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="혼자 보려고 만든 블로그 Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          혼자 보려고 만든 블로그
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/categories/">Category</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/">About</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+  
+    
+      
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox" />
+  <label for="ac-toc">Toggle menu</label>
+  <ul class="nav__items">
+    
+      <li>
+        
+          <span class="nav__sub-title">LINUX</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#linux-system">LINUX System</a></li>
+          
+            <li><a href="/categories/#linux-tools">LINUX Tools</a></li>
+          
+            <li><a href="/categories/#linux-compile">LINUX Compile</a></li>
+          
+            <li><a href="/categories/#linux-filesystem">LINUX Filesystem</a></li>
+          
+            <li><a href="/categories/#http">HTTP</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">System Programming</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#file">File, Memory</a></li>
+          
+            <li><a href="/categories/#env">Env</a></li>
+          
+            <li><a href="/categories/#process">Process</a></li>
+          
+            <li><a href="/categories/#thread">Thread</a></li>
+          
+            <li><a href="/categories/#ipc">IPC</a></li>
+          
+            <li><a href="/categories/#signal">Signal</a></li>
+          
+            <li><a href="/categories/#socket-programming">Socket Programming</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">C</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#c">C</a></li>
+          
+            <li><a href="/categories/#system-programming">System Programming</a></li>
+          
+            <li><a href="/categories/#stdio">Standard I/O</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">Python</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#python-language">Python Language</a></li>
+          
+            <li><a href="/categories/#python-pandas">Python Pandas</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">Algorithm</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#algorithm">Algorithm</a></li>
+          
+            <li><a href="/categories/#problem">Problem</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">MAC</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#mac">Mac</a></li>
+          
+        </ul>
+        
+      </li>
+    
+  </ul>
+</nav>
+
+    
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Signal &lt;2&gt; RTS">
+    <meta itemprop="description" content="RTS: Realtime Signal">
+    <meta itemprop="datePublished" content="2021-01-18T00:00:00+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">Signal &lt;2&gt; RTS
+</h1>
+          
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          4 minute read
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              <ul class="toc__menu"><li><a href="#posix-rts">POSIX RTS</a><ul><li><a href="#rts">RTS</a></li><li><a href="#rts-지원-확인">RTS 지원 확인</a></li></ul></li><li><a href="#rts를-통한-네트워크-io-처리">RTS를 통한 네트워크 I/O 처리</a><ul><li><a href="#rts-api">RTS API</a></li><li><a href="#udp에서-rts-블록으로-정보-얻기">UDP에서 RTS 블록으로 정보 얻기</a></li></ul></li><li><a href="#프로세스간-신호-전달">프로세스간 신호 전달</a><ul><li><a href="#sigqueue2">sigqueue():2</a></li></ul></li><li><a href="#rts-반응-app-예제">RTS 반응 App 예제</a><ul><li><a href="#rcv_rtsc">rcv_rts.c</a></li><li><a href="#snd_rtsc">snd_rts.c</a></li></ul></li><li><a href="#rts-대기열의-크기에-따른-문제">RTS 대기열의 크기에 따른 문제</a></li><li><a href="#예제">예제</a></li></ul>
+
+            </nav>
+          </aside>
+        
+        <h2 id="posix-rts">POSIX RTS</h2>
+<h3 id="rts">RTS</h3>
+<hr />
+<ul>
+  <li><strong>RTS</strong>: <strong>비동기(asynchronous)</strong> 이벤트를 전달하기 위한 목적, 실시간성 유지하며 대기열부재 문제를 해결.
+    <ul>
+      <li><span style="color:navyblue"><strong>polling</strong></span>에 비해 월등한 성능 향상
+        <ul>
+          <li><strong>select, poll</strong>과 같은 I/O 방식은 <span style="color:navy"><strong>메시지가 도착하기를 계속 체크</strong></span>방식</li>
+          <li><strong>poll</strong>은 <span style="color:magenta"><strong>이벤트</strong></span>를 받기 위해 <span style="color:red"><strong>커널 스페이스</strong></span> <strong>-&gt;</strong> <span style="color:navy"><strong>유저스페이스</strong></span>로 <span style="color:magenta"><strong>이벤트</strong></span>를 <strong>복사</strong>한다.</li>
+          <li><strong>업데이트</strong>된 <span style="color:magenta"><strong>이벤트 리스트</strong></span>를 <span style="color:navy"><strong>유저스페이스</strong></span> <strong>-&gt;</strong> <span style="color:red"><strong>커널스페이스</strong></span>로 <strong>다시 복사</strong></li>
+          <li>즉, <strong>하나의 이벤트를 전달</strong>받기 위해 <strong>2번의 복사</strong>가 일어난다.</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><strong>UNIX 표준 시그널</strong>은 시그널 발생 시, 단지 <strong><u>시그널 전달 사실</u></strong>+ <strong><u>시그널 번호</u></strong>만 알 수 있다.
+    <ul>
+      <li><span style="color:red"><strong>표준 시그널은 시그널의 대기열 유지 불가</strong></span>, 시그널 핸들러가 리턴되기 전에 여러 개의 동일한 시그널이 전달되면 <em>그 중 하나</em>의 시그널만 전달될 뿐이며 나머지 시그널은 잃어 버린다.</li>
+    </ul>
+  </li>
+  <li><strong>RTS</strong>는 <span style="color:magenta"><strong>구조체</strong></span>에 <strong>시그널 관련 여러 정보 포함</strong>해 전달
+    <ul>
+      <li><span style="color:red"><strong>RTS는 시그널 대기열 유지 가능</strong></span>하여, <strong>동시에 여러 시그널</strong>이 전달되어도 대기열에 담아둘 수 있다.</li>
+    </ul>
+  </li>
+  <li><span style="color:magenta"><strong><em>struct</em></strong></span> <span style="color:steelblue"><strong>siginfo</strong></span>는 <a href="https://markyang920413.github.io/signal/system_programming-signal-signal_1/#sigaction-구조체"><strong>sigaction</strong> 구조체 내 <strong>sa_sigaction</strong></a>에서 사용된다.</li>
+</ul>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">typedef</span> <span class="k">struct</span> <span class="n">siginfo</span><span class="p">{</span>
+	<span class="kt">int</span> <span class="n">si_signo</span><span class="p">;</span>	<span class="cm">/* Signal number */</span>
+	<span class="kt">int</span> <span class="n">si_errno</span><span class="p">;</span>	<span class="cm">/* Error code */</span>
+	<span class="kt">int</span> <span class="n">si_code</span><span class="p">;</span>
+	<span class="n">pid_t</span> <span class="n">si_pid</span><span class="p">;</span>
+	<span class="n">uid_t</span> <span class="n">si_uid</span><span class="p">;</span>
+	<span class="kt">void</span> <span class="o">*</span><span class="n">si_addr</span><span class="p">;</span>
+	<span class="k">union</span> <span class="n">sigval</span> <span class="n">si_value</span><span class="p">;</span>
+	<span class="k">union</span> <span class="p">{</span>
+		<span class="cm">/* Skipping other fields */</span>
+		<span class="k">struct</span> <span class="p">{</span>
+			<span class="kt">int</span> <span class="n">_band</span><span class="p">;</span>	<span class="cm">/* Socket event flags (similar to poll) */</span>
+			<span class="kt">int</span> <span class="n">_fd</span><span class="p">;</span>	<span class="cm">/* Socket fd where event occurred */</span>
+		<span class="p">}</span> <span class="n">_sigpoll</span><span class="p">;</span>
+	<span class="p">}</span> <span class="n">_sifields</span><span class="p">;</span>
+<span class="p">}</span> <span class="n">siginfo_t</span><span class="p">;</span>
+
+<span class="cp">#define si_fd	_sifields._sigpoll._fd
+</span></code></pre></div></div>
+<ul>
+  <li>위 구조체를 보면 시그널 번호, 어떤 소켓에서 이벤트를 발생시켰는지 등의 정보를 포함한다.</li>
+</ul>
+
+<table>
+  <tbody>
+    <tr>
+      <td><span style="color:magenta"><strong><em>struct</em></strong></span> <span style="color:navy"><strong>siginfo_t</strong></span>의 <strong>멤버</strong></td>
+      <td><strong>description</strong></td>
+    </tr>
+    <tr>
+      <td><strong><em>si_signo</em></strong></td>
+      <td>시그널 번호</td>
+    </tr>
+    <tr>
+      <td><strong><em>si_errno</em></strong></td>
+      <td>errno 값</td>
+    </tr>
+    <tr>
+      <td><strong><em>si_code</em></strong></td>
+      <td>시그널을 받았을 때 <strong>어떤 이유</strong>로 <strong>시그널이 발생</strong>했는지 관련된 값<br /><strong>SI_ASYNCIO</strong>: 소켓으로 <span style="color:red"><strong>비동기 입출력 이벤트</strong></span> <strong>발생</strong><br /><strong>SI_QUEUE</strong>: <strong>sigqueue()</strong>함수를 통한 시그널 발생<br /><strong>SI_TIMER</strong>: 시간 초과<br /><strong>SI_USER</strong>: <strong>kill()</strong>함수 등에 의한 시그널 발생</td>
+    </tr>
+    <tr>
+      <td><strong><em>si_pid</em></strong></td>
+      <td>시그널을 발생시킨 PID</td>
+    </tr>
+    <tr>
+      <td><strong><em>si_uid</em></strong></td>
+      <td>시그널을 발생시킨 프로세스의 UID로, si_code가 SI_USER일 경우에만 값이 설정된다.</td>
+    </tr>
+    <tr>
+      <td><strong><em>si_status</em></strong></td>
+      <td>자식 프로세스에서 <span style="color:red"><strong>SIGCHLD</strong></span>시그널이 발생시키고 종료했을 경우 <strong>자식 프로세스의 종료 값</strong></td>
+    </tr>
+    <tr>
+      <td><strong><em>si_value</em></strong></td>
+      <td><strong>sigqueue()</strong>함수를 이용해서 시그널을 발생시킬 경우 사용자가 보낸 값이 저장된다.</td>
+    </tr>
+    <tr>
+      <td><strong><em>si_addr</em></strong></td>
+      <td>메모리 참조주소의 포인터를 포함. 이것은 SIGSEGV, SIGBUS, SIGILL, SIGFPE 등이 발생했을 때만 적용된다.</td>
+    </tr>
+    <tr>
+      <td><strong><em>si_fd</em></strong></td>
+      <td><strong>이벤트를 발생</strong>시킨 <span style="color:navy"><strong><em>file discriptor</em></strong></span></td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">typedef</span> <span class="k">union</span> <span class="n">sigval</span><span class="p">{</span>
+	<span class="kt">int</span> <span class="n">sival_int</span><span class="p">;</span>
+	<span class="kt">void</span> <span class="o">*</span><span class="n">sival_ptr</span><span class="p">;</span>
+<span class="p">}</span> <span class="n">sigval_t</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h3 id="rts-지원-확인">RTS 지원 확인</h3>
+<ul>
+  <li><strong><em>kill -l</em></strong> 커맨드로 확인한다.
+    <ul>
+      <li><strong>1~31</strong>: UNIX 표준 시그널</li>
+      <li><span style="color:navy"><strong>32~63</strong></span>: <strong>RTS를 위해 예약된 영역</strong>, 이 중 하나를 사용하면된다.
+        <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="o">[</span>root@joinc /root]# <span class="nb">kill</span> <span class="nt">-l</span>
+  1<span class="o">)</span> SIGHUP       2<span class="o">)</span> SIGINT       3<span class="o">)</span> SIGQUIT      4<span class="o">)</span> SIGILL
+  5<span class="o">)</span> SIGTRAP      6<span class="o">)</span> SIGABRT      7<span class="o">)</span> SIGBUS       8<span class="o">)</span> SIGFPE 
+  9<span class="o">)</span> SIGKILL     10<span class="o">)</span> SIGUSR1     11<span class="o">)</span> SIGSEGV     12<span class="o">)</span> SIGUSR2 
+  13<span class="o">)</span> SIGPIPE     14<span class="o">)</span> SIGALRM     15<span class="o">)</span> SIGTERM     17<span class="o">)</span> SIGCHLD
+  18<span class="o">)</span> SIGCONT     19<span class="o">)</span> SIGSTOP     20<span class="o">)</span> SIGTSTP     21<span class="o">)</span> SIGTTIN
+  22<span class="o">)</span> SIGTTOU     23<span class="o">)</span> SIGURG      24<span class="o">)</span> SIGXCPU     25<span class="o">)</span> SIGXFSZ
+  26<span class="o">)</span> SIGVTALRM   27<span class="o">)</span> SIGPROF     28<span class="o">)</span> SIGWINCH    29<span class="o">)</span> SIGIO
+  30<span class="o">)</span> SIGPWR      31<span class="o">)</span> SIGSYS      32<span class="o">)</span> SIGRTMIN    33<span class="o">)</span> SIGRTMIN+1
+  34<span class="o">)</span> SIGRTMIN+2  35<span class="o">)</span> SIGRTMIN+3  36<span class="o">)</span> SIGRTMIN+4  37<span class="o">)</span> SIGRTMIN+5
+  38<span class="o">)</span> SIGRTMIN+6  39<span class="o">)</span> SIGRTMIN+7  40<span class="o">)</span> SIGRTMIN+8  41<span class="o">)</span> SIGRTMIN+9
+  42<span class="o">)</span> SIGRTMIN+10 43<span class="o">)</span> SIGRTMIN+11 44<span class="o">)</span> SIGRTMIN+12 45<span class="o">)</span> SIGRTMIN+13
+  46<span class="o">)</span> SIGRTMIN+14 47<span class="o">)</span> SIGRTMIN+15 48<span class="o">)</span> SIGRTMAX-15 49<span class="o">)</span> SIGRTMAX-14
+  50<span class="o">)</span> SIGRTMAX-13 51<span class="o">)</span> SIGRTMAX-12 52<span class="o">)</span> SIGRTMAX-11 53<span class="o">)</span> SIGRTMAX-10
+  54<span class="o">)</span> SIGRTMAX-9  55<span class="o">)</span> SIGRTMAX-8  56<span class="o">)</span> SIGRTMAX-7  57<span class="o">)</span> SIGRTMAX-6
+  58<span class="o">)</span> SIGRTMAX-5  59<span class="o">)</span> SIGRTMAX-4  60<span class="o">)</span> SIGRTMAX-3  61<span class="o">)</span> SIGRTMAX-2
+  62<span class="o">)</span> SIGRTMAX-1  63<span class="o">)</span> SIGRTMAX
+</code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="rts를-통한-네트워크-io-처리">RTS를 통한 네트워크 I/O 처리</h2>
+<h3 id="rts-api">RTS API</h3>
+<hr />
+<ul>
+  <li>select없이 <strong>소켓</strong>에 <span style="color:magenta"><strong>이벤트 시그널</strong></span>이 발생한 것 어떻게 아는가?</li>
+  <li>소켓파일이 <strong>RTS</strong>에 반응하도록 한다.
+    <ul>
+      <li><span style="color:navy"><a href="https://markyang920413.github.io//file/system_programming-file-lowlevel_IO_2/#fcntl2-%ED%8C%8C%EC%9D%BC-%EC%A0%9C%EC%96%B4"><strong><em>fcntl()</em></strong></a></span>을 사용한다.
+        <ol>
+          <li>해당 <span style="color:red"><strong>소켓</strong></span>을 <span style="color:magenta"><strong><em>논 블럭+비동기</em></strong></span>로 셋팅</li>
+          <li><strong>시그널 번호</strong> <span style="color:red"><strong>&gt;=</strong></span> <strong>SIGRTMIN</strong> (SIGRTMIN 부터 RTS 시그널 가능)
+            <div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="kt">int</span> <span class="n">sockfd</span> <span class="o">=</span> <span class="n">accept</span><span class="p">(...);</span>
+
+ <span class="s">"소켓을 논블럭, 비동기로 설정한다."</span>
+ <span class="n">fcntl</span><span class="p">(</span><span class="n">sockfd</span><span class="p">,</span> <span class="n">F_SETFL</span><span class="p">,</span> <span class="n">O_RDWR</span> <span class="o">|</span> <span class="n">O_NONBLOCK</span> <span class="o">|</span> <span class="n">O_ASYNC</span><span class="p">);</span>
+
+ <span class="s">"SIGRTMIN보다 더 큰 RTS시그널이 전달되도록 한다."</span>
+ <span class="n">fcntl</span><span class="p">(</span><span class="n">sockfd</span><span class="p">,</span> <span class="n">F_SETSIG</span><span class="p">,</span> <span class="n">SIGRTMIN</span><span class="p">);</span>
+
+ <span class="s">"시그널을 보낼 프로세스 ID를 설정한다. 여기서는 자기 프로세스로 보내도록 했다."</span>
+ <span class="n">fcntl</span><span class="p">(</span><span class="n">sockfd</span><span class="p">,</span> <span class="n">F_SETOWN</span><span class="p">,</span> <span class="n">getpid</span><span class="p">());</span>
+ <span class="n">fcntl</span><span class="p">(</span><span class="n">sockfd</span><span class="p">,</span> <span class="n">F_SETAUXFL</span><span class="p">,</span> <span class="n">O_ONESIGFD</span><span class="p">);</span>
+</code></pre></div>            </div>
+          </li>
+        </ol>
+      </li>
+    </ul>
+  </li>
+  <li>위 설정으로 <span style="color:navy"><strong>소켓 fd</strong></span>는 <span style="color:magenta"><strong>SIGRTMIN</strong></span> 이벤트 감지 가능</li>
+  <li>이제, 소켓에 <strong>RTS가 통지</strong>되었을 때 필요한 작업을 하도록 코드를 추가
+    <ul>
+      <li><strong>RTS</strong>가 통지되었는지 <span style="color:navy"><strong>확인하는 함수</strong></span>가 필요하다.</li>
+      <li>UNIX는 <span style="color:navy"><strong>sigwaitinfo()</strong></span>와 <span style="color:navy"><strong>sigtimedwait()</strong></span>함수를 제공하며, 이 함수들로 <strong>RTS통지</strong> 확인
+        <div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="cp">#include &lt;signal.h&gt;
+</span>
+  <span class="kt">int</span> <span class="nf">sigwaitinfo</span><span class="p">(</span><span class="k">const</span> <span class="n">sigset_t</span> <span class="o">*</span><span class="n">set</span><span class="p">,</span> <span class="n">siginfo_t</span> <span class="o">*</span><span class="n">info</span><span class="p">);</span>
+  <span class="kt">int</span> <span class="nf">sigtimedwait</span><span class="p">(</span><span class="k">const</span> <span class="n">sigset_t</span> <span class="o">*</span><span class="n">set</span><span class="p">,</span> <span class="n">siginfo_t</span> <span class="o">*</span><span class="n">info</span><span class="p">,</span> <span class="k">const</span> <span class="k">struct</span> <span class="n">timespec</span> <span class="o">*</span><span class="n">timeout</span><span class="p">);</span>
+  <span class="kt">int</span> <span class="nf">sigqueue</span><span class="p">(</span><span class="n">pid_t</span> <span class="n">pid</span><span class="p">,</span> <span class="kt">int</span> <span class="n">sig</span><span class="p">,</span> <span class="k">const</span> <span class="k">union</span> <span class="n">sigval</span> <span class="n">value</span><span class="p">);</span>
+</code></pre></div>        </div>
+        <ul>
+          <li><a href="https://markyang920413.github.io/signal/system_programming-signal-signal_1/#sigset_t-%EA%B5%AC%EC%A1%B0%EC%B2%B4"><strong>set</strong></a>은 기다릴 시그널 정보가 설정되는 구조체</li>
+          <li>set에 설정한 시그널이 통지되면 해당 정보가 <strong>info</strong>에 복사된다.
+            <ul>
+              <li><span style="color:navy"><strong><em>sigtimewait()</em></strong></span>는 기다리는 시간을 설정할 수 있다는 점을 제외하고는 <span style="color:navy"><strong><em>sigwaitinfo()</em></strong></span>와 완전 동일</li>
+            </ul>
+          </li>
+          <li>사용법은 아래 UDP에서 RTS 블록으로 정보 얻기 참고</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>kill()이 시그널을 보내는 것 처럼, <span style="color:navy"><strong>RTS Signal</strong></span>도 <strong>다른 프로세스</strong>로 시그널을 보낼 수 있는데 바로 <code class="language-plaintext highlighter-rouge">sigqueue()</code>이다.</li>
+</ul>
+
+<h3 id="udp에서-rts-블록으로-정보-얻기">UDP에서 RTS 블록으로 정보 얻기</h3>
+<hr />
+
+<p><img src="img1.png" /></p>
+
+<ol>
+  <li><span style="color:navy"><strong>sigaddset()</strong></span>을 이용해서 RTS를 대응하도록 설정.<br /><span style="color:magenta"><strong>sigprocmask()</strong></span>을 이용해서 동일한 RTS가 들어왔을 때, 인터럽트가 걸리지 않고 <strong>블럭되도록 설정</strong>한다.
+    <ul>
+      <li>만약 sigprocmask()를 사용해서 RTS를 블럭하지 않는다면 <span style="color:blue"><strong>sigwaitinfo()</strong></span>가 호출되어 RTS를 기다리기 전에 RTS가 프로세스로 전달될 경우 프로세스에 인터럽트가 걸리고 <u>프로세스는 종료</u>되어 버릴 것이다.</li>
+    </ul>
+  </li>
+  <li><strong>소켓 fd</strong>를 <span style="color:navy"><strong><em>fcntl()</em></strong></span>을 이용해 <strong>RTS</strong>에 대응하도록 만든다.</li>
+  <li><span style="color:blue"><strong>sigwaitinfo()</strong></span>를 통해 <strong>RTS</strong>를 기다린다.<br />소켓에 <span style="color:magenta"><strong>이벤트</strong></span>발생 시, RTS가 전달 되고, <span style="color:blue"><strong>sigwaitinfo()</strong></span>는 리턴한다. 리턴 시, <strong>siginfo</strong>를 채워 이벤트 발생한 파일과 정보등을 담는다.</li>
+  <li><strong>siginfo</strong> 정보를 이용해 어느 소켓, 어떤 이벤트 발생했는지 파악해 데이터 통신</li>
+</ol>
+
+<h2 id="프로세스간-신호-전달">프로세스간 신호 전달</h2>
+<h3 id="sigqueue2">sigqueue():2</h3>
+<hr />
+<ul>
+  <li><strong>RTS</strong>는 파일에 대한 좋은 <span style="color:magenta"><strong>이벤트 전달</strong></span> 도구 이기도 하지만, 프로세스간 신호 전달 목적으로도 사용가능하다.
+    <ul>
+      <li>장점: 시그널이 대기열에 쌓이므로 잃어버릴 염려 없다. 부가적인 정보 전달 가능하다.</li>
+    </ul>
+  </li>
+  <li><span style="color:navy"><strong>sigqueue()</strong></span>: <span style="color:steelblue"><strong>다른 프로세스</strong>로 <strong>RTS 전달</strong></span></li>
+  <li><span style="color:magenta"><strong><em>sifinfo_t</em></strong></span> 구조체의 <span style="color:navy"><strong>sigvalue</strong></span>로 <strong>부가적인 정보 전달</strong>
+    <div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="k">union</span> <span class="n">sigval</span><span class="p">{</span>
+      <span class="kt">int</span> <span class="n">sival_int</span><span class="p">;</span>
+      <span class="kt">void</span> <span class="o">*</span><span class="n">sival_ptr</span><span class="p">;</span>
+  <span class="p">}</span>
+</code></pre></div>    </div>
+    <ul>
+      <li><span sytle="color:orange"><strong>sival_int</strong></span>는 <strong>int</strong>형 값 전달 위해 사용</li>
+      <li><span sytle="color:orange"><strong>*sival_ptr</strong></span>는 주소값을 전달하기 위해 사용한다고 되어 있는데, 실제 어디에 사용가능한지 확인 할 수 없다.</li>
+    </ul>
+  </li>
+  <li><span style="color:navy"><strong><em>sigaction</em></strong></span>의 <span style="color:magenta"><strong><em>sa_falgs</em></strong></span>를 <span style="color:red"><strong>SA_SIGINFO</strong></span>로 <a href="https://markyang920413.github.io/signal/system_programming-signal-signal_1/#sigaction-%EA%B5%AC%EC%A1%B0%EC%B2%B4"><strong>sigaction 참고</strong></a>설정하고 적당한 <strong>시그널 핸들러</strong>를 등록하기만 하면된다.<br />그리고 RTS가 전달되었을 경우 <strong>si_cod</strong>e가 <span style="color:magenta"><strong>SI_QUEUE</strong></span>인지를 확인하고 원하는 작업을 하면 된다.
+    <ul>
+      <li>확인하는 이유는 RTS가 아닌 표준 시그널이 도착할 수 있고, 이를 구별해서 작업해야할 필요가 있기 때문이다.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="rts-반응-app-예제">RTS 반응 App 예제</h2>
+<h3 id="rcv_rtsc">rcv_rts.c</h3>
+<hr />
+
+<p><img src="rcv_rts.png" /></p>
+
+<h3 id="snd_rtsc">snd_rts.c</h3>
+<hr />
+
+<p><img src="snd_rts.png" width="80%" /></p>
+
+<h2 id="rts-대기열의-크기에-따른-문제">RTS 대기열의 크기에 따른 문제</h2>
+<ul>
+  <li><strong>RTS</strong> 대기열의 크기는 <strong>무한하지 않다.</strong>
+    <ul>
+      <li>대기열이 다차지않게 해야한다.</li>
+      <li><strong>RTS 대기열</strong>은 <strong>프로세스 단위</strong>로 유지된다.
+        <ul>
+          <li>클라이언트의 데이터량을 계산해서 <strong>RTS+스레드</strong>, <strong>RTS+fork</strong>의 식으로 서버를 작성하라(스레드/프로세스 풀 사용).</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><strong>RTS 대기열 Overflow</strong>
+    <ul>
+      <li>Overflow가 발생할 수 있다.
+        <ul>
+          <li>RTS overflow 발생 시, 프로세스로 <span style="color:magenta"><strong>SIGIO 시그널</strong></span>이 전달된다.</li>
+          <li><span style="color:magenta"><strong>SIGIO</strong></span> <span style="color:steelblue"><strong>시그널 핸들러</strong></span>를 등록해 이벤트 발생시 <strong>복구 작업</strong>
+            <ol>
+              <li>모든 소켓에 대한 RTS대응을 하지 않도록 설정</li>
+              <li>모든 시그널 대기열로 부터 모든 시그널을 제거</li>
+              <li>잃어버린 소켓 이벤트를 복구
+<br /><br /></li>
+            </ol>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>시그널 대기열에 있는 <strong>소켓 fd 당 하나의 이벤트만 허용</strong>하도록 커널 수정
+    <ul>
+      <li><span style="color:navy"><strong>fcntl</strong></span>을 사용하여 <span style="color:blue"><strong>하나의 소켓</strong></span>당 <span style="color:magenta"><strong>하나의 이벤트</strong></span>가 대기열에 들어가도록 조작
+        <ul>
+          <li><span style="color:navy"><strong>fcntl</strong></span>(<strong>sockfd, F_SETAUXFL, O_ONESIGFD</strong>);</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="예제">예제</h2>
+
+<p><img src="img100.png" /></p>
+
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/#signal" class="page__taxonomy-item" rel="tag">signal</a>
+    
+    </span>
+  </p>
+
+
+        
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2021-01-18T00:00:00+09:00">January 18, 2021</time></p>
+
+
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">Share on</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=Signal+%3C2%3E+RTS%20https%3A%2F%2Fmarkyang920413.github.io%2F%2Fsignal%2Fsystem_programming-signal-signal_2%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmarkyang920413.github.io%2F%2Fsignal%2Fsystem_programming-signal-signal_2%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fmarkyang920413.github.io%2F%2Fsignal%2Fsystem_programming-signal-signal_2%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/file/system_programming-file-filesystemAPI_5/" class="pagination--pager" title="파일시스템 API &lt;5&gt; 임시파일 생성, 파일삭제, 변경 tmpnam(), tmpfile(), remove(), rename()
+">Previous</a>
+    
+    
+      <a href="/thread/system_programming-thread-thread_2/" class="pagination--pager" title="thread &lt;2&gt; cond 조건변수, attribute, signal, cancel
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/linux-filesystem/linux-linux_filesystem-LVM/" rel="permalink">LVM
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/mac/m1_rosetta2/" rel="permalink">M1 Mac 로제타2 설치, 로제타 사용 brew 설치, M1용 jekyll설치
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/algorithm/algorithm-algorithm-time_complexity/" rel="permalink">Time complexity
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          less than 1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/algorithm/algorithm-algorithm-IO_STL/" rel="permalink">시험에서 입출력, STL
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          less than 1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2021 Dong-Hyeon Yang. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "https://markyang920413.github.io//signal/system_programming-signal-signal_2/";  /* Replace PAGE_URL with your page's canonical URL variable */
+      this.page.identifier = "/signal/system_programming-signal-signal_2"; /* Replace PAGE_IDENTIFIER with your page's unique identifier variable */
+    };
+    (function() { /* DON'T EDIT BELOW THIS LINE */
+      var d = document, s = d.createElement('script');
+      s.src = 'https://MarkYang920413.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+
+
+  </body>
+</html>

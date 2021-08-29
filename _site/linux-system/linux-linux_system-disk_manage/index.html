@@ -1,0 +1,866 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.21.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>디스크 관리 명령어: df, du, fsck, e2fsck, badblocks, dump2efs - 혼자 보려고 만든 블로그</title>
+<meta name="description" content="It is just my note">
+
+
+  <meta name="author" content="Dong-Heyon Yang">
+  
+  <meta property="article:author" content="Dong-Heyon Yang">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="혼자 보려고 만든 블로그">
+<meta property="og:title" content="디스크 관리 명령어: df, du, fsck, e2fsck, badblocks, dump2efs">
+<meta property="og:url" content="https://markyang920413.github.io//linux-system/linux-linux_system-disk_manage/">
+
+
+  <meta property="og:description" content="It is just my note">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2021-03-07T00:00:00+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://markyang920413.github.io//linux-system/linux-linux_system-disk_manage/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "Dong-Hyeon Yang",
+      "url": "https://markyang920413.github.io//"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="혼자 보려고 만든 블로그 Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          혼자 보려고 만든 블로그
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/categories/">Category</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/">About</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+  
+    
+      
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox" />
+  <label for="ac-toc">Toggle menu</label>
+  <ul class="nav__items">
+    
+      <li>
+        
+          <span class="nav__sub-title">LINUX</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#linux-system">LINUX System</a></li>
+          
+            <li><a href="/categories/#linux-tools">LINUX Tools</a></li>
+          
+            <li><a href="/categories/#linux-compile">LINUX Compile</a></li>
+          
+            <li><a href="/categories/#linux-filesystem">LINUX Filesystem</a></li>
+          
+            <li><a href="/categories/#http">HTTP</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">System Programming</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#file">File, Memory</a></li>
+          
+            <li><a href="/categories/#env">Env</a></li>
+          
+            <li><a href="/categories/#process">Process</a></li>
+          
+            <li><a href="/categories/#thread">Thread</a></li>
+          
+            <li><a href="/categories/#ipc">IPC</a></li>
+          
+            <li><a href="/categories/#signal">Signal</a></li>
+          
+            <li><a href="/categories/#socket-programming">Socket Programming</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">C</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#c">C</a></li>
+          
+            <li><a href="/categories/#system-programming">System Programming</a></li>
+          
+            <li><a href="/categories/#stdio">Standard I/O</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">Python</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#python-language">Python Language</a></li>
+          
+            <li><a href="/categories/#python-pandas">Python Pandas</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">Algorithm</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#algorithm">Algorithm</a></li>
+          
+            <li><a href="/categories/#problem">Problem</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">MAC</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#mac">Mac</a></li>
+          
+        </ul>
+        
+      </li>
+    
+  </ul>
+</nav>
+
+    
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="디스크 관리 명령어: df, du, fsck, e2fsck, badblocks, dump2efs">
+    <meta itemprop="description" content="">
+    <meta itemprop="datePublished" content="2021-03-07T00:00:00+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">디스크 관리 명령어: df, du, fsck, e2fsck, badblocks, dump2efs
+</h1>
+          
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          2 minute read
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              <ul class="toc__menu"><li><a href="#디스크-사용량-관리">디스크 사용량 관리</a><ul><li><a href="#df---파일-시스템별-사용량-확인">df - 파일 시스템별 사용량 확인</a></li><li><a href="#du---디렉터리-사용자별-디스크-사용량-확인">du - 디렉터리, 사용자별 디스크 사용량 확인</a></li></ul></li><li><a href="#파일-시스템-검사-복구">파일 시스템 검사 복구</a><ul><li><a href="#fsck---파일-시스템-검사-및-복구">fsck - 파일 시스템 검사 및 복구</a></li><li><a href="#e2fsck---fsck-기능">e2fsck - fsck 기능</a></li><li><a href="#badblocks---배드-블록-검사하기">badblocks - 배드 블록 검사하기</a></li></ul></li><li><a href="#백업-수퍼블록을-이용해-파일-시스템-복구하기">백업 수퍼블록을 이용해 파일 시스템 복구하기</a><ul><li><a href="#dumpe2fs---파일-시스템-정보-출력">dumpe2fs - 파일 시스템 정보 출력</a><ul><li><a href="#dumpe2fs를-이용해-수퍼-블록-정보-추출">dumpe2fs를 이용해 수퍼 블록 정보 추출</a></li><li><a href="#fsck-e2fsck--b-로-파일-시스템-복구">fsck, e2fsck -b 로 파일 시스템 복구</a></li></ul></li></ul></li></ul>
+
+            </nav>
+          </aside>
+        
+        <h2 id="디스크-사용량-관리">디스크 사용량 관리</h2>
+<h3 id="df---파일-시스템별-사용량-확인">df - 파일 시스템별 사용량 확인</h3>
+<hr />
+<ul>
+  <li><strong>df</strong>: <strong><em>disk free</em></strong>의 약자로 현재 시스템에서 <code class="language-plaintext highlighter-rouge">사용 중</code>인 파일 시스템의 <code class="language-plaintext highlighter-rouge">사용량</code>에 대한 정보 출력
+    <ul>
+      <li>전체 용량, 사용 가능한 용량, 마운트 정보 등도 함께 출력</li>
+    </ul>
+  </li>
+</ul>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">$</span> <span class="n">df</span> <span class="p">[</span><span class="err">옵션</span><span class="p">]</span> <span class="p">[</span><span class="err">파일</span> <span class="err">시스템</span><span class="p">]</span>
+
+<span class="n">option</span><span class="o">:</span>
+	<span class="o">-</span><span class="n">a</span>			<span class="err">모든</span> <span class="err">파일</span> <span class="err">시스템을</span> <span class="err">대상으로</span> <span class="err">디스크</span> <span class="err">사용량을</span> <span class="err">확인한다</span><span class="p">.</span>
+	<span class="o">-</span><span class="n">k</span>			<span class="err">디스크</span> <span class="err">사용량을</span> <span class="n">KB</span> <span class="err">단위로</span> <span class="err">출력한다</span><span class="p">.</span>
+	<span class="o">-</span><span class="n">m</span>			<span class="err">디스크</span> <span class="err">사용량을</span> <span class="n">MB</span> <span class="err">단위로</span> <span class="err">출력한다</span><span class="p">.</span>
+	<span class="o">-</span><span class="n">h</span>			<span class="err">디스크</span> <span class="err">사용량을</span> <span class="err">알기</span> <span class="err">쉬운</span> <span class="err">단위</span><span class="p">(</span><span class="n">GB</span><span class="p">,</span> <span class="n">MB</span><span class="p">,</span> <span class="n">KB</span> <span class="err">등</span><span class="p">)</span><span class="err">로</span> <span class="err">출력한다</span><span class="p">.</span>
+	<span class="o">-</span><span class="n">t</span> <span class="o">&lt;</span><span class="err">파일</span> <span class="err">시스템의</span> <span class="err">종류</span><span class="o">&gt;</span>	<span class="err">지정한</span> <span class="err">파일</span> <span class="err">시스템의</span> <span class="err">종류에</span> <span class="err">해당하는</span> <span class="err">디스크</span> <span class="err">사용량을</span> <span class="err">출력한다</span><span class="p">.</span>
+	<span class="o">-</span><span class="n">T</span>			<span class="err">파일</span> <span class="err">시스템의</span> <span class="err">종류도</span> <span class="err">출력한다</span><span class="p">.</span>
+
+<span class="err">사용</span> <span class="err">예</span><span class="o">:</span>
+	<span class="n">df</span> <span class="o">-</span><span class="n">h</span>
+</code></pre></div></div>
+<ul>
+  <li>df 명령으로 출력되는 항목은 다음과 같다.
+    <ul>
+      <li>파일 시스템 장치명</li>
+      <li>파일 시스템의 전체 용량</li>
+      <li>파일 시스템의 사용량</li>
+      <li>사용량을 퍼센트로 표시</li>
+      <li>파일 시스템의 사용 가능한 남은 용량</li>
+      <li>마운트 포인트
+<br /> <br />
+<br /></li>
+    </ul>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">-t ext4</code>: ext4 파일 시스템에 대해서만 정보 출력</p>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">-T</code> : 파일 시스템의 종류 정보 출력</li>
+</ul>
+
+<p><img src="img1.jpg" /></p>
+
+<h3 id="du---디렉터리-사용자별-디스크-사용량-확인">du - 디렉터리, 사용자별 디스크 사용량 확인</h3>
+<ul>
+  <li><strong>disk usage</strong>: 특정 <code class="language-plaintext highlighter-rouge">디렉터리별</code>로 <code class="language-plaintext highlighter-rouge">디스크의 사용량</code>을 알려준다.</li>
+</ul>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">$</span> <span class="n">du</span> <span class="p">[</span><span class="err">옵션</span><span class="p">]</span> <span class="p">[</span><span class="err">디렉터리</span><span class="p">]</span>
+
+<span class="n">option</span><span class="o">:</span>
+	<span class="o">-</span><span class="n">s</span>		<span class="err">특정</span> <span class="err">디렉터리의</span> <span class="err">전체</span> <span class="err">사용량을</span> <span class="err">출력한다</span><span class="p">.</span>
+	<span class="o">-</span><span class="n">h</span>		<span class="err">디스크</span> <span class="err">사용량을</span> <span class="err">알기</span> <span class="err">쉬운</span> <span class="err">단위</span><span class="p">(</span><span class="n">GB</span><span class="p">,</span> <span class="n">MB</span><span class="p">,</span> <span class="n">KB</span> <span class="err">등</span><span class="p">)</span><span class="err">로</span> <span class="err">출력한다</span><span class="p">.</span>
+
+<span class="err">사용</span> <span class="err">예</span><span class="o">:</span>
+	<span class="n">du</span> <span class="o">-</span><span class="n">sh</span> <span class="p">.</span>
+	<span class="n">du</span> <span class="o">-</span><span class="n">sh</span> <span class="o">~/</span><span class="n">blog</span>
+</code></pre></div></div>
+
+<h2 id="파일-시스템-검사-복구">파일 시스템 검사 복구</h2>
+<h3 id="fsck---파일-시스템-검사-및-복구">fsck - 파일 시스템 검사 및 복구</h3>
+<hr />
+<ul>
+  <li><strong>fsck</strong>: ‘file system check’의 약자로, inode 및 블록, 디렉터리, 파일 링크 등을 검사하고 필요시 복구 작업도 수행</li>
+</ul>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">$</span> <span class="n">fsck</span> <span class="p">[</span><span class="err">옵션</span><span class="p">]</span> <span class="err">장치명</span>
+
+<span class="n">option</span><span class="o">:</span>
+	<span class="o">-</span><span class="n">f</span>			<span class="err">강제로</span> <span class="err">점검한다</span><span class="p">.</span>
+	<span class="o">-</span><span class="n">b</span> <span class="o">&lt;</span><span class="err">수퍼</span> <span class="err">블록</span><span class="o">&gt;</span>		<span class="err">지정한</span> <span class="err">백업</span> <span class="err">수퍼</span> <span class="err">블록을</span> <span class="err">사용한다</span><span class="p">.</span>
+	<span class="o">-</span><span class="n">y</span>			<span class="err">모든</span> <span class="err">질문에</span> <span class="n">yes</span><span class="err">로</span> <span class="err">대답하게</span> <span class="err">한다</span><span class="p">.</span>
+	<span class="o">-</span><span class="n">a</span>			<span class="err">파일</span> <span class="err">시스템</span> <span class="err">검사에서</span> <span class="err">문제가</span> <span class="err">발생했을</span> <span class="err">때</span> <span class="err">자동으로</span> <span class="err">복구한다</span><span class="p">.</span>
+
+<span class="err">사용</span> <span class="err">예</span><span class="o">:</span>
+	<span class="n">fsck</span> <span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">sdb1</span>
+	<span class="n">fsck</span> <span class="o">-</span><span class="n">f</span> <span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">sdb1</span>
+</code></pre></div></div>
+<ul>
+  <li>fsck 명령은 기본적으로 /etc/fstab에 지정된 파일 시스템을 대상으로 한다.<br />물론 다른 파일 시스템에 대한 검사도 수행할 수 있다.</li>
+  <li>각 파일 시스템 종류별로 <strong><em>fsck.ext2, fsck.ext3, fsck.ext4</em></strong> 명령도 제공한다.</li>
+</ul>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">$</span> <span class="n">sudo</span> <span class="n">fsck</span> <span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">sdd1</span>
+<span class="n">fsck</span> <span class="n">from</span> <span class="n">util</span><span class="o">-</span><span class="n">linux</span> <span class="mi">2</span><span class="p">.</span><span class="mi">20</span><span class="p">.</span><span class="mi">1</span>
+<span class="n">e2fsck</span> <span class="mi">1</span><span class="p">.</span><span class="mi">42</span><span class="p">.</span><span class="mi">8</span> <span class="p">(</span><span class="mi">20</span><span class="o">-</span><span class="n">Jun</span><span class="o">-</span><span class="mi">2013</span><span class="p">)</span>
+<span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">sdd1</span><span class="o">:</span> <span class="n">clean</span><span class="p">,</span> <span class="mi">11</span><span class="o">/</span><span class="mi">76912</span> <span class="n">files</span><span class="p">,</span> <span class="mi">11777</span><span class="o">/</span><span class="mi">307200</span> <span class="n">blocks</span>
+<span class="err">$</span>
+</code></pre></div></div>
+
+<ul>
+  <li>파일 시스템 <code class="language-plaintext highlighter-rouge">종류 지정</code>해 검사</li>
+</ul>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">$</span> <span class="n">sudo</span> <span class="n">fsck</span><span class="p">.</span><span class="n">ext4</span> <span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">sdd1</span>
+<span class="n">e2fsck</span> <span class="mi">1</span><span class="p">.</span><span class="mi">42</span><span class="p">.</span><span class="mi">8</span> <span class="p">(</span><span class="mi">20</span><span class="o">-</span><span class="n">Jun</span><span class="o">-</span><span class="mi">2013</span><span class="p">)</span>
+<span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">sdd1</span><span class="o">:</span> <span class="n">clean</span><span class="p">,</span> <span class="mi">11</span><span class="o">/</span><span class="mi">76912</span> <span class="n">files</span><span class="p">,</span> <span class="mi">11777</span><span class="o">/</span><span class="mi">307200</span> <span class="n">blocks</span>
+<span class="err">$</span>
+</code></pre></div></div>
+
+<h3 id="e2fsck---fsck-기능">e2fsck - fsck 기능</h3>
+<hr />
+<ul>
+  <li>fsck 처럼 inode 및 블록, 디렉터리, 파일 링크 등을 검사하고 필요시 복구 작업도 수행한다.
+    <ul>
+      <li><span style="color:red"><strong>&lt;주의!&gt;</strong></span> e2fsck 명령으로 파일 시스템을 점검할 때는 해당 파일 시스템의 마운트를 해제하고 해야한다!!</li>
+    </ul>
+  </li>
+</ul>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">$</span> <span class="n">sudo</span> <span class="n">e2fsck</span> <span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">sdd1</span>
+<span class="err">$</span> <span class="n">sudo</span> <span class="n">e2fsck</span> <span class="o">-</span><span class="n">f</span> <span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">sdd1</span>
+</code></pre></div></div>
+
+<h3 id="badblocks---배드-블록-검사하기">badblocks - 배드 블록 검사하기</h3>
+<hr />
+<ul>
+  <li>배드 블록으로 인한 데이터 유실 피해 방지하는 것 중요!
+    <ul>
+      <li>fsck, e2fsck 명령으로 배드 블록 검사가 가능하나 배드 블록을 검사하는 별도의 badblocks 명령도 있다.</li>
+    </ul>
+  </li>
+  <li><strong>badblocks</strong>: <strong>배드 블록을 검색</strong>한다.</li>
+</ul>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">$</span> <span class="n">badblocks</span> <span class="p">[</span><span class="err">옵션</span><span class="p">]</span> <span class="err">장치명</span>
+
+<span class="n">options</span><span class="o">:</span>
+	<span class="o">-</span><span class="n">v</span>				<span class="err">검색</span> <span class="err">결과를</span> <span class="err">자세하게</span> <span class="err">출력한다</span><span class="p">.</span>
+	<span class="o">-</span><span class="n">o</span> <span class="err">출력파일</span>			<span class="err">검색한</span> <span class="err">배드</span> <span class="err">블록</span> <span class="err">목록을</span> <span class="err">지정한</span> <span class="err">출력</span> <span class="err">파일에</span> <span class="err">저장한다</span><span class="p">.</span>
+
+<span class="err">사용</span> <span class="err">예</span><span class="o">:</span>
+	<span class="n">badblocks</span> <span class="o">-</span><span class="n">v</span> <span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">sdb1</span>
+	<span class="n">badblocks</span> <span class="o">-</span><span class="n">v</span> <span class="o">-</span><span class="n">o</span> <span class="n">bad</span><span class="p">.</span><span class="n">out</span> <span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">sdb1</span>
+</code></pre></div></div>
+
+<h2 id="백업-수퍼블록을-이용해-파일-시스템-복구하기">백업 수퍼블록을 이용해 파일 시스템 복구하기</h2>
+<ul>
+  <li>파일 시스템의 기본 <a href="https://markyang920413.github.io/linux-filesystem/linux-linux_filesystem-filesystem_architecture/#%EB%A6%AC%EB%88%85%EC%8A%A4-%ED%8C%8C%EC%9D%BC-%EC%8B%9C%EC%8A%A4%ED%85%9C-%EA%B5%AC%EC%A1%B0">수퍼블록</a>에 문제가 있으면 해당 파일 시스템을 사용할 수 없다.
+    <ul>
+      <li>이럴 경우를 대비해 <code class="language-plaintext highlighter-rouge">백업 수퍼 블록</code>이 있다.</li>
+      <li>이 <span style="color:steelblue">백업 수퍼 블록</span>을 사용하여 <strong>파일 시스템 복구</strong> 가능하다.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="dumpe2fs---파일-시스템-정보-출력">dumpe2fs - 파일 시스템 정보 출력</h3>
+<hr />
+<ul>
+  <li>dumpe2fs: <strong>파일 시스템</strong> <code class="language-plaintext highlighter-rouge">정보 출력</code></li>
+</ul>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">$</span> <span class="n">dumpe2fs</span> <span class="o">&lt;</span><span class="err">장치명</span><span class="o">&gt;</span>
+
+<span class="err">사용</span> <span class="err">예</span><span class="o">:</span>
+	<span class="n">dumpe2fs</span> <span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">sdb1</span>
+</code></pre></div></div>
+
+<h4 id="dumpe2fs를-이용해-수퍼-블록-정보-추출">dumpe2fs를 이용해 수퍼 블록 정보 추출</h4>
+<ul>
+  <li>먼저 어떤 장치의 수퍼 블록 정보를 얻을 것인지 체크
+<img src="img2.jpg" /></li>
+  <li>/dev/sda2 장치의 수퍼 블록 정보를 얻어보자
+<img src="img3.jpg" /></li>
+  <li>32768번 블록 등 백업 수퍼블록은 모두 13개이다.
+    <ul>
+      <li>이 중 <code class="language-plaintext highlighter-rouge">하나를 사용</code>해 <code class="language-plaintext highlighter-rouge">파일 시스템 복구</code>할 수 있다.</li>
+    </ul>
+  </li>
+</ul>
+
+<h4 id="fsck-e2fsck--b-로-파일-시스템-복구">fsck, e2fsck -b 로 파일 시스템 복구</h4>
+<ul>
+  <li>위 <strong><em>dumpe2fs</em></strong> 를 이용해 얻은 <strong>백업 수퍼 블록 정보</strong>를 이용해 <strong>fsck -b</strong> 옵션을 이용해 파일 시스템을 <strong>복구</strong>한다.</li>
+</ul>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">$</span> <span class="n">sudo</span> <span class="n">e2fsck</span> <span class="o">-</span><span class="n">b</span> <span class="mi">32768</span> <span class="o">-</span><span class="n">y</span> <span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">sda2</span>
+<span class="n">e2fsck</span> <span class="mi">1</span><span class="p">.</span><span class="mi">42</span><span class="p">.</span><span class="mi">8</span> <span class="p">(</span><span class="mi">20</span><span class="o">-</span><span class="n">Jun</span><span class="o">-</span><span class="mi">2013</span><span class="p">)</span>
+<span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">sda2</span> <span class="n">was</span> <span class="n">not</span> <span class="n">cleanly</span> <span class="n">unmounted</span><span class="p">,</span> <span class="n">check</span> <span class="n">forced</span><span class="p">.</span>
+<span class="n">Pass</span> <span class="mi">1</span><span class="o">:</span> <span class="n">Checking</span> <span class="n">inodes</span><span class="p">,</span> <span class="n">blocks</span><span class="p">,</span> <span class="n">and</span> <span class="n">sizes</span>
+<span class="n">Pass</span> <span class="mi">2</span><span class="o">:</span> <span class="n">Checking</span> <span class="n">directory</span> <span class="n">structure</span>
+<span class="n">Pass</span> <span class="mi">3</span><span class="o">:</span> <span class="n">Checking</span> <span class="n">directory</span> <span class="n">connectivity</span>
+<span class="n">Pass</span> <span class="mi">4</span><span class="o">:</span> <span class="n">Checking</span> <span class="n">reference</span> <span class="n">counts</span>
+<span class="n">Pass</span> <span class="mi">5</span><span class="o">:</span> <span class="n">Checking</span> <span class="n">group</span> <span class="n">summary</span> <span class="n">information</span>
+
+<span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">sda2</span><span class="o">:</span> <span class="o">*****</span> <span class="kt">FILE</span> <span class="n">SYSTEM</span> <span class="n">WAS</span> <span class="n">MODIFIED</span> <span class="o">*****</span>
+<span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">sda2</span><span class="o">:</span> <span class="mi">11</span><span class="o">/</span><span class="mi">76912</span> <span class="n">files</span> <span class="p">(</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="o">%</span> <span class="n">non</span><span class="o">-</span><span class="n">contiguous</span><span class="p">),</span> <span class="mi">11777</span><span class="o">/</span><span class="mi">307200</span> <span class="n">blocks</span>
+<span class="err">$</span>
+</code></pre></div></div>
+<ul>
+  <li>e2fsck <strong>-b</strong> 옵션은 <strong>백업 수퍼블록 위치 지정</strong>이고, -y는 All yes!</li>
+</ul>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/#linux-system" class="page__taxonomy-item" rel="tag">linux-system</a>
+    
+    </span>
+  </p>
+
+
+        
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2021-03-07T00:00:00+09:00">March 7, 2021</time></p>
+
+
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">Share on</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=%EB%94%94%EC%8A%A4%ED%81%AC+%EA%B4%80%EB%A6%AC+%EB%AA%85%EB%A0%B9%EC%96%B4%3A+df%2C+du%2C+fsck%2C+e2fsck%2C+badblocks%2C+dump2efs%20https%3A%2F%2Fmarkyang920413.github.io%2F%2Flinux-system%2Flinux-linux_system-disk_manage%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmarkyang920413.github.io%2F%2Flinux-system%2Flinux-linux_system-disk_manage%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fmarkyang920413.github.io%2F%2Flinux-system%2Flinux-linux_system-disk_manage%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/linux-system/linux-linux_system-boot/" class="pagination--pager" title="디스크 관리 명령어: df, du, fsck, e2fsck, badblocks
+">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/linux-system/linux-linux_system-boot/" rel="permalink">디스크 관리 명령어: df, du, fsck, e2fsck, badblocks
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          less than 1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">df
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/linux-filesystem/linux-linux_filesystem-LVM/" rel="permalink">LVM
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          5 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/mac/m1_rosetta2/" rel="permalink">M1 Mac 로제타2 설치, 로제타 사용 brew 설치, M1용 jekyll설치
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/algorithm/algorithm-algorithm-time_complexity/" rel="permalink">Time complexity
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          less than 1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2021 Dong-Hyeon Yang. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "https://markyang920413.github.io//linux-system/linux-linux_system-disk_manage/";  /* Replace PAGE_URL with your page's canonical URL variable */
+      this.page.identifier = "/linux-system/linux-linux_system-disk_manage"; /* Replace PAGE_IDENTIFIER with your page's unique identifier variable */
+    };
+    (function() { /* DON'T EDIT BELOW THIS LINE */
+      var d = document, s = d.createElement('script');
+      s.src = 'https://MarkYang920413.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+
+
+  </body>
+</html>

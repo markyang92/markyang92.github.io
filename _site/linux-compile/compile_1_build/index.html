@@ -1,0 +1,1729 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.21.0 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>컴파일 &lt;1&gt; Build, 컴파일 옵션 - 혼자 보려고 만든 블로그</title>
+<meta name="description" content="build, 컴파일 옵션">
+
+
+  <meta name="author" content="Dong-Heyon Yang">
+  
+  <meta property="article:author" content="Dong-Heyon Yang">
+  
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="혼자 보려고 만든 블로그">
+<meta property="og:title" content="컴파일 &lt;1&gt; Build, 컴파일 옵션">
+<meta property="og:url" content="https://markyang920413.github.io//linux-compile/compile_1_build/">
+
+
+  <meta property="og:description" content="build, 컴파일 옵션">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2020-12-16T00:00:00+09:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://markyang920413.github.io//linux-compile/compile_1_build/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "Dong-Hyeon Yang",
+      "url": "https://markyang920413.github.io//"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="혼자 보려고 만든 블로그 Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          혼자 보려고 만든 블로그
+          
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/categories/">Category</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/">About</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+  
+    
+      
+      
+      
+      
+    
+    
+      
+
+<nav class="nav__list">
+  
+  <input id="ac-toc" name="accordion-toc" type="checkbox" />
+  <label for="ac-toc">Toggle menu</label>
+  <ul class="nav__items">
+    
+      <li>
+        
+          <span class="nav__sub-title">LINUX</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#linux-system">LINUX System</a></li>
+          
+            <li><a href="/categories/#linux-tools">LINUX Tools</a></li>
+          
+            <li><a href="/categories/#linux-compile">LINUX Compile</a></li>
+          
+            <li><a href="/categories/#linux-filesystem">LINUX Filesystem</a></li>
+          
+            <li><a href="/categories/#http">HTTP</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">System Programming</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#file">File, Memory</a></li>
+          
+            <li><a href="/categories/#env">Env</a></li>
+          
+            <li><a href="/categories/#process">Process</a></li>
+          
+            <li><a href="/categories/#thread">Thread</a></li>
+          
+            <li><a href="/categories/#ipc">IPC</a></li>
+          
+            <li><a href="/categories/#signal">Signal</a></li>
+          
+            <li><a href="/categories/#socket-programming">Socket Programming</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">C</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#c">C</a></li>
+          
+            <li><a href="/categories/#system-programming">System Programming</a></li>
+          
+            <li><a href="/categories/#stdio">Standard I/O</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">Python</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#python-language">Python Language</a></li>
+          
+            <li><a href="/categories/#python-pandas">Python Pandas</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">Algorithm</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#algorithm">Algorithm</a></li>
+          
+            <li><a href="/categories/#problem">Problem</a></li>
+          
+        </ul>
+        
+      </li>
+    
+      <li>
+        
+          <span class="nav__sub-title">MAC</span>
+        
+
+        
+        <ul>
+          
+            <li><a href="/categories/#mac">Mac</a></li>
+          
+        </ul>
+        
+      </li>
+    
+  </ul>
+</nav>
+
+    
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="컴파일 &lt;1&gt; Build, 컴파일 옵션">
+    <meta itemprop="description" content="build, 컴파일 옵션">
+    <meta itemprop="datePublished" content="2020-12-16T00:00:00+09:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">컴파일 &lt;1&gt; Build, 컴파일 옵션
+</h1>
+          
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          13 minute read
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              <ul class="toc__menu"><li><a href="#빌드-시스템의-용도">빌드 시스템의 용도</a><ul><li><a href="#빌드-시스템">빌드 시스템</a></li></ul></li><li><a href="#릴리스-패키징과-타겟-머신">릴리스 패키징과 타겟 머신</a></li><li><a href="#빌드-과정">빌드 과정</a></li><li><a href="#toolchain-program">Toolchain Program</a></li><li><a href="#cc-컴파일-차이">C/C++ 컴파일 차이</a></li><li><a href="#gcc-옵션-적용-규칙">gcc 옵션 적용 규칙</a><ul><li><a href="#-f--fno-">-f, -fno-</a></li><li><a href="#gcc-옵션">gcc 옵션</a></li></ul></li><li><a href="#cpp-전처리기">CPP: 전처리기</a><ul><li><a href="#-d">-D</a></li></ul></li><li><a href="#cflags">CFLAGS</a><ul><li><a href="#-o0---o3">-O0 ~ -O3</a></li><li><a href="#-march--mtune--mcpu">-march, -mtune, -mcpu</a></li><li><a href="#프로파일-결과를-이용한-최적화">프로파일 결과를 이용한 최적화</a></li><li><a href="#-g-디버깅">-g: 디버깅</a></li><li><a href="#-pg-프로파일">-pg: 프로파일</a></li><li><a href="#-shared-shared-라이브러리-사용-우선-shared-만들기">-shared: shared 라이브러리 사용 우선, shared 만들기</a></li><li><a href="#-fpic">-fPIC</a></li><li><a href="#-static-static-라이브러리-사용-우선">-static: static 라이브러리 사용 우선</a></li><li><a href="#-nostdlib">-nostdlib</a></li><li><a href="#-nostartfiles">-nostartfiles</a></li></ul></li><li><a href="#ldflags">LDFLAGS</a><ul><li><a href="#-l-라이브러리-path">-L: 라이브러리 path</a></li><li><a href="#-wl링커-옵션">-Wl,[링커 옵션]</a><ul><li><a href="#-rpath--rpath-link">-rpath, -rpath-link</a></li></ul></li><li><a href="#-rdynamic">-rdynamic</a></li><li><a href="#-xlinker-f링커-옵션">-Xlinker [f링커 옵션]</a><ul><li><a href="#-wl--xlinker에서-사용가능한-링커-옵션">-Wl -Xlinker에서 사용가능한 링커 옵션</a></li></ul></li></ul></li><li><a href="#libs">LIBS</a><ul><li><a href="#-l--라이브러리-링크">-l : 라이브러리 링크</a><ul><li><a href="#-ldl--동적-라이브러리">-ldl : 동적 라이브러리</a></li></ul></li></ul></li></ul>
+
+            </nav>
+          </aside>
+        
+        <h2 id="빌드-시스템의-용도">빌드 시스템의 용도</h2>
+<ul>
+  <li>컴파일
+    <ul>
+      <li><strong>C/C++</strong> 같은 컴파일형 언어(Compiled Lang)</li>
+    </ul>
+  </li>
+  <li>패키지와 테스트
+    <ul>
+      <li><strong>Perl, Python</strong> 같은 인터프리트 언어(Interpreted Lang) SW 패키지, 테스트</li>
+    </ul>
+  </li>
+  <li>웹 애플리케이션 컴파일, 패키지
+    <ul>
+      <li>정적 HTML, JSP, ASP, PHP …</li>
+    </ul>
+  </li>
+  <li>PDF, HTML 문서 생성</li>
+  <li>정적 분석(static analysis) 수행
+    <ul>
+      <li>소스코드로 부터 <strong>버그</strong> 찾기</li>
+      <li><strong>빌드 시스템의 출력물</strong>은 <strong>버그 리포트 문서</strong></li>
+    </ul>
+  </li>
+  <li>단위 테스트(unit test)
+    <ul>
+      <li>SW의 전체 소스코드에서 작은 부분을 분리해 <strong>독립적 검증</strong></li>
+    </ul>
+  </li>
+  <li>빌드 트리(build tree) <strong>클리닝(clean)</strong>
+    <ul>
+      <li><strong>컴파일할 때 생성</strong>된 모든 파일 <strong>제거</strong></li>
+    </ul>
+  </li>
+  <li>실행 파일 <strong>설치(install)</strong>
+    <ul>
+      <li>표준 바이너리 경로로 <span style="color:green"><strong>실행 파일</strong></span> <strong>복사</strong></li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="빌드-시스템">빌드 시스템</h3>
+<hr />
+<ul>
+  <li>C/C++, 자바, C# 같은 컴파일형 언어를 위한 빌드 시스템</li>
+  <li>
+    <p><strong>생성된 결과</strong>는 머신에 <strong>install</strong>할 수 있는 <span style="color:steelblue"><strong>릴리스 패키지</strong>(Release Package)</span></p>
+  </li>
+  <li>주요 구성요소
+    <ul>
+      <li><strong>소스 트리</strong> - <strong>오브젝트 트리</strong> - (단위 테스트 스위트, 문서 생성)<br />
+　　 ㄴ(결합 리포트)
+<br /><br /></li>
+    </ul>
+  </li>
+  <li><strong>소스 및 오브젝트 트리</strong></li>
+  <li>각 클래스<br />
+      - <strong>외부 행동</strong>(external behavior): 프로그래머가 항상 <strong>명심</strong> 해야하는 것 들
+      - <strong>내부 행동</strong>(internal implementation): 클래스의 복잡도를 외부 관점에게서 숨김</li>
+  <li>소스 트리<br />
+<img src="tree1.png" width="30%" height="30%" /></li>
+</ul>
+
+<h2 id="릴리스-패키징과-타겟-머신">릴리스 패키징과 타겟 머신</h2>
+<ul>
+  <li><strong>최종 패키징</strong>단계에선 사용자 머신에 실제로 설치할 수 있는 무언가를 만들어야 한다.</li>
+  <li>불필요한 <strong>디버그 정보 삭제</strong></li>
+  <li><strong>아카이브 파일</strong>, <strong>패키지 관리 도구</strong>(.rpm, .deb), <strong>GUI 도구</strong></li>
+</ul>
+
+<p>소스 파일들 —–&gt; 오브젝트 파일 ——&gt; <span styl="color:green"><strong>실행 바이너리</strong></span> ——–&gt; <span style="color:steelblue"><strong>릴리스 패키지</strong></span><br />
+　　　　　링크　　　　　　　　데이터 이미지 파일 ——-┘</p>
+
+<h2 id="빌드-과정">빌드 과정</h2>
+<ul>
+  <li>빌드: C언어 작성한 프로그램을 기계어로 변환해 실행가능한 파일로 만드는 작업</li>
+  <li>빌드 내에서 수행되는 작업
+    <ul>
+      <li><strong>전처리(preprocess)</strong> <strong><code class="language-plaintext highlighter-rouge">.i</code></strong> 파일
+        <ul>
+          <li>#include, #ifdef, #define 등을 처리해 C코드로 변환한다.</li>
+          <li>gcc <code class="language-plaintext highlighter-rouge">-E</code> 옵션을 붙여 실행하면 전처리 수행한 결과를 출력</li>
+        </ul>
+      </li>
+      <li><strong>컴파일(compile)</strong> <strong><code class="language-plaintext highlighter-rouge">.s</code></strong> 파일
+        <ul>
+          <li><strong>*.c</strong>를 <strong>어셈블리어</strong>로 변환한다.</li>
+          <li>gcc에서 컴파일은 <code class="language-plaintext highlighter-rouge">ccl</code> 프로그램이 컴파일을 담당한다.</li>
+          <li>gcc <code class="language-plaintext highlighter-rouge">-S</code> 옵션을 붙여 실행하면 <strong>.s</strong> 어셈블리 파일 출력</li>
+        </ul>
+      </li>
+      <li><strong>어셈블(assemble)</strong> <strong><code class="language-plaintext highlighter-rouge">.o</code></strong> 파일
+        <ul>
+          <li><strong>*.s</strong>파일을 오브젝트 파일 <strong>*.o</strong>로 변환</li>
+          <li>gcc가 아닌 <span style="color:green"><strong>binutils</strong></span> 라는패키지에 포함된 <strong><code class="language-plaintext highlighter-rouge">as</code></strong>라는 명령어가 담당한다.</li>
+          <li>오브젝트 파일은 아래와 같이 3가지 종류가 있다.
+            <ul>
+              <li>ELF(Executable and Linking Format)</li>
+              <li>COFF(Common Object File Format)</li>
+              <li>a.out(assembler output)</li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li><strong>링크(link)</strong>
+        <ul>
+          <li><strong>*.o -&gt; <span style="color:green">bin</span>, *.a, <span style="color:steelblue">*.so</span></strong>
+            <ul>
+              <li><span style="color:green"><strong>bin</strong></span>: 그 자체가 하나의 오브젝트 파일, 리눅스에서 ELF 포맷 사용</li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="toolchain-program">Toolchain Program</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">명령</th>
+      <th style="text-align: left">설명</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">addr2line</td>
+      <td style="text-align: left">실행 파일 안의 디버그 심볼을 읽어서 프로그램 주소를 파일 이름과 행 번호로 변환한다.<br />시스템 크래시 리포트에 출력된 주소를 해독할 때 매우 유용하다.</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><strong>ar</strong></td>
+      <td style="text-align: left">아카이브 유틸리티<br /><span style="color:red"><strong>static 라이브러리를 만들 때</strong></span>쓰인다.</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><strong>as</strong></td>
+      <td style="text-align: left">GNU <span style="color:red"><strong>어셈블러</strong></span></td>
+    </tr>
+    <tr>
+      <td style="text-align: center">c++filt</td>
+      <td style="text-align: left">C++와 자바 심볼을 복원(demangle)할 때 쓰인다.</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><strong>cpp</strong></td>
+      <td style="text-align: left">C 전처리기, #define #include 등의 지시자를 확장할 때 쓰인다.</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><strong>ld</strong></td>
+      <td style="text-align: left">GNU <span style="color:red"><strong>링커</strong></span></td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><strong>nm</strong></td>
+      <td style="text-align: left"><strong>오브젝트 파일의 심볼 나열</strong></td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><strong>strip</strong></td>
+      <td style="text-align: left">오브젝트 파일의 <strong>디버그 심볼 테이블을 없애 <span style="color:red">파일 크기를 줄여준다.</span></strong><br />흔히 <span style="color:blue"><strong>타깃에 복사할 모든 실행 코드에 적용한다.</strong></span></td>
+    </tr>
+    <tr>
+      <td style="text-align: center">elfedit</td>
+      <td style="text-align: left">ELF 파일의 ELF 헤더를 업데이트할 때 쓰인다.</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">g++</td>
+      <td style="text-align: left">GNU C++</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">gcc</td>
+      <td style="text-align: left">GNU C</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">gconv</td>
+      <td style="text-align: left">코드 커버리지 도구</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">gdb</td>
+      <td style="text-align: left">GNU 디버거</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">gprof</td>
+      <td style="text-align: left">프로그램 프로파일링 도구</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">objcopy</td>
+      <td style="text-align: left">오브젝트 파일 복사 및 번역</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">objdump</td>
+      <td style="text-align: left">오브젝트 파일 정보 출력시 사용</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">ranlib</td>
+      <td style="text-align: left">static 라이브러리 안의 인덱스를 만들거나 수정해 링크 단계를 더 빠르게 한다.</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">readelf</td>
+      <td style="text-align: left">ELF 오브젝트 형식의 파일에 정보를 출력한다.</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">size</td>
+      <td style="text-align: left">섹션 크기와 전체 크기를 나열한다.</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">strings</td>
+      <td style="text-align: left">파일 안의 인쇄 가능 문자열들을 출력한다.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="cc-컴파일-차이">C/C++ 컴파일 차이</h2>
+<ul>
+  <li>g++를 이용한 C++은 함수 심볼을 <strong>mangled</strong>한다.</li>
+</ul>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;stdio.h&gt;
+</span><span class="kt">void</span> <span class="nf">dbg</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">s</span><span class="p">){</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">"Log: %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">s</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>gcc <span class="nt">-c</span> dbg.c
+<span class="nv">$ </span>nm dbg.o
+00000000 T dbg	<span class="s2">"함수 dbg의 심볼"</span>
+	 U <span class="nb">printf</span>
+</code></pre></div></div>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>g++ <span class="nt">-c</span> dbg.c
+<span class="nv">$ </span>nm dbg.o
+00000000 T _Z3dbgPKc	<span class="s2">"mangled된 함수 dbg의 심볼"</span>
+	 U __gxx_personality_v0
+	 U <span class="nb">printf</span>
+</code></pre></div></div>
+<ul>
+  <li>g++에선 함수 심볼을 <strong>mangled</strong>시키기 때문에 <strong>C컴파일로 컴파일</strong>한 <code class="language-plaintext highlighter-rouge">main.o</code>(gcc C)는 <strong>링킹 시</strong>, <br /><strong>dbg.o</strong>(g++ C++)에서 <code class="language-plaintext highlighter-rouge">dbg 심볼</code>을 <strong>찾지 못한다</strong>.</li>
+</ul>
+
+<h2 id="gcc-옵션-적용-규칙">gcc 옵션 적용 규칙</h2>
+<h3 id="-f--fno-">-f, -fno-</h3>
+<hr />
+<p><strong>-[f|W|m][옵션]</strong>은 설정<br />
+<strong>-[f|W|m]<span style="color:red">no-</span>[옵션]</strong>은 해제</p>
+
+<p>-f<strong><code class="language-plaintext highlighter-rouge">cse-skip-blocks</code></strong>	: ‘cse-skip-blocks’ 옵션 설정한 것<br />
+-f<strong><code class="language-plaintext highlighter-rouge">no</code></strong>-cse-skip-blocks : ‘cse-skip-blocks’ 옵션을 해제</p>
+
+<p><strong>동일 종류의 옵션은 최종 옵션만 옵션 변수에 값이 설정</strong><br />
+-Wunused-function : 소스 파일 내에 사용되지 않은 함수가 있을 때 경고 출력</p>
+
+<p>$ gcc -o like like.c -Wunused-function <strong>-Wno-unused-function</strong></p>
+
+<p>최종 옵션인, -Wno-unused-function 옵션에 의해 저 옵션이 해제된다.</p>
+
+<p><strong>그룹 옵션이 존재한다</strong>
+-fdump-tree-all 옵션은 아래 옵션들을 동시에 준 것과 동일<br />
+<br />
+-fdump-tree-original[-n] -fdump-tree-optimized[-n] -fdump-tree-inlined[-n] ….</p>
+
+<p><strong>플래그</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">플래그</th>
+      <th style="text-align: center">뜻</th>
+      <th style="text-align: center">예제</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center"><strong>-f</strong></td>
+      <td style="text-align: center">플래그</td>
+      <td style="text-align: center"><strong><em>-f</em></strong>dump-tree-original</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><strong>-W</strong></td>
+      <td style="text-align: center">경고</td>
+      <td style="text-align: center"><strong><em>-W</em></strong>unused-function</td>
+    </tr>
+    <tr>
+      <td style="text-align: center"><strong>-m</strong></td>
+      <td style="text-align: center">아키텍처 종속</td>
+      <td style="text-align: center"><strong><em>-m</em></strong>cpu=armv7-a</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="gcc-옵션">gcc 옵션</h3>
+<hr />
+<p><strong>gcc -v -I/usr/local/include -DDEBUG -W -Wall -O2 -L/usr/local/lib -o like like.c -lm</strong></p>
+
+<ul>
+  <li><strong>-E</strong>: 전처리 과정의 결과를 화면에 보이는 옵션
+    <ul>
+      <li>gcc -E like.c</li>
+    </ul>
+  </li>
+  <li><strong>-S</strong>: 어셈블리 파일만 생성하고 컴파일 과정을 멈춘다.
+    <ul>
+      <li>gcc -S like.c -&gt; like.s</li>
+    </ul>
+  </li>
+  <li><strong>-c</strong>: 오브젝트 파일까지만 생성
+    <ul>
+      <li>gcc -c like.c -&gt; like.o</li>
+    </ul>
+  </li>
+  <li><strong>-v</strong>: gcc가 컴파일하는 과정을 화면에 자세히 출력한다.</li>
+  <li>
+    <p><strong>–save-temps</strong>: 컴파일하는 과정중, 전처리 파일(*.i), 어셈블리 파일(*.s), 오브젝트 파일(*.o)를 지우지 않는다.</p>
+  </li>
+  <li><strong>-o</strong>: 출력 파일 명을 정하는 옵션
+    <ul>
+      <li>gcc hello.c -o hello</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="cpp-전처리기">CPP: 전처리기</h2>
+<h3 id="-d">-D</h3>
+<hr />
+<p><strong><code class="language-plaintext highlighter-rouge">-D</code></strong><code class="language-plaintext highlighter-rouge">[macro]</code>: 전처리기한테, macro를 넘겨 define 시킨다.</p>
+
+<div class="language-makefile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">CC</span>	<span class="o">=</span> gcc
+<span class="nv">CPP</span>	<span class="o">=</span> <span class="nt">-DDEBUG</span>
+
+<span class="err">$(CC)</span> <span class="err">$(CPP)</span> <span class="err">like.c</span> <span class="err">-o</span> <span class="err">like</span>
+<span class="err">=&gt;gcc</span> <span class="err">-DDEBUG</span> <span class="err">like.c</span> <span class="err">-o</span> <span class="err">like</span>
+</code></pre></div></div>
+
+<p>like.c 파일에 <code class="language-plaintext highlighter-rouge">#define DEBUG</code> 를 삽입한 것과 같다.</p>
+
+<ul>
+  <li>왜 쓰나?</li>
+</ul>
+
+<p>like.c 파일에</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#ifdef DEBUG
+</span>	<span class="n">printf</span><span class="p">(</span><span class="s">"%d..."</span><span class="p">);</span>
+<span class="cp">#endif
+</span></code></pre></div></div>
+<p>처럼 디버그용으로 쓰고, file path넘길 때도 쓰고..</p>
+
+<h2 id="cflags">CFLAGS</h2>
+<h3 id="-o0---o3">-O0 ~ -O3</h3>
+<hr />
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">-O0</code></strong>
+    <ul>
+      <li>어떠한 것도 최적화하지 않는다.</li>
+      <li>inline 키워드를 써도 인라인 확장이 일어나지 않는다.</li>
+      <li>컴파일 시 최적화 옵션을 쓰지 않았다면, <strong>-O0</strong> 셋</li>
+      <li>time 명령어로 실험해본다.</li>
+    </ul>
+  </li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">time</span> ./test
+real 0m5.209s
+user 0m2.475s
+sys  0m0.002s
+</code></pre></div></div>
+<p>총 5.209s가 걸렸고, 유저에서는 2.475s 걸렸다.</p>
+
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">-O1</code></strong>
+    <ul>
+      <li><strong>-O</strong> 옵션과 동일하다.</li>
+      <li>gcc에서 수행하는 효과가 큰 몇 가지 기본 최적화를 수행한다.</li>
+    </ul>
+  </li>
+</ul>
+
+<p><img src="img1.png" />
+<img src="img2.png" /></p>
+
+<ul>
+  <li>잠시 위 표에 있는 <strong><em><code class="language-plaintext highlighter-rouge">-floop-optimize</code></em></strong> 옵션을 알아보자.</li>
+</ul>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="n">y</span><span class="o">=</span><span class="mi">1</span><span class="o">+</span><span class="mi">2</span><span class="p">;</span>
+<span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">){</span>
+	<span class="n">j</span><span class="o">=</span><span class="n">j</span><span class="o">+</span><span class="mi">2</span><span class="p">;</span>
+	<span class="n">k</span><span class="o">=</span><span class="n">y</span><span class="o">+</span><span class="mi">3</span><span class="p">;</span>
+	<span class="n">z</span><span class="o">=</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="err">루프에서</span> <span class="err">변하지</span> <span class="err">않는</span> <span class="err">코드를</span> <span class="err">밖으로</span> <span class="n">unrolling</span><span class="err">한다</span><span class="p">.</span>
+
+<span class="kt">int</span> <span class="n">y</span><span class="o">=</span><span class="mi">1</span><span class="o">+</span><span class="mi">2</span><span class="p">;</span>
+<span class="n">k</span><span class="o">=</span><span class="n">y</span><span class="o">+</span><span class="mi">3</span><span class="p">;</span>
+<span class="n">z</span><span class="o">=</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span>
+<span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">n</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+	<span class="n">j</span><span class="o">=</span><span class="n">j</span><span class="o">+</span><span class="mi">2</span><span class="p">;</span>
+</code></pre></div></div>
+
+<ul>
+  <li><strong>-O1</strong> 옵션을 넣고 컴파일 한 후, 시간 측정</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">time</span> ./test
+real 0m3.155s
+user 0m1.767s
+sys  0m0.002s
+</code></pre></div></div>
+<p>user에서 확 줄었다.</p>
+
+<ul>
+  <li><strong><em><code class="language-plaintext highlighter-rouge">-O2</code></em></strong>
+    <ul>
+      <li>가장 많이 사용한다. App, kernel compile시 주로 사용한다.</li>
+      <li>수행 속도와 사이즈 간에 트레이드오프가 존재하지 않는 거의 모든 최적화 수행</li>
+      <li><strong>-O1</strong> 옵션 최적화 + 아래 표의 최적화도 더함</li>
+    </ul>
+  </li>
+</ul>
+
+<p><img src="img3.png" /></p>
+
+<ul>
+  <li>위에서 공통 부분식 제거(Common Subexpression Elimination)을 알아보자</li>
+</ul>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">x</span><span class="o">=</span><span class="n">a</span><span class="o">-</span><span class="n">b</span><span class="p">;</span>
+<span class="n">w</span><span class="o">=</span><span class="n">c</span><span class="o">+</span><span class="n">a</span><span class="o">-</span><span class="n">b</span><span class="p">;</span>
+<span class="n">y</span><span class="o">=</span><span class="n">c</span><span class="o">*</span><span class="n">d</span><span class="p">;</span>
+<span class="n">x</span><span class="o">=</span><span class="n">d</span><span class="o">+</span><span class="n">c</span><span class="p">;</span>
+
+<span class="n">Optimize</span><span class="p">..</span>
+
+<span class="n">t0</span><span class="o">=</span><span class="n">a</span><span class="o">-</span><span class="n">b</span><span class="p">;</span>
+<span class="n">x</span><span class="o">=</span><span class="n">t0</span><span class="p">;</span>
+<span class="n">w</span><span class="o">=</span><span class="n">c</span><span class="o">+</span><span class="n">t0</span><span class="p">;</span>
+<span class="n">y</span><span class="o">=</span><span class="n">c</span><span class="o">*</span><span class="n">d</span><span class="p">;</span>
+<span class="n">x</span><span class="o">=</span><span class="n">d</span><span class="o">+</span><span class="n">c</span><span class="p">;</span>
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">time</span> ./test
+real 0m3.194s
+user 0m1.621s
+sys  0m0.002s
+</code></pre></div></div>
+<p>user에서 0.1초 줄었다.</p>
+
+<p><strong>하지만 <code class="language-plaintext highlighter-rouge">-O1 결과가 -O2 보다 빠를 수 있고, -O2가 -O3보다 더 빠를 수도 있다</code></strong></p>
+
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">-O3</code></strong>
+    <ul>
+      <li>가장 높은 레벨의 최적화</li>
+      <li>단순한 함수들의 인라인 과정이 일어나 바이너리 사이즈가 커진다.</li>
+      <li><strong>O0 + O1 + O2</strong> + 아래 표의 최적화</li>
+    </ul>
+  </li>
+</ul>
+
+<p><img src="img4.png" /></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">time</span> ./test
+real 0m1.177s
+user 0m0.696s
+sys  0m0.002s
+</code></pre></div></div>
+
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">-Os</code></strong>
+    <ul>
+      <li>사이즈 최적화</li>
+      <li><strong>-O2</strong> 옵션 중에서 사이즈를 늘리는 최적화만 제거하고 나머지 최적화는 다 수행한다.</li>
+      <li><strong>-O2</strong> 옵션에서 아래와 같은 옵션이 비활성화</li>
+    </ul>
+  </li>
+</ul>
+
+<p><img src="img5.png" /></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">time</span> ./test
+real 0m3.020s
+user 0m1.473s
+sys  0m0.004s
+</code></pre></div></div>
+<ul>
+  <li><strong>O2</strong> 옵션보다 오히려 속도는 잘나왔다.
+    <ul>
+      <li>사이즈가 작아짐으로 인해 캐시 히트가 더 자주 발생했을 수도 있다.</li>
+      <li>바이너리 사이즈가 작으면 캐시에 들어가는 inst 비율이 증가해 수행 속도가 향상될 수 있다.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="-march--mtune--mcpu">-march, -mtune, -mcpu</h3>
+<hr />
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">-march=[cpu-type]</code></strong>
+    <ul>
+      <li><strong>-march=armv7-a</strong></li>
+      <li><span style="color:red">지정하는 <strong>ISA</strong>코드를 생성한다.</span></li>
+      <li><strong>-march=pentium4</strong> 시, pentium4에서 지원하는 ISA로 코드를 생성한다.</li>
+      <li><strong>-march</strong>는 <strong>-mtune</strong>을 내부적으로 포함한다.
+        <ul>
+          <li><strong>-march=pentium4</strong> 지정 시, <strong>-mtune=pentium4</strong> 지정 안해도 무방</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><strong><code class="language-plaintext highlighter-rouge">-mtune=[cpu-type]</code></strong>
+    <ul>
+      <li>인스트럭션을 스케줄링 하거나 정렬할 때 -mtune 옵션으로 지정해 준 cpu에 최적화되게 스케줄링하고 정렬</li>
+      <li>이 때 고려되는 것은 각 CPU의 파이프라인 단계와 각 인스트럭션을 수행하는 데 걸리는 사이클 버스와 캐시의 크기 등이 있다.</li>
+      <li>Pen3는 파이프라인이 10개, Pen4는 20개, CPU stall을 줄이기 위해 인스트럭션 순서를 섞을 때 -mtune 옵션으로 지정한 CPU에 최적화되게 인스터럭션을 섞는다.</li>
+      <li>인스트럭션 스케줄링이란 CPU내부의 특정 자원이 사용 가능치 않아 CPU stall을 줄이기 위해 인스트럭션 수행 순서를 바꾸는 것이다.</li>
+      <li>인스트럭션 정렬이란 함수나 레이블이 시작하는 주소를 해당 CPU의 버스 너비와 캐시의 크기에 최적화한다.</li>
+      <li><strong>CPU 특성</strong>을 반영해 최적화된 코드를 생성하는 역할만 담당한다. ISA에 영향을 주는 것은 아니다.
+        <ul>
+          <li>-mtune=pentium4 옵션으로 컴파일 해도, i386 ISA를 사용했다면 오래된 펜티엄에서도 동작</li>
+          <li>-mtune=athlon-xp 해도 ISA를 펜티엄으로 하면 펜티엄에서 돌아간다. 단지 좀 비효율적</li>
+        </ul>
+      </li>
+      <li>-march 옵션은 주지 않고, -mtune 옵션만 주어 ISA는 모든 x86 아키텍처에 공통된 것을 사용하게 하고, 스케줄링과 코드 정렬만 특정 프로세서에서 최적화할 수 있다.</li>
+    </ul>
+  </li>
+  <li><strong><code class="language-plaintext highlighter-rouge">-mcpu=[cpu-type]</code></strong>
+    <ul>
+      <li>-mtune과 거의 동일하다.</li>
+    </ul>
+  </li>
+</ul>
+
+<p><strong>-march 종류</strong>
+<img src="img6.png" /></p>
+
+<ul>
+  <li>x86 아키텍처에서 -march와 -mtune -mcpu에서 지정할 수 있는 cpu-type은 generic만 제외하고 동일하다.</li>
+  <li>generic은 -march에서 사용할 수 없다.</li>
+  <li>generic은 현재 가장 보편적인 프로세서를 의미하고 gcc-4.1.2에서는 i686로 지정되어 있다.</li>
+</ul>
+
+<p><img src="img7.png" /></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>arm-[vendor]-linux-gnueabi-[gcc/g++/ld] <span class="nt">-march</span><span class="o">=</span>armv7-a
+</code></pre></div></div>
+
+<h3 id="프로파일-결과를-이용한-최적화">프로파일 결과를 이용한 최적화</h3>
+<hr />
+<p><strong>사용법 및 다양한 플래그</strong></p>
+<ol>
+  <li>like.c 파일을 <strong><code class="language-plaintext highlighter-rouge">-fprofile-generate</code></strong> 옵션을 주어 컴파일한다.</li>
+</ol>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>gcc <span class="nt">-O2</span> <span class="nt">-o</span> like like.c <span class="nt">-fprofile-generate</span>
+</code></pre></div></div>
+
+<ol>
+  <li>like bin파일을 한번 수행한다. 그러면, 프로파일 결과들이 있는 파일들(like.gcda, like.gcno)가 생성됨</li>
+  <li>like.c 파일을 <strong>-fprofile-generate</strong> 옵션을 빼고 <strong><code class="language-plaintext highlighter-rouge">-fprofile-use</code></strong>옵션을 추가해 like.c를 다시 컴파일한다.
+    <ul>
+      <li>gcc는 <strong>like.gcda, like.gcno</strong>를 이용해 좀 더 최적화한 like bin 파일을 만든다.</li>
+    </ul>
+  </li>
+</ol>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>gcc <span class="nt">-O2</span> <span class="nt">-o</span> like like.c <span class="nt">-fprofile-use</span>
+</code></pre></div></div>
+
+<ul>
+  <li><strong>-fprofile-use</strong>: 프로파일 정보를 이용해 할 수 있는 모든 최적화를 수행한다. 이 옵션에 의해 선택되는 최적화 옵션은 다믕과 같다.
+    <ul>
+      <li><strong>-fbranch-probabilities 분기 최적화</strong>
+        <ul>
+          <li>분기문이 있을 때, 프로그램이 주로 어떤 쪽으로 분기하는지 파악하고 이를 적용해 파이프라인이 최대한 깨지지 않게 하는 코드 생성</li>
+        </ul>
+      </li>
+      <li><strong>-funroll-loops 루프 최적화</strong>
+        <ul>
+          <li>루프가 몇 번 도는지 알고, 최적화 할 수 있다면 언롤링</li>
+        </ul>
+      </li>
+      <li><strong>-fpeel-loops 루프 최적화</strong>
+        <ul>
+          <li>프로파일 정보로 부터 루프가 그다지 많이 돌지 않는다면 사용, 루프 필링이란 루프 내에 인덱스와 인접하지만 다른 값을 가지면서 인덱스 범위 내에서 인덱스의 증감과 같이 변하는 연산을 루프 밖으로 빼는 것</li>
+        </ul>
+      </li>
+      <li><strong>-ftracer 베이직 블록을 슈퍼 블록으로 만든다.</strong>
+        <ul>
+          <li>프로파일 결과를 토대로 베이직 블록을 슈퍼 블록으로 만든다. 베이직 블록의 개념은 다음과 같다.</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p><strong>CTest.c</strong></p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;stdio.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">){</span>
+	<span class="kt">int</span> <span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">;</span>
+	<span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+	<span class="n">k</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+	<span class="k">for</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="mi">10</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">){</span>
+		<span class="k">if</span><span class="p">(</span><span class="n">i</span><span class="o">%</span><span class="mi">2</span><span class="o">!=</span><span class="mi">0</span><span class="p">)</span>
+			<span class="n">j</span><span class="o">+=</span><span class="mi">1</span><span class="p">;</span>
+		<span class="k">else</span>
+			<span class="n">k</span><span class="o">+=</span><span class="mi">1</span><span class="p">;</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">"j=%d,k=%d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">);</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>위 코드를<br />
+<strong><em>$ gcc -o CTest CTest.c <code class="language-plaintext highlighter-rouge">-fdump-tree-all</code></em></strong> =&gt; <strong>CTest.c.t21.cfg</strong> 파일 생성</p>
+
+<p><strong>CFG: Control Flow Graph</strong> 제어 흐름 분석을 통해 생성된 결과 파일</p>
+
+<p><img src="img8.png" /></p>
+
+<ul>
+  <li><strong>베이직 블록</strong>: 제어 흐름 단위로 나눠진 블록
+    <ul>
+      <li>블록 내에서는 제어 흐름이 변치 않고 순차적으로 진행</li>
+      <li>제어 흐름이 바뀌는 단위로 나눈 소스 코드으 ㅣ블록</li>
+      <li>베이직 블록 내에는 베이직 블록이 끝나는 시점이나 시작되는 시점이 아니고서는 브랜치 문과 같이 제어 흐름을 바꿀 수 있는 Inst는 존재하지 않는다.</li>
+    </ul>
+  </li>
+  <li>이 제어 흐름을 그래프로 그린 것이 <strong>CFG</strong>이다.</li>
+  <li>슈퍼 블록: CFG에서 인접한 베이직 블록들을 합쳐 좀더 크게 만든 블록
+    <ul>
+      <li>베이직 블록 -&gt; 슈퍼 블록, 꼬리 복제(tail duplication)이라는 기법 사용</li>
+      <li>베이직 블록 -&gt; 슈퍼 블록, inst scheduling 효율 향상</li>
+    </ul>
+  </li>
+  <li><strong>instruction scheduling</strong>
+    <ul>
+      <li>베이직 블록 단위로 수행하는데, 스케줄링할 inst 개수가 적으면 스케줄링 효율이 감소한다.</li>
+      <li>지연이 발생되는 구간에 끼워 넣을 inst 갯수가 적기 때문</li>
+      <li>베이직을 슈퍼로 만들면 블록 크기가 훨씬 커져 스케줄링할 대상이 되는 inst 개수가 많아져 스케줄링 효율 향상</li>
+    </ul>
+  </li>
+  <li><strong>fvpt</strong>: 조건식의 값에 대한 정보를 수집하는 코드 추가
+    <ul>
+      <li>컴파일러가 조건식의 값에 대한 정보를 수집하는 코드를 추가하게 한다. 그 정보를 바탕으로 최적화 수행
+<br /><br /><br /><br /><br /></li>
+    </ul>
+  </li>
+</ul>
+
+<p><strong>함수 프레임 포인터 제거</strong></p>
+
+<p><img src="img9.png" /></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>gcc <span class="nt">-o</span> exp exp.c <span class="nt">--save-temps</span>
+</code></pre></div></div>
+
+<p><img src="img10.png" width="50%" height="50%" /></p>
+
+<p><strong><code class="language-plaintext highlighter-rouge">-fomit-frame-pointer</code></strong>: 프레임 포인터 설정이 필요 없는 함수에 대해 프레임 포인터 설정을 제거</p>
+<ul>
+  <li><strong>rbp 레지스터</strong>는 x86_64 아키텍처에서 <strong>프레임 포인터</strong>로 사용되는 레지스터</li>
+  <li>add()와 sub() 최상위 보면 이전 레지스터의 값(rsb)를 스택에 push 후, ‘rsp’ 스택 포인터를 <strong>rbp 레지스터</strong>에 설정하는 것 보일 것임</li>
+  <li>
+    <p>함수의 시작 부분에서 rbp 레지스터의 값을 현재 rsp(스택 포인터)의 값으로 변경하는 것을 <strong>함수의 프레임 포인터를 설정</strong>한다고 한다.</p>
+  </li>
+  <li>각 함수 마지막 부분을 보면 저장했던 rbp 레지스터를 다시 popq 명령으로 복구하는 것이 보인다.
+    <ul>
+      <li>이는 이전 함수의 프레임 포인터로 복구하는 과정</li>
+    </ul>
+  </li>
+</ul>
+
+<p><br /><br /><br /></p>
+
+<p><strong>prefetch를 이용한 최적화</strong><br />
+<strong><code class="language-plaintext highlighter-rouge">-fprefetch-loop-arrays</code></strong>: 루프에 진입하기 전에 컴파일러는 루프 내에서 사용할 메모리 영역을 캐시에 미리 가져다 놓음</p>
+<ul>
+  <li>현대 모든 아키텍처는 프로세서 매우 빠름, 메모리 아주 느림
+    <ul>
+      <li>load 명령에 많은 클록 사이클 소모</li>
+    </ul>
+  </li>
+  <li>큰 배열이 있을 때 루프를 돌면서 배열을 순차적으로 액세스 하면서, 어떤 명령을 수행한다 -&gt; 배열 값이 캐시에 없다 -&gt; load 발생 증가 -&gt; 성능 하락</li>
+  <li><strong>Prefetch는 이런 값을 미리 캐시에 가져다 둠</strong></li>
+</ul>
+
+<p><br /><br /><br /></p>
+
+<p><strong>레지스터를 활용한 최적화</strong></p>
+<ul>
+  <li>
+    <p><strong><code class="language-plaintext highlighter-rouge">-fforce-mem</code></strong>: 메모리에 있는 값을 레지스터에 로드해 연산 수행. GCC 4.2에서 제거된 옵션이지만 이전 버전에서 사용 가능</p>
+  </li>
+  <li>
+    <p><strong><code class="language-plaintext highlighter-rouge">-fforce-addr</code></strong>: 메모리 주소 값을 레지스터에 로드 후 연산을 수행</p>
+  </li>
+</ul>
+
+<p><br /><br /><br /></p>
+
+<p><strong>gcc 컴파일 속도 최적화</strong></p>
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">-pipe</code></strong>: 컴파일 속도 상승
+    <ul>
+      <li>gcc는 컴파일 시 /tmp에 임시 파일을 생성하고, 각 과정의 바이너리는 이런 임시 파일을 입력으로 받아 다음 과정 수행</li>
+      <li><strong>-pipe</strong> 사용 시, 컴파일 과정에서 임시 파일을 생성해 전달하지 않고 파이프로 전달해 컴파일 속도 향상</li>
+    </ul>
+  </li>
+</ul>
+
+<p><br /><br /><br /></p>
+
+<p><strong>환경 변수(env)를 사용한 gcc설정</strong></p>
+<ul>
+  <li>
+    <p><strong><code class="language-plaintext highlighter-rouge">COMPILER_PATH</code></strong></p>
+  </li>
+  <li>
+    <p>CC, CPP, AS, LD를 호출할 때, <strong>COMPILER_PATH</strong>에 등록된 디렉터리에서 먼저 찾는다.</p>
+  </li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">export </span><span class="nv">COMPILER_PATH</span><span class="o">=</span>/opt/arm-:root
+</code></pre></div></div>
+
+<p><strong><code class="language-plaintext highlighter-rouge">C_INCLUDE_PATH</code></strong>, <strong><code class="language-plaintext highlighter-rouge">CPLUS_INCLUDE_PATH</code></strong>, <strong><code class="language-plaintext highlighter-rouge">OBJC_INCLUDE_PATH</code></strong></p>
+<ul>
+  <li>전처리할 때, 헤더 파일을 찾을 디렉터리를 지정하는 환경 변수</li>
+  <li>설정 해두면, -I(대문자 i) 옵션으로 참조할 path 안해줘도 됨</li>
+  <li>각각 C, C++, Objective-C 소스에 대한 Include Path 지정</li>
+</ul>
+
+<p><strong><code class="language-plaintext highlighter-rouge">LIBRARY_PATH</code></strong></p>
+<ul>
+  <li>라이브러리 찾을 디렉터리 지정</li>
+  <li>ld에게 LIBRARY_PATH에 등록된 디렉터리들을 -L 옵션으로 넘긴다</li>
+</ul>
+
+<p><br /><br /><br /></p>
+
+<p><strong>specs 파일을 이용한 gcc설정</strong><br />
+<strong><code class="language-plaintext highlighter-rouge">-v</code></strong></p>
+<ul>
+  <li>제일 처음에 다음과 같은 메시지가 출력된다.</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>gcc <span class="nt">-o</span> <span class="nb">test </span>test.c <span class="nt">-v</span>
+Using built-in specs...
+</code></pre></div></div>
+
+<p><br /><br />
+<strong><code class="language-plaintext highlighter-rouge">-dumpspecs</code></strong></p>
+<ul>
+  <li>내장된 specs파일을 보는 옵션</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>gcc <span class="nt">-dumpspecs</span> <span class="o">&gt;</span> specs					<span class="c"># gcc</span>
+<span class="nv">$ </span>arm-starfishmllib32-linux-gnueabi-gcc <span class="nt">-dumpspecs</span> <span class="o">&gt;</span> specs	<span class="c"># arm gcc</span>
+</code></pre></div></div>
+<ul>
+  <li><strong>gcc -dumpspecs &gt; specs</strong> 명령을 사용해 gcc에 내장된 specs 파일을 덤프해 보면 다음과 같은 specs 파일을 볼 수 있다.</li>
+  <li>specs 파일은 컴파일러 드라이버(gcc, g++..)가 수행될 때 읽고 specs 파일에 적힌 각 바이너리(CPP, CC, AS, LD)들을 호출하게 되어 있다.</li>
+</ul>
+
+<p><strong>specs</strong>파일을 수정해 원하는 형태로 각 바이너리들을 호출할 수 있다.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>vi specs
+<span class="sb">```</span>일
+  
+&lt;img <span class="nv">src</span><span class="o">=</span><span class="s2">"img11.png"</span><span class="o">&gt;</span>
+
+<span class="sb">```</span>bash
+%<span class="o">{</span>pg:%<span class="o">{</span>formit-frame-pointer:%e-pg and <span class="nt">-fomit-frame-pointer</span> are <span class="k">in </span>compatible<span class="o">}}</span>
+</code></pre></div></div>
+
+<p><strong>-pg</strong> 옵션이 있고 동시에 <strong>-formit-frame-pointer</strong> 옵션이 있다면, <strong>오류(%e)</strong>로 <strong>“pg and -fomit-frame-pointer are incompatible”</strong>문자열 출력하라.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>%<span class="o">{!</span>Q:-quiet<span class="o">}</span>
+</code></pre></div></div>
+<p><strong>-Q</strong> 옵션이 없다면, <strong>-quiet</strong> 옵션을 추가하라는 의미</p>
+
+<ul>
+  <li><strong>ARM과 같은 크로스 컴파일 환경에서는 프로파일 정보를 어떻게 수집하는가?</strong>
+    <ol>
+      <li>시뮬레이터 사용
+Simit-ARM 시뮬레이터 사용</li>
+    </ol>
+  </li>
+  <li>http://simit-arm.sourceforge.net 에서 simit-arm release 3.0 설치</li>
+  <li>www.falinux.com/zdownload/toolchain.php 에서 arm-toolchain-3.3.4.tar.gz 받아서 ARM 크로스 컴파일러 설치(3.3.4)</li>
+  <li>소스 파일을 arm-linux-gcc 컴파일러로 컴파일 할 때 -O2 -static -fprofile-generate 옵션을 주고 컴파일</li>
+  <li>simit [바이너리] 명령으로 실행하면 프로파일 정보가 들어있는 파일들이 생성된다.</li>
+  <li>O2 -static -fbranch-probabilities 옵션 등으로 재 컴파일한다.</li>
+</ul>
+
+<ol>
+  <li>그냥 ARM 보드에서 직접 수행</li>
+</ol>
+
+<h3 id="-g-디버깅">-g: 디버깅</h3>
+<hr />
+<p><strong><code class="language-plaintext highlighter-rouge">-g</code></strong>: 디버깅 옵션</p>
+<ul>
+  <li>디버거에 제공하는 디버깅 정보를 바이너리에 삽입</li>
+  <li>디버깅 옵션시, <span style="color:red"><strong>최적화 금지</strong></span></li>
+  <li>디버깅 옵션시, 삽입한 바이너리는 용량이 매우 커짐. <strong>개발 초기에만 사용할 것</strong>.</li>
+  <li>디버깅 정보: 변수 타입, 전역 심볼명과 주소, 소스 라인 정보등이 DWARF2라는 디버깅 정보 포맷으로 되어있음</li>
+  <li><strong>-g</strong> 바이너리 컴파일시, DWARF2 디버깅 포맷이 ELF 바이너리에 섹션 형태로 삽입된다.
+    <ul>
+      <li><strong>$ readelf -a [bin]</strong>으로 바이너리를 읽으면, <strong>.debug_*</strong>로 시작하는 섹션들이 DWARF2를 구성하는 섹션들임</li>
+    </ul>
+  </li>
+  <li>-g 미 옵션 시, 어셈블리 코드로 디버깅할 수 밖에
+<br /><br /><br /></li>
+  <li><strong><code class="language-plaintext highlighter-rouge">-g0</code></strong>: 디버깅 정보를 삽입하지 않는다.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">-g2</code></strong>: = -g</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">-g3</code></strong>: 디버깅 정보 가장 많이 삽입</li>
+</ul>
+
+<p><strong>odjdump -S</strong>로 덤프 떠보기</p>
+<ul>
+  <li>test.c</li>
+</ul>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;stdio.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(){</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">"hello world!</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>gcc <span class="nt">-g</span> <span class="nt">-o</span> <span class="nb">test </span>test.c
+<span class="nv">$ </span>odjdump <span class="nt">-S</span> <span class="nb">test</span>
+</code></pre></div></div>
+
+<p>… <생략></생략></p>
+
+<h3 id="-pg-프로파일">-pg: 프로파일</h3>
+<hr />
+<p><strong><code class="language-plaintext highlighter-rouge">-pg</code></strong></p>
+<ul>
+  <li>컴파일한 프로그램이 종료하면, 프로파일 정보가 <code class="language-plaintext highlighter-rouge">gmon.out</code> 파일에 저장된다.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">gprof</code></strong>로 <strong>gmon.out</strong> 파일의 내용을 분석해 어떤 함수가 얼마나 호출되었고, 시간은 얼마나 걸렸는지 확인가능</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1. <span class="nv">$ </span>gcc <span class="nt">-pg</span> <span class="nt">-o</span> <span class="nb">test </span>test.c
+2. <span class="nv">$ </span>./test
+3. <span class="nv">$ </span>   &lt;<span class="nt">---</span> gmon.out 생성
+4. <span class="nv">$ </span>gprof ./test
+</code></pre></div></div>
+
+<h3 id="-shared-shared-라이브러리-사용-우선-shared-만들기">-shared: shared 라이브러리 사용 우선, shared 만들기</h3>
+<hr />
+<p><strong><code class="language-plaintext highlighter-rouge">-shared</code></strong></p>
+<ul>
+  <li><strong><span style="color:red">2가지</span></strong>용도, <strong><span style="color:blue">shared 우선 사용, shared 만들기 </span></strong></li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>gcc <span class="nt">-fPIC</span> <span class="nt">-c</span> test1.c
+<span class="nv">$ </span>gcc <span class="nt">-fPIC</span> <span class="nt">-c</span> test2.c
+<span class="nv">$ </span>gcc <span class="nt">-shared</span> <span class="nt">-o</span> libtest.so test1.o test2.o
+
+<span class="nv">$ </span>gcc <span class="nt">-L</span><span class="nb">.</span> <span class="nt">-shared</span> <span class="nt">-o</span> <span class="nb">test </span>test.c <span class="nt">-ltest</span>
+</code></pre></div></div>
+
+<ul>
+  <li><strong>-ltest</strong> 로 링크 걸었는데, <strong>libtest.a</strong>, <strong><span style="color:#0BA6D6">libtest.so</span></strong> 둘다 있다.
+    <ul>
+      <li><strong><span style="color:#0BA6D6">-shared</span></strong> 옵션 시, <strong><span style="color:#0BA6D6">libtest.so</span></strong> 링크</li>
+      <li>근데, 기본적으로 아무 옵션을 안줘도 <strong>shared라이브러리</strong>를 우선 링크</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="-fpic">-fPIC</h3>
+<hr />
+<p><strong><code class="language-plaintext highlighter-rouge">-fPIC</code></strong></p>
+<ul>
+  <li><strong>-f</strong>: set!</li>
+  <li><strong>PIC</strong>: Positino-Independent Code 생성하라
+<br /><br /></li>
+  <li>Shared library는 메모리 어느 위치에 로딩되는지가 컴파일 타임에 결정되지 않기 때문에, 절대 주소가 아닌 상대 주소를 주는 옵션</li>
+  <li>다른 바이너리에서 이 라이브러리의 함수를 호출할 때 PLT와 GOT를 사용하도록 하는 옵션</li>
+  <li>library의 mapping 주소 + offset = 해당 Symbol의 주소
+    <ul>
+      <li>mapping 주소는 <strong>ldd</strong>로 확인</li>
+      <li>offset은 <strong>nm</strong>으로 확인</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="-static-static-라이브러리-사용-우선">-static: static 라이브러리 사용 우선</h3>
+<hr />
+<p><strong><code class="language-plaintext highlighter-rouge">-static</code></strong></p>
+<ul>
+  <li><strong>static</strong>라이브러리 우선 사용</li>
+  <li>PLT, GOT 사용하지 않고 바로 <strong>call libcaddr</strong></li>
+  <li>dynamic linking 사용 안하기 때문에, 라이브러리 종속성 제거</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>gcc <span class="nt">-static</span> <span class="nt">-o</span> like like.c
+</code></pre></div></div>
+
+<h3 id="-nostdlib">-nostdlib</h3>
+<hr />
+<p><strong><code class="language-plaintext highlighter-rouge">-nostdlib</code></strong></p>
+<ul>
+  <li>링크 시, <strong><code class="language-plaintext highlighter-rouge">표준 C 라이브러리 사용 안함</code></strong></li>
+  <li>OS, bootloader, Device Driver 같은 표준 C 라이브러리를 사용하지 않는 프로그램을 컴파일할 때 사용</li>
+</ul>
+
+<h3 id="-nostartfiles">-nostartfiles</h3>
+<hr />
+<p><strong><code class="language-plaintext highlighter-rouge">-nostartfiles</code></strong></p>
+<ul>
+  <li>crt1.o, crti.o, crtbegin.o, crtend.o, crtn.o 등과 같은 crt 오브젝트 파일들을 링크하지 않는다.</li>
+  <li>OS, bootloader 같은 프로그램을 컴파일할 때 사용</li>
+</ul>
+
+<h2 id="ldflags">LDFLAGS</h2>
+<h3 id="-l-라이브러리-path">-L: 라이브러리 path</h3>
+<hr />
+<p><strong><code class="language-plaintext highlighter-rouge">-L[path]</code></strong></p>
+<ul>
+  <li>path에 라이브러리를 찾을 디렉터리 지정</li>
+  <li><strong>shared, static 모두</strong> 찾음
+<br /><br /></li>
+  <li>기본적으로 찾아보는 디렉터리
+    <ul>
+      <li><strong>/usr/lib, /usr/local/lib, /lib</strong></li>
+    </ul>
+  </li>
+  <li>
+    <p><strong><span style="color:#0BA6D6">.so</span></strong>파일 못찾을 땐, <strong><em>export LD_LIBRARY_PATH=path:$LD_LIBRARY_PATH</em></strong></p>
+  </li>
+  <li><em>-L</em> 옵션 사용 예</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>/opt/lib/libclsched.a &lt;<span class="nt">--</span> 라이브러리 파일 위치
+
+<span class="nv">$ </span>gcc <span class="nt">-o</span> like like.c <span class="nt">-L</span>/opt/lib <span class="nt">-lclsched</span>
+</code></pre></div></div>
+
+<ul>
+  <li><em>-L</em> 여러 곳 필요시</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>gcc <span class="nt">-L</span><span class="k">${</span><span class="nv">HOME</span><span class="k">}</span>/lib <span class="nt">-L</span><span class="k">${</span><span class="nv">HOME</span><span class="k">}</span>/other main.c <span class="nt">-lmylib1</span> <span class="nt">-lmylib2</span> <span class="nt">-o</span> main
+     따로 따로 지정
+</code></pre></div></div>
+
+<h3 id="-wl링커-옵션">-Wl,[링커 옵션]</h3>
+<hr />
+<p><strong><code class="language-plaintext highlighter-rouge">-Wl,[링커 옵션]</code></strong></p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">-Wl</code>류 옵션은 gcc를 거치지 않고 바로 링커에 옵션을 전하려 할 때 사용</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>gcc <span class="nt">-o</span> like like.c <span class="nt">-Wl</span>,-M,-s
+</code></pre></div></div>
+<ul>
+  <li>gcc 스킵, <strong><em>collect2</em></strong>에 <strong>-M</strong>, <strong>-s</strong> 옵션이 전달된다.</li>
+  <li>collect2는 <strong>링커인 ld</strong>를 찾아서 위 옵션으로 호출</li>
+</ul>
+
+<h4 id="-rpath--rpath-link">-rpath, -rpath-link</h4>
+<hr />
+<p><strong><code class="language-plaintext highlighter-rouge">-Wl,-rpath,[path]</code></strong></p>
+<ul>
+  <li><strong>rpath</strong>는 <strong><span style="color:#0BA6D6">shared</span></strong> 라이브러리 검색 path만 추가</li>
+  <li>
+    <p><strong>-rpath</strong>와 <strong>-L</strong>이 동시에 사용되면, <strong><span style="color:red">-L은 무시</span></strong>됨</p>
+  </li>
+  <li>사용 예</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>gcc <span class="nt">-Wl</span>,-rpath,/usr/local/lib hello.c <span class="nt">-lmylib</span>
+</code></pre></div></div>
+
+<ul>
+  <li>바이너리에 rpath 먹혀 있는지 체크</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>readelf <span class="nt">-d</span> a.out | <span class="nb">grep </span>RPATH
+
+0x000000000000000f <span class="o">(</span>RPATH<span class="o">)</span>                  Library rpath: <span class="o">[</span>/usr/local/lib]
+</code></pre></div></div>
+
+<p><strong><code class="language-plaintext highlighter-rouge">-Wl,-rpath-link</code></strong>=<strong>[path1]:[path2]</strong></p>
+<ul>
+  <li><strong>rpath-link</strong>는 <strong><span style="color:#0BA6D6">shared</span></strong>라이브러리 검색 패스를 추가한다.</li>
+</ul>
+
+<h3 id="-rdynamic">-rdynamic</h3>
+<hr />
+<p><strong><code class="language-plaintext highlighter-rouge">-rdynamic</code></strong></p>
+<ul>
+  <li>dynamic linking</li>
+  <li>링커에게 <strong>-export-dynamic</strong>을 넘기는 것, <strong>-Wl,-export-dynamic</strong>과 동일</li>
+  <li>링커가 <em>dynamic symbol table</em>에 모든 symbol을 추가하도록 하는 옵션</li>
+  <li>dlopen man page에는 쓰라고 나오는데, <strong>-ldl만 보통 써도 된다</strong></li>
+</ul>
+
+<h3 id="-xlinker-f링커-옵션">-Xlinker [f링커 옵션]</h3>
+<hr />
+<p><strong><code class="language-plaintext highlighter-rouge">-Xlinker [f링커 옵션]</code></strong></p>
+<ul>
+  <li>gcc가 인식하지 못하는 특정 링커에 대해 옵션을 지정할 때 사용된다.</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>gcc <span class="nt">-o</span> like like.c <span class="nt">-Xlinker</span> <span class="nt">-M</span> <span class="nt">-Xlinker</span> <span class="nt">-s</span>
+</code></pre></div></div>
+
+<ul>
+  <li>collect2에 -M -s 옵션이 전달되고 진짜 링커인 <strong>ld</strong> 호출시 -M -s 옵션으로 ld가 호출된다.</li>
+</ul>
+
+<h4 id="-wl--xlinker에서-사용가능한-링커-옵션">-Wl -Xlinker에서 사용가능한 링커 옵션</h4>
+<hr />
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">-s</code></strong>: 실행 파일에서 심볼 테이블 제거</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">-x</code></strong>: 출력 파일에 로컬 심볼 제거</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">-e[name]</code></strong>: 시작 심볼을 name 심볼로 사용한다.
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>gcc <span class="nt">-Wl</span>,-emain <span class="nt">-o</span> like like.c
+</code></pre></div>    </div>
+    <p>위 명령 시, 시작 심볼로 main 심볼을 사용한다.<br />기본적으로 시작 심볼은 <em>_start</em> 심볼이다.</p>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">-M</code>: 링커 스크립트와 메모리 맵을 자세하게 출력한다.
+    <ul>
+      <li>프로그램의 메모리 구조를 자세하게 알 수 있다.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="libs">LIBS</h2>
+<h3 id="-l--라이브러리-링크">-l : 라이브러리 링크</h3>
+<hr />
+<p><strong><code class="language-plaintext highlighter-rouge">-l[library]</code></strong></p>
+<ul>
+  <li>링크할 라이브러리</li>
+  <li><strong>반드시</strong> <strong><span style="color:blue">소스 뒤에 위치</span></strong>, <strong>특히</strong> <strong><span style="color:red">main 함수 있는 파일보다 무조건 뒤</span></strong></li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># libclsched.so 링크</span>
+1. <span class="nv">$ </span>gcc <span class="nt">-o</span> like like.c <span class="nt">-lclsched</span>
+
+2. <span class="nv">$ </span>gcc like.c <span class="nt">-lclsched</span> <span class="nt">-o</span> like
+</code></pre></div></div>
+
+<h4 id="-ldl--동적-라이브러리">-ldl : 동적 라이브러리</h4>
+<hr />
+<p><strong><code class="language-plaintext highlighter-rouge">-ldl</code></strong></p>
+<ul>
+  <li><strong>동적 라이브러리용</strong>(<strong><span style="color:red">shared 아님!!</span></strong>)</li>
+  <li><strong><span style="color:blue">dlopen()</span></strong> 사용하려면 꼭 써줘야한다.</li>
+  <li><strong>-ldl</strong>은 <strong>libdl.so</strong>를 로딩하는데, 속에 dlopen()이 있다.</li>
+</ul>
+
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/#linux-compile" class="page__taxonomy-item" rel="tag">linux-compile</a>
+    
+    </span>
+  </p>
+
+
+        
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2020-12-16T00:00:00+09:00">December 16, 2020</time></p>
+
+
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">Share on</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=%EC%BB%B4%ED%8C%8C%EC%9D%BC+%3C1%3E+Build%2C+%EC%BB%B4%ED%8C%8C%EC%9D%BC+%EC%98%B5%EC%85%98%20https%3A%2F%2Fmarkyang920413.github.io%2F%2Flinux-compile%2Fcompile_1_build%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmarkyang920413.github.io%2F%2Flinux-compile%2Fcompile_1_build%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fmarkyang920413.github.io%2F%2Flinux-compile%2Fcompile_1_build%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/ipc/system_programming-ipc-pipe/" class="pagination--pager" title="Pipe &lt;1&gt; pipe(), popen()
+">Previous</a>
+    
+    
+      <a href="/ipc/system_programming-ipc-message_queue_posix/" class="pagination--pager" title="Message Queue - POSIX
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/linux-filesystem/linux-linux_filesystem-LVM/" rel="permalink">LVM
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/mac/m1_rosetta2/" rel="permalink">M1 Mac 로제타2 설치, 로제타 사용 brew 설치, M1용 jekyll설치
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/algorithm/algorithm-algorithm-time_complexity/" rel="permalink">Time complexity
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          less than 1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/algorithm/algorithm-algorithm-IO_STL/" rel="permalink">시험에서 입출력, STL
+</a>
+      
+    </h2>
+    
+
+  <p class="page__meta">
+    
+
+    
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          less than 1 minute read
+        
+      </span>
+    
+  </p>
+
+
+    <p class="archive__item-excerpt" itemprop="description">
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2021 Dong-Hyeon Yang. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "https://markyang920413.github.io//linux-compile/compile_1_build/";  /* Replace PAGE_URL with your page's canonical URL variable */
+      this.page.identifier = "/linux-compile/compile_1_build"; /* Replace PAGE_IDENTIFIER with your page's unique identifier variable */
+    };
+    (function() { /* DON'T EDIT BELOW THIS LINE */
+      var d = document, s = d.createElement('script');
+      s.src = 'https://MarkYang920413.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+
+
+  </body>
+</html>
